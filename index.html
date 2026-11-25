@@ -17,7 +17,7 @@
 <style>
 /* VOICE: a kind, patient maître d'école; short sentences, praise first, then the rule.
    IDEA: the CM1 cahier itself: Seyès ruling, red margin, the teacher's blue, red and green inks.
-   PICTURE: Kalou the hornbill, perched on a pencil, cheering her on.
+   PICTURE: Kalou the hornbill cheers her on; Le Professeur corrects each answer.
    COLOUR and TYPE: white paper, ink blue, margin red, leaf green, sun yellow stars; a slate board at night. Playwrite FR Moderne (French school cursive) for titles, Andika (made for young readers) for text.
    LAYOUT: one calm column, big 52px+ buttons, cards laid on ruled paper; stacks naturally on phones. */
 :root{color-scheme:light dark;
@@ -100,6 +100,33 @@ textarea.inp{min-height:110px;resize:vertical;font-size:18px}
 .endsc{text-align:center}.endsc .score{font-size:56px;font-weight:700;line-height:1;color:var(--blue)}
 .burst{animation:pop .6s ease-out}@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){.burst,.mic.on{animation:none}}
+/* ---- animations & gaieté ---- */
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-8px) rotate(-2deg)}}
+.kal svg{animation:bob 3.2s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+.k-eye{animation:blink 4.5s infinite;transform-origin:122px 68px;transform-box:view-box}
+@keyframes hop{0%{transform:translateY(0)}30%{transform:translateY(-14px) rotate(-6deg)}60%{transform:translateY(0)}80%{transform:translateY(-5px)}100%{transform:translateY(0)}}
+@keyframes nod{0%,100%{transform:rotate(0)}25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+@keyframes rise{from{opacity:0;transform:translateY(14px) scale(.97)}}
+@keyframes twinkle{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.1)}}
+@keyframes fall{0%{transform:translate(0,0) rotate(0);opacity:1}100%{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+.prof{flex:none;width:58px;height:58px;border-radius:16px;overflow:hidden;background:#e8eefc}
+.prof.hop svg{animation:hop .8s ease-out}.prof.nod svg{animation:nod .5s ease-in-out 2}
+.who{display:block;font-size:13px;font-weight:700;color:var(--soft);letter-spacing:.02em}
+.fb .h{align-items:center}
+.opt.good{animation:pop .45s ease-out}.opt.bad{animation:shake .45s ease-in-out}
+.qcard{animation:rise .35s ease-out}
+.subj{animation:rise .5s ease-out backwards;animation-delay:calc(var(--i,0)*55ms);background:color-mix(in srgb,var(--c) 10%,var(--card));border-color:color-mix(in srgb,var(--c) 35%,var(--edge))}
+.subj:active .ic{animation:hop .5s}
+.kal{position:relative}
+.spark{position:absolute;animation:twinkle 2.4s ease-in-out infinite}
+.confetti i{position:fixed;width:10px;height:14px;border-radius:3px;z-index:20;pointer-events:none;animation:fall var(--d,1.4s) cubic-bezier(.15,.6,.35,1) forwards}
+.lvl{display:flex;align-items:center;justify-content:center;gap:10px;font-size:20px;font-weight:700;background:var(--hl);border-radius:16px;padding:12px}
+.btn.deep{--btn:#c25e00;--btnD:#8a4300}
+.dots i.g{background:#ffb400;box-shadow:0 0 0 2px color-mix(in srgb,#ffb400 35%,transparent)}
+@media(prefers-reduced-motion:reduce){.kal svg,.k-eye,.prof svg,.opt.good,.opt.bad,.qcard,.subj,.spark,.confetti i{animation:none!important}.confetti{display:none}}
+
 .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;max-width:min(92vw,520px);z-index:9;font-size:16px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 table{border-collapse:collapse;width:100%;font-size:15px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--edge);vertical-align:top}td.n{text-align:right;white-space:nowrap}
 .seg{display:inline-flex;border:2px solid var(--edge);border-radius:14px;overflow:hidden}.seg button{appearance:none;border:0;background:var(--card);color:var(--ink);font:inherit;min-height:44px;padding:8px 14px;cursor:pointer}.seg button.on{background:var(--btn);color:#fff}
@@ -553,11 +580,139 @@ const GEN_DESC="Générateurs d'exercices disponibles (champ g) : nombresLettres
 function barSvg(a,b){const w=300,h=46,cw=w/b;let s='<svg viewBox="0 0 '+(w+4)+' '+(h+4)+'" width="100%" style="max-width:340px;margin:6px 0 14px" role="img" aria-label="Bande partagée en '+b+' parts, '+a+' coloriées">';
  for(let i=0;i<b;i++)s+='<rect x="'+(2+i*cw)+'" y="2" width="'+cw+'" height="'+h+'" fill="'+(i<a?"#ffb400":"transparent")+'" stroke="currentColor" stroke-width="2"/>';return s+"</svg>"}
 
+/* ============ EXERCICES SUPPLÉMENTAIRES ============ */
+function classify(list,q,labels,xs){const[t,c,x]=pick(list);return mkQ(q.replace("%",t),labels[c],labels.filter((_,i)=>i!==c),x||(xs&&xs[c])||"")}
+function tfQ(list){const[t,v,x]=pick(list);return mkQ("Vrai ou faux ? « "+t+" »",v?"Vrai":"Faux",[v?"Faux":"Vrai"],x||(v?"C'est vrai, c'est ce que dit la leçon.":"C'est faux."))}
+function defsGen(D){return()=>{const k=R(0,D.length-1);const[w,d]=D[k];const o=shuffle(D.filter((_,i)=>i!==k)).slice(0,2);
+ if(Math.random()<.5)return mkQ("Que veut dire « "+w+" » ?",cap(d),o.map(x=>cap(x[1])),cap(w)+" : "+d+".");
+ return mkQ("Quel mot correspond à cette définition : « "+cap(d)+" » ?",w,o.map(x=>x[0]),cap(w)+" : "+d+".")}}
+const DEFS={
+ impot:[["un contribuable","une personne qui paie l'impôt"],["un intérêt de retard","la somme que le contribuable paie en plus quand il paie son impôt en retard"],["une saisie de biens","le fait de confisquer les biens d'un mauvais contribuable"],["un inspecteur des impôts","un agent des impôts chargé de vérifier les déclarations des biens"],["l'impôt","l'argent que chaque citoyen doit payer à l'État"],["une déclaration de biens","un document où l'on indique ce que l'on possède"]],
+ conflit:[["un médiateur","une personne qui règle les conflits"],["négocier","discuter pour se mettre d'accord"],["la réinsertion sociale","le fait de cesser d'être soldat pour retourner à la vie sociale"],["un conflit","un désaccord ou une dispute entre des personnes ou des groupes"],["la réconciliation","le fait de faire la paix après une dispute"],["la négociation","une discussion pour trouver un accord"]],
+ orient:[["une décoratrice","une femme qui fabrique ou dessine des choses pour embellir un lieu"],["une qualification","l'ensemble des savoirs, des savoir-faire et des qualités d'un travailleur"],["une maquette","la représentation réduite d'un objet"],["l'entrepreneuriat","la création d'entreprise"],["un entrepreneur","une personne qui crée et dirige une entreprise"],["un métier","le travail que l'on fait pour gagner sa vie"]],
+ protect:[["une victime","une personne sans défense qui subit des violences"],["la maltraitance","le fait de violenter quelqu'un"],["la discrimination","le fait de faire des différences injustes entre les personnes"],["la protection","le fait de mettre quelqu'un à l'abri du danger"],["la violence","le fait d'utiliser la force pour faire du mal"]]
+};
+const PREFS=["re","dé","in","im","sur","anti","mal","mé","a"];
+const PREFW=[["refaire","re"],["défaire","dé"],["impossible","im"],["inutile","in"],["incapable","in"],["malheureux","mal"],["surcharger","sur"],["antivol","anti"],["redire","re"],["déplacer","dé"],["impatient","im"],["inconnu","in"],["revenir","re"],["désordre","dé"],["mécontent","mé"],["alourdir","a"],["surabondance","sur"]];
+const CONTR=[["possible","impossible",["inpossible","dépossible"]],["utile","inutile",["imutile","malutile"]],["content","mécontent",["incontent","imcontent"]],["faire","défaire",["infaire","imfaire"]],["patient","impatient",["inpatient","dépatient"]],["connu","inconnu",["imconnu","déconnu"]],["poli","impoli",["inpoli","dépoli"]],["juste","injuste",["imjuste","déjuste"]],["heureux","malheureux",["inheureux","déheureux"]],["coller","décoller",["incoller","imcoller"]],["visible","invisible",["imvisible","dévisible"]],["prudent","imprudent",["inprudent","déprudent"]],["ordre","désordre",["inordre","imordre"]]];
+const SUFW=[["richesse","riche","esse"],["gentillesse","gentil","esse"],["tristesse","triste","esse"],["national","nation","al"],["chanteur","chant","eur"],["vendeur","vend","eur"],["boulangerie","boulanger","ie"],["lavage","lav","age"],["plantation","plant","ation"],["jardinier","jardin","ier"],["rapidement","rapide","ment"],["renforcement","renforce","ment"],["fruitier","fruit","ier"],["pêcheur","pêch","eur"]];
+const FAM=[[["terre","terrain","enterrer","terrasse"],"terr",["ain","asse"],"la tarte"],[["dent","dentiste","dentifrice","dentition"],"dent",["iste","ifrice"],"la danse"],[["fleur","fleuriste","fleurir","fleuri"],"fleur",["iste","ir"],"la flèche"],[["jardin","jardinier","jardinage","jardiner"],"jardin",["age","ier"],"jaune"],[["lait","laitier","laitage","laiterie"],"lait",["age","erie"],"la laine"],[["chant","chanter","chanteur","chantonner"],"chant",["eur","onner"],"le champ"],[["vent","ventilateur","éventail","ventiler"],"vent",["iler","ail"],"le ventre"],[["plant","plante","planteur","plantation"],"plant",["eur","ation"],"la planche"]];
+const HOMN=[["Il a mangé un ___ de pain.","bout",["boue","bous"],"Le bout, c'est un morceau."],["Après la pluie, il y a de la ___ dans la cour.","boue",["bout","bous"],"La boue, c'est de la terre mouillée."],["L'eau ___ dans la marmite.","bout",["boue","bou"],"Il bout : c'est le verbe bouillir."],["La ___ de Koffi prépare le repas.","mère",["mer","maire"],"La mère, c'est la maman."],["Le bateau navigue sur la ___.","mer",["mère","maire"],"La mer, c'est la grande étendue d'eau salée."],["Le ___ dirige la mairie de la commune.","maire",["mer","mère"],"Le maire dirige la commune."],["Le ___ de la girafe est très long.","cou",["coup","coût"],"Le cou relie la tête au corps."],["Il a donné un ___ de pied dans le ballon.","coup",["cou","coût"],"Un coup, c'est un choc."],["Je mets du ___ dans la sauce.","sel",["selle","celle"],"Le sel sert à saler."],["Le cavalier pose la ___ sur le cheval.","selle",["sel","celle"],"La selle, c'est le siège du cavalier."],["Le mois de ___ vient après avril.","mai",["mais","mes"],"Mai est un mois de l'année."],["Le ___ de l'arbre est très solide.","tronc",["trond","tron"],"Le tronc est la tige du grand arbre."]];
+const CONNECT=[["D'abord, Awa se lève. ___, elle se lave. Enfin, elle part à l'école.","Ensuite",["Autrefois","Derrière"],"« Ensuite » indique l'action qui vient après."],["Il pleuvait très fort, ___ nous sommes restés à la maison.","alors",["mais","enfin"],"« Alors » annonce une conséquence."],["Le chasseur attendit longtemps. ___, il rentra au village.","Enfin",["D'abord","Devant"],"« Enfin » annonce la dernière action."],["Je voulais sortir, ___ maman a refusé.","mais",["donc","ensuite"],"« Mais » marque une opposition."],["Koffi a bien révisé, ___ il a réussi son examen.","donc",["mais","or"],"« Donc » annonce une conséquence."],["Il ouvrit la porte, ___ il entra dans la case.","puis",["mais","or"],"« Puis » indique l'action suivante."],["___, le lièvre et la tortue décidèrent de faire une course.","Un jour",["Derrière","Donc"],"« Un jour » est un indicateur de temps pour commencer une histoire."]];
+const INDIC=[["autrefois",0],["au village",1],["il y a longtemps",0],["derrière la case",1],["un matin",0],["au marché",1],["devant l'école",1],["hier soir",0],["à côté du puits",1],["ce jour-là",0],["dans la forêt",1],["le lendemain",0],["de l'autre côté de la route",1],["il était une fois",0]];
+const TEMPS=[["Le soleil ___ (briller) quand nous sommes partis.","brillait","brilla","L'action dure dans le passé : imparfait."],["Soudain, un serpent ___ (sortir) de l'herbe.","sortit","sortait","Action brève et soudaine : passé simple."],["Chaque matin, grand-mère ___ (préparer) la bouillie.","préparait","prépara","C'est une habitude qui dure : imparfait."],["Tout à coup, Koffi ___ (crier).","cria","criait","Action brève : passé simple."],["Les enfants ___ (jouer) dans la cour quand la cloche sonna.","jouaient","jouèrent","Action en train de durer : imparfait."],["Le lion ___ (bondir) sur sa proie.","bondit","bondissait","Action brève : passé simple."],["Autrefois, les villageois ___ (cultiver) l'igname.","cultivaient","cultivèrent","Habitude du passé : imparfait."],["Le maître ___ (entrer) et les élèves se levèrent.","entra","entrait","Action brève, à un moment précis : passé simple."]];
+const FORM=[["Veuillez agréer, Monsieur, mes salutations respectueuses.",1],["Gros bisous !",0],["Je vous remercie pour votre aide.",1],["Tu me manques beaucoup.",0],["Salut ! Comment vas-tu ?",0],["Monsieur le Directeur,",1],["Pouvez-vous m'aider, s'il vous plaît ?",1],["Passe-moi ton livre, s'il te plaît.",0],["À très vite, ton amie Awa.",0],["Je vous prie d'accepter mes excuses.",1]];
+const FORML=["À un ami ou une personne familière","À un adulte, avec le vous de politesse"];
+const FORMX=["On tutoie (tu, ton, ta, tes) : c'est pour un ami ou une personne familière.","On vouvoie (vous, votre, vos) : c'est pour un adulte qu'on respecte."];
+const VIV=[["le manguier",0],["le caillou",1],["l'eau",1],["le poisson",0],["l'air",1],["le champignon",0],["la roche",1],["l'oiseau",0],["le sable",1],["l'herbe",0],["la grenouille",0],["la terre",1]];
+const INTER=[["La tique suce le sang du chien.",1],["Deux arbres se disputent la lumière.",3],["Les fourmis travaillent ensemble pour transporter la nourriture.",4],["Le pique-bœuf mange les parasites sur le dos du bœuf : les deux y gagnent.",2],["Deux lions se battent pour la même proie.",3],["Le ver solitaire vit dans l'intestin et affaiblit l'animal.",1],["Les abeilles s'organisent ensemble pour construire la ruche.",4],["Un petit oiseau fait son nid dans un grand arbre sans le gêner.",0]];
+const INTERL=["Le commensalisme","Le parasitisme","La symbiose","La compétition","La coopération"];
+const INTERX=["Commensalisme : l'un profite de l'autre sans le gêner.","Parasitisme : l'un vit aux dépens de l'autre et lui fait du mal.","Symbiose : les deux s'aident et y gagnent.","Compétition : ils se disputent la même chose.","Coopération : ils travaillent ensemble."];
+const PROT=[["Planter un arbre",0],["Jeter les ordures dans la lagune",1],["Allumer des feux de brousse",1],["Ramasser les déchets de la cour",0],["Chasser les animaux protégés (le braconnage)",1],["Économiser l'eau",0],["Couper les arbres sans en replanter",1],["Mettre les ordures dans la poubelle",0],["Construire n'importe où sans plan (urbanisation incontrôlée)",1]];
+const TIG=[["le manguier",0],["le haricot",1],["l'igname",2],["la pomme de terre",2],["le cocotier",0],["la liane",1],["le fromager",0],["le taro",2]];
+const TIGL=["Une tige aérienne dressée","Une tige aérienne grimpante","Une tige souterraine (un tubercule)"];
+const REPRO=[["On plante un morceau de tige de manioc dans le sol.",2],["On plante la couronne d'un ananas.",2],["On fixe un rameau d'oranger sur un jeune citronnier pour qu'il pousse avec lui.",1],["On laisse les racines se développer puis on coupe les rejets pour les replanter.",0],["On plante une branche d'hibiscus dans la terre.",2],["On insère un bourgeon d'un bon manguier dans un jeune manguier.",1]];
+const REPROL=["Le marcottage","Le greffage","Le bouturage"];
+const REPROX=["Marcottage : on laisse la racine se développer, puis on coupe les rejets pour les transplanter.","Greffage : on introduit un fragment d'une plante dans une autre plante.","Bouturage : on enfouit dans le sol un morceau de tige, de racine ou de feuille."];
+const TF={
+ sortie:[["Pendant une sortie, on peut casser les branches pour s'amuser.",0,"C'est faux : il faut respecter la nature."],["Il faut préparer la sortie en choisissant le lieu et le matériel.",1],["Pendant la sortie, on prend des notes et on récolte des échantillons.",1],["On peut jouer avec les objets dangereux.",0,"C'est faux : il faut éviter de jouer avec les objets dangereux."],["Il faut être prudent pendant la sortie.",1],["On doit capturer et tuer les petits animaux.",0,"C'est faux : il faut éviter de capturer et de tuer les petits animaux."]],
+ eau:[["Les déchets polluent l'eau.",1],["L'eau polluée est sans danger pour la santé.",0,"C'est faux : l'eau polluée est un danger pour notre santé."],["L'oxygène produit par les végétaux aide à purifier l'eau.",1],["Les restes d'animaux peuvent polluer l'eau.",1],["Boire de l'eau sale peut rendre malade.",1],["Jeter les ordures dans la lagune la rend plus propre.",0,"C'est faux : les ordures polluent la lagune."]],
+ kong:[["Kong est une ville très ancienne : elle existe depuis le XIe siècle.",1],["Le royaume de Kong a été fondé par Samory.",0,"C'est faux : il a été fondé par Sékou Ouattara, vers 1710."],["Des commerçants malinkés musulmans ont fait de Kong un centre d'échanges.",1],["Dans le royaume de Kong, le roi avait tous les pouvoirs.",1],["Le royaume de Kong s'est affaibli au XIXe siècle.",1],["Le royaume de Kong était divisé en provinces.",1],["La colonisation française a renforcé le royaume de Kong.",0,"C'est faux : elle a contribué à l'affaiblir."]],
+ geo:[["La géographie étudie la Terre et les relations entre elle et les humains.",1],["La légende d'une carte explique les signes et les couleurs utilisés.",1],["L'échelle permet de connaître les vraies distances sur une carte.",1],["Une carte n'a pas besoin de titre.",0,"C'est faux : il faut un titre, une légende et une échelle."],["La géographie a deux grandes branches : la géographie physique et la géographie humaine.",1],["La géographie n'aide pas à comprendre ce qui se passe sur la Terre.",0,"C'est faux : elle aide à comprendre les phénomènes sur la Terre et à les améliorer."]],
+ elections:[["On choisit ses représentants par le vote.",1],["Seul le plus fort peut devenir délégué de classe.",0,"C'est faux : le délégué est choisi par le vote."],["Participer aux élections permet d'exprimer son choix.",1],["Une élection peut servir à choisir une personne pour exercer une fonction.",1],["Voter, c'est se battre.",0,"C'est faux : voter, c'est choisir en donnant sa voix."]],
+ president:[["Le président de la République est le chef de l'État.",1],["Le président est choisi par tirage au sort.",0,"C'est faux : il est élu par le peuple."],["Le président détient le pouvoir exécutif.",1],["Je dois respecter le président de la République.",1],["Le président de la République est une institution de la République.",1]]
+};
+const DROITS=[["Aller à l'école",0],["Payer l'impôt",1],["Être soigné",0],["Respecter les lois",1],["Être protégé",0],["Défendre son pays",1],["Être informé",0],["Respecter les institutions de son pays",1]];
+const SOURCES=[["un conte",0],["un proverbe",0],["une lettre ancienne",1],["un vieux journal",1],["des ossements",2],["les ruines d'une maison",2],["le récit d'un griot",0],["un livre ancien",1],["une poterie ancienne",2],["une devinette",0],["un outil en pierre",2],["un document officiel ancien",1]];
+const SOURCEL=["Une source orale","Une source écrite","Un vestige archéologique"];
+const CI_VILLES=["Abidjan","Bouaké","Yamoussoukro","Korhogo","Daloa","San-Pédro","Man","Gagnoa","Divo","Odienné"];
+const CAPS=[["Accra","le Ghana"],["Bamako","le Mali"],["Ouagadougou","le Burkina Faso"],["Conakry","la Guinée"],["Monrovia","le Liberia"]];
+const RANGS=["unités","dizaines","centaines","unités de mille","dizaines de mille","centaines de mille","unités de millions","dizaines de millions","centaines de millions","unités de milliards"];
+const PERIODES=[["l'Antiquité",-3000,475],["le Moyen Âge",476,1491],["l'époque moderne",1492,1788],["l'époque contemporaine",1789,2026]];
+const yr=y=>y<=0?(-y+1)+" avant J.-C.":String(y);
+const orderQ=(q,vals,show,x)=>{const s=vals.slice().sort((a,b)=>a-b);const good=s.map(show).join(" < ");const w=new Set();let g=0;while(w.size<2&&g++<30){const p=shuffle(vals);const t=p.map(show).join(" < ");if(t!==good)w.add(t)}return mkQ(q,good,[...w],x)};
+Object.assign(GEN,{
+ defs_impot:defsGen(DEFS.impot),defs_conflit:defsGen(DEFS.conflit),defs_orient:defsGen(DEFS.orient),defs_protect:defsGen(DEFS.protect),
+ prefixe:L=>{if(L>=2&&Math.random()<.5){const[b,c,w]=pick(CONTR);return mkQ("Quel est le contraire de « "+b+" », formé avec un préfixe ?",c,w,/^im/.test(c)?"Devant m, b, p, on écrit im- : "+c+".":"On ajoute le préfixe devant le radical : "+c+".")}
+  const[w,p]=pick(PREFW);return mkQ("Quel est le préfixe du mot « "+w+" » ?",p+"-",shuffle(PREFS.filter(x=>x!==p)).slice(0,2).map(x=>x+"-"),"Le préfixe est placé devant le radical : "+p+"- + "+w.slice(p.length)+".")},
+ suffixe:()=>{const k=R(0,SUFW.length-1);const[w,b,s]=SUFW[k];if(Math.random()<.5){const sufs=[...new Set(SUFW.map(x=>x[2]))].filter(x=>x!==s);return mkQ("Quel est le suffixe du mot « "+w+" » ?","-"+s,shuffle(sufs).slice(0,2).map(x=>"-"+x),"Le suffixe est placé après le radical : "+b+" + -"+s+".")}
+  const o=shuffle(SUFW.filter((x,i)=>i!==k&&x[2]!==s)).slice(0,2).map(x=>x[0]);return mkQ("Quel mot est formé avec le suffixe -"+s+" ?",w,o,w+" = "+b+" + -"+s+".")},
+ radical:()=>{const[f,r,bad,intr]=pick(FAM);const m=shuffle(f);if(Math.random()<.5)return mkQ("Quel mot n'est pas de la même famille que « "+m[0]+" » ?",intr,[m[1],m[2]],"« "+intr+" » ne contient pas le radical « "+r+" ».");
+  return mkQ("Quel est le radical commun à « "+m[0]+" », « "+m[1]+" » et « "+m[2]+" » ?",r,bad,"Le radical est la base commune : "+r+".")},
+ homonymes:()=>{const[s,a,w,x]=pick(HOMN);return Object.assign(mkQ(s,a,w,x,s.replace("___","…")),{blank:true})},
+ connecteurs:()=>{const[s,a,w,x]=pick(CONNECT);const st=s.startsWith("___");return Object.assign(mkQ("Choisis le bon mot : "+s,a,w,x),{blank:true})},
+ indicateurs:()=>classify(INDIC,"« % » est…",["un indicateur de temps","un indicateur de lieu"],["Il dit QUAND l'histoire se passe.","Il dit OÙ l'histoire se passe."]),
+ tempsRecit:()=>{const[s,a,b,x]=pick(TEMPS);return Object.assign(mkQ("Choisis le bon temps : "+s,a,[b],x),{blank:true})},
+ formules:()=>classify(FORM,"« % » : à qui écrit-on ou parle-t-on ?",FORML,FORMX),
+ vivant:()=>classify(VIV,"« % » est…",["un être vivant","un élément non vivant"],["Il naît, grandit, se nourrit et meurt : c'est un être vivant.","Il ne naît pas et ne grandit pas : c'est un élément non vivant."]),
+ interactions:()=>{const[t,c]=pick(INTER);return mkQ("« "+t+" » Quelle interaction est-ce ?",INTERL[c],shuffle(INTERL.filter((_,i)=>i!==c)).slice(0,2),INTERX[c])},
+ proteger:()=>classify(PROT,"« % » : est-ce bon pour la nature ?",["Cela protège la nature","Cela détruit la nature"]),
+ tiges:()=>classify(TIG,"Quelle est la tige de « % » ?",TIGL),
+ reproduction:()=>{const[t,c]=pick(REPRO);return mkQ("« "+t+" » Quelle technique est-ce ?",REPROL[c],REPROL.filter((_,i)=>i!==c),REPROX[c])},
+ tf_sortie:()=>tfQ(TF.sortie),tf_eau:()=>tfQ(TF.eau),tf_kong:()=>tfQ(TF.kong),tf_geo:()=>tfQ(TF.geo),tf_elections:()=>tfQ(TF.elections),tf_president:()=>tfQ(TF.president),
+ droitDevoir:()=>classify(DROITS,"« % » : est-ce un droit ou un devoir du citoyen ?",["Un droit","Un devoir"],["C'est un droit : ce que le citoyen peut recevoir.","C'est un devoir : ce que le citoyen doit faire."]),
+ sources:()=>classify(SOURCES,"« % » est…",SOURCEL.map(s=>s.charAt(0).toLowerCase()+s.slice(1)),["Les sources orales sont dites ou racontées : récits des griots, contes, proverbes, devinettes.","Les sources écrites : textes, documents, livres, lettres.","Les vestiges archéologiques : objets, ruines, ossements laissés par les hommes."]),
+ chrono:L=>{if(L>=3&&Math.random()<.5){const y=R(1001,2026);const c=Math.ceil(y/100);return mkQ("En quel siècle se situe l'année "+y+" ?",toRoman(c)+"e siècle",[toRoman(c-1)+"e siècle",toRoman(c+1)+"e siècle"],"L'année "+y+" fait partie du "+toRoman(c)+"e siècle (de "+((c-1)*100+1)+" à "+c*100+").")}
+  const k=R(0,3);const[p,a,b]=PERIODES[k];const y=k===0?R(-2500,470):R(a,Math.min(b,2026));return mkQ("À quelle période appartient l'année "+yr(y)+" ?",cap(p),PERIODES.filter((_,i)=>i!==k).map(x=>cap(x[0])),cap(p)+" va de "+yr(a===-3000?-2999:a)+" à "+yr(b)+".")},
+ villes:L=>{if(L>=3&&Math.random()<.5){const[c,p]=pick(CAPS);return mkQ(c+" est la capitale de quel pays voisin ?",cap(p),shuffle(CAPS.filter(x=>x[1]!==p)).slice(0,2).map(x=>cap(x[1])),c+" est la capitale de "+p+".")}
+  const g=pick(CI_VILLES);return mkQ("Laquelle de ces villes se trouve en Côte d'Ivoire ?",g,shuffle(CAPS).slice(0,2).map(x=>x[0]),g+" est une ville de Côte d'Ivoire.")},
+ /* ---- approfondissement maths ---- */
+ rangChiffre:()=>{const n=rndDigits(R(7,10));const s=String(n);const pos=R(0,s.length-1);const d=+s[s.length-1-pos];return{kind:"num",q:"Dans "+fmt(n)+", quel est le chiffre des "+RANGS[pos]+" ?",a:d,at:String(d),x:"Je pars de la droite : unités, dizaines, centaines, puis la classe des mille, puis celle des millions. Le chiffre des "+RANGS[pos]+" est "+d+"."}},
+ siecle:()=>{const y=R(1001,2026);const c=Math.ceil(y/100);return{kind:"roman",q:"Écris en chiffres romains le siècle de l'année "+y+".",a:toRoman(c),at:toRoman(c)+" ("+c+"e siècle)",x:"L'année "+y+" est au "+c+"e siècle ; "+c+" s'écrit "+toRoman(c)+"."}},
+ rangerTrois:()=>{const d=R(6,9);const a=rndDigits(d);const v=[...new Set([a,mutate(a),mutate(a)])];while(v.length<3)v.push(rndDigits(d));return orderQ("Range dans l'ordre croissant (du plus petit au plus grand).",v,fmt,"Même nombre de chiffres : je compare de gauche à droite, classe par classe.")},
+ addition3:()=>{const a=rndN(R(4,5)),b=rndN(R(4,5)),c=rndN(R(3,4));return{kind:"num",q:"Calcule : "+fmt(a)+" + "+fmt(b)+" + "+fmt(c),say:"Calcule "+a+" plus "+b+" plus "+c,a:a+b+c,at:fmt(a+b+c),x:"J'additionne d'abord les deux premiers ("+fmt(a+b)+"), puis j'ajoute le troisième."}},
+ soustractionZeros:()=>{const a=R(1,9)*10**R(4,5);const b=rndN(String(a).length-1);return{kind:"num",q:"Calcule : "+fmt(a)+" − "+fmt(b),say:"Calcule "+a+" moins "+b,a:a-b,at:fmt(a-b),x:"Attention aux zéros : on emprunte une retenue au chiffre suivant.",pose:pose(a,b,"−",a-b)}},
+ probDeuxEtapes:()=>{if(Math.random()<.5){const a=R(20,90)*1000,b=R(2,9)*1000+R(1,9)*100,c=R(1,5)*1000+R(1,9)*50;return{kind:"num",q:"Maman a "+fmt(a)+" F CFA. Elle achète du riz à "+fmt(b)+" F CFA et de l'huile à "+fmt(c)+" F CFA. Combien lui reste-t-il ?",a:a-b-c,at:fmt(a-b-c)+" F CFA",x:"Deux étapes : "+fmt(b)+" + "+fmt(c)+" = "+fmt(b+c)+", puis "+fmt(a)+" − "+fmt(b+c)+" = "+fmt(a-b-c)+"."}}
+  const a=R(30,60),b=R(5,20),c=R(3,15);return{kind:"num",q:"Un car part d'Abidjan avec "+a+" passagers. À Yamoussoukro, "+b+" passagers descendent et "+c+" montent. Combien de passagers y a-t-il dans le car ?",a:a-b+c,at:String(a-b+c),x:a+" − "+b+" = "+(a-b)+", puis "+(a-b)+" + "+c+" = "+(a-b+c)+"."}},
+ mult10:()=>{const n=R(12,999);const m=pick([10,100,1000,20,50]);return{kind:"num",q:"Calcule de tête : "+fmt(n)+" × "+fmt(m),say:"Calcule de tête "+n+" fois "+m,a:n*m,at:fmt(n*m),x:m===10||m===100||m===1000?"Multiplier par "+m+", c'est ajouter "+(String(m).length-1)+" zéro"+(m>10?"s":"")+" : "+fmt(n*m)+".":"× "+m+" = × "+(m/10)+" puis × 10 : "+fmt(n*m/10)+" × 10 = "+fmt(n*m)+"."}},
+ probAchat:()=>{const a=R(3,12),p=R(2,8)*50,b=R(2,6),q2=R(1,6)*100;return{kind:"num",q:"Papa achète "+a+" cahiers à "+p+" F CFA l'un et "+b+" stylos à "+q2+" F CFA l'un. Combien paie-t-il en tout ?",a:a*p+b*q2,at:fmt(a*p+b*q2)+" F CFA",x:a+" × "+p+" = "+fmt(a*p)+" ; "+b+" × "+q2+" = "+fmt(b*q2)+" ; total "+fmt(a*p+b*q2)+" F CFA."}},
+ probPartage:()=>{const d=R(3,9),n=R(40,400);const q=Math.floor(n/d),r=n%d;const v=R(0,2);
+  if(v===2){const pl=pick([30,40,50]);const e=R(100,450);const c=Math.ceil(e/pl);return{kind:"num",q:"Pour une sortie, "+e+" élèves prennent des cars de "+pl+" places. Combien de cars faut-il au minimum ?",a:c,at:String(c),x:e+" : "+pl+" = "+Math.floor(e/pl)+" reste "+(e%pl)+(e%pl?". Il faut un car de plus pour les "+(e%pl)+" élèves restants : "+c+" cars.":" : "+c+" cars.")}}
+  return{kind:"num",q:"On partage "+n+" mangues entre "+d+" enfants. "+(v===0?"Combien de mangues chaque enfant reçoit-il ?":"Combien de mangues reste-t-il ?"),a:v===0?q:r,at:String(v===0?q:r),x:n+" : "+d+" → quotient "+q+", reste "+r+" ("+d+" × "+q+" + "+r+" = "+n+")."}},
+ fracQuantite:()=>{const b=pick([2,3,4,5,10]),k=R(2,10),a=R(1,b-1),t=b*k;return{kind:"num",q:"Combien font les "+fr(a,b)+" de "+t+" billes ?",a:a*k,at:String(a*k),x:"Je partage "+t+" en "+b+" parts égales : "+t+" : "+b+" = "+k+". Puis j'en prends "+a+" : "+a+" × "+k+" = "+a*k+"."}},
+ simplifier:()=>{const[a,b]=pick([[1,2],[1,3],[2,3],[3,4],[2,5],[3,5],[4,5],[5,6],[3,7],[5,8],[7,10],[3,10]]);const k=R(2,6);return{kind:"frac",q:"Simplifie le plus possible la fraction "+fr(a*k,b*k)+".",a:[a,b],at:a+"/"+b,x:"Je divise le numérateur et le dénominateur par "+k+" : "+fr(a*k,b*k)+" = "+fr(a,b)+"."}},
+ decEntre:()=>{const i=R(1,30),d=R(1,8);const lo=i+","+d,hi=i+","+(d+1);const good=i+","+d+R(1,9);return mkQ("Quel nombre est compris entre "+lo+" et "+hi+" ?",good,[i+","+(d+1)+R(1,9),i+","+(d-1<0?0:d-1)+R(1,9)].filter(x=>x!==good),"Entre "+lo+" et "+hi+", le chiffre des dixièmes est "+d+" : "+good+" convient.")},
+ fracCompDiff:()=>{const b=R(2,6),k=R(2,4),a=R(1,b*2),c=R(1,b*k*2);return signQ("Compare : "+fr(a,b)+" … "+fr(c,b*k),a*k,c,"Je transforme "+fr(a,b)+" en "+fr(a*k,b*k)+" (× "+k+"), puis je compare les numérateurs : "+a*k+" et "+c+".")},
+ rangerDec:()=>{const i=R(1,9);const v=[...new Set([i+R(1,9)/10,i+R(10,99)/100,i+R(1,9)/10+R(1,9)/100])].map(x=>+x.toFixed(2));while(v.length<3)v.push(+(i+R(1,99)/100).toFixed(2));return orderQ("Range dans l'ordre croissant.",v,fmt,"Même partie entière : je compare les dixièmes, puis les centièmes.")}
+});
+const GEN_FOR={"f-voc-impot":["defs_impot"],"f-voc-radical":["radical"],"f-voc-conflit":["defs_conflit"],"f-voc-prefixe":["prefixe"],"f-voc-homonymes":["homonymes"],"f-voc-orientation":["defs_orient"],"f-voc-protection":["defs_protect"],"f-voc-suffixe":["suffixe"],
+ "f-exp-recit":["connecteurs","tempsRecit"],"f-exp-debut":["indicateurs","connecteurs"],"f-exp-suite":["connecteurs","tempsRecit"],"f-exp-lettre-ami":["formules"],"f-exp-lettre-adulte":["formules"],"f-exp-lieu":["indicateurs"],"f-oral-familier":["formules"],"f-oral-ami":["formules"],
+ "sc-sortie":["tf_sortie"],"sc-composantes":["vivant"],"sc-eau":["tf_eau"],"sc-ecosys":["interactions"],"sc-proteger":["proteger"],"sc-tiges":["tiges"],"sc-reproduction":["reproduction"],"sc-vertebres":[],
+ "hg-histoire":["sources"],"hg-chrono":["chrono"],"hg-kong":["tf_kong"],"hg-geo":["tf_geo"],"hg-ci":["villes"],"ed-droits":["droitDevoir"],"ed-elections":["tf_elections"],"ed-president":["tf_president"]};
+const DEEP={"m-nombres":"rangChiffre","m-romains":"siecle","m-ranger":"rangerTrois","m-addition":"addition3","m-soustraction":"soustractionZeros","m-pb-soustraction":"probDeuxEtapes","m-multiplication":"mult10","m-pb-multiplication":"probAchat","m-division":"probPartage","m-fractions":"fracQuantite","m-frac-equiv":"simplifier","m-frac-dec":"fractionsDecimales","m-decimaux":"decEntre","m-frac-comparer":"fracCompDiff","m-dec-comparer":"rangerDec","hg-chrono":"chrono","hg-ci":"villes","f-voc-prefixe":"prefixe"};
+HOMO.mais.it.push(["Elle ___ son pagne pour la fête.","met","Verbe mettre avec « elle » : elle met."],["Ce plat est un ___ délicieux.","mets","Un mets, c'est un plat."],["J'ai lavé ___ mains.","mes","Pluriel de « ma main » : mes mains."]);
+HOMO.ces.it.push(["Koffi ___ blessé en jouant.","s'est","On peut dire « il s'est blessé »."],["___ crayons sont à moi.","ces","Pluriel de « ce crayon » : ces crayons."],["Awa cherche ___ chaussures.","ses","Pluriel de « sa chaussure » : ses chaussures."],["___ l'heure de la récréation.","c'est","On peut dire « cela est l'heure »."]);
+HOMO.la.it.push(["Où est ta trousse ? Je ___ vois sur la table.","la","Devant un verbe : on peut dire « je les vois »."],["Range ton cahier ___ où tu l'as trouvé.","là","On peut dire « ici »."],["Son vélo, il ___ réparé hier.","l'a","On peut dire « il l'avait réparé »."]);
+HOMO.cetait.it.push(["La fillette ___ endormie sous l'arbre.","s'était","On peut dire « elle s'était endormie »."],["___ des jours de fête.","c'étaient","« Cela était » + un pluriel : c'étaient."]);
+PHR.push(["Viens manger !",2],["Est-ce que tu viens avec nous ?",1],["Que cette mangue est sucrée !",3],["Les élèves rangent leurs cahiers.",0]);
+SIMPLE.push(["Le coq chante le matin.",1],["Maman cuisine pendant que papa lit.",0],["Nous allons au marché.",1],["Il prend son sac, salue sa mère et part.",0]);
+
+/* ---- le Professeur, confettis, sons ---- */
+function prof(mood){const serious=mood==="ko";return '<svg viewBox="0 0 100 100" width="58" height="58" role="img" aria-label="Le Professeur"><rect width="100" height="100" fill="#e8eefc"/>'+
+ '<path d="M14 100c3-19 15-28 36-28s33 9 36 28z" fill="#3b4a6b"/><path d="M38 72l12 14 12-14 3 28H35z" fill="#fff"/><path d="M47 76l3 3 3-3 3 24h-12z" fill="#c92a42"/>'+
+ '<rect x="43" y="58" width="14" height="15" rx="5" fill="#7a4a2e"/><ellipse cx="50" cy="42" rx="20" ry="23" fill="#8a5a3c"/>'+
+ '<ellipse cx="30" cy="44" rx="3.5" ry="5" fill="#7a4a2e"/><ellipse cx="70" cy="44" rx="3.5" ry="5" fill="#7a4a2e"/>'+
+ '<path d="M30 37c0-15 9-21 20-21s20 6 20 21c-3-7-9-9-20-9s-17 2-20 9z" fill="#1d1d1d"/>'+
+ '<path d="M36 33q6-3 11 0M53 33q6-3 11 0" stroke="#1d1d1d" stroke-width="2.4" fill="none" stroke-linecap="round"/>'+
+ '<circle cx="42" cy="42" r="6.5" fill="rgba(255,255,255,.35)" stroke="#1d1d1d" stroke-width="2"/><circle cx="58" cy="42" r="6.5" fill="rgba(255,255,255,.35)" stroke="#1d1d1d" stroke-width="2"/><path d="M48.5 42h3" stroke="#1d1d1d" stroke-width="2"/>'+
+ '<circle cx="42" cy="42" r="2.2" fill="#1d1d1d"/><circle cx="58" cy="42" r="2.2" fill="#1d1d1d"/>'+
+ (serious?'<path d="M43 56h14" stroke="#3a1f12" stroke-width="2.6" stroke-linecap="round"/>':'<path d="M41 53q9 8 18 0" stroke="#3a1f12" stroke-width="2.6" fill="none" stroke-linecap="round"/>')+'</svg>'}
+const reduced=()=>{try{return matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){return false}};
+function confetti(n,x,y){if(reduced())return;const box=document.createElement("div");box.className="confetti";const cols=["#ffb400","#2343c4","#c92a42","#11784a","#ff7aa2","#6a34a8","#00b3d6","#ff7a1a"];
+ for(let i=0;i<n;i++){const e=document.createElement("i");const a=-Math.PI/2+(Math.random()-.5)*Math.PI*1.4;const v=120+Math.random()*220;e.style.left=x+"px";e.style.top=y+"px";e.style.background=cols[i%cols.length];
+  if(i%3===0)e.style.borderRadius="50%";e.style.setProperty("--x",(Math.cos(a)*v)+"px");e.style.setProperty("--y",(Math.sin(a)*v+260+Math.random()*160)+"px");e.style.setProperty("--r",(Math.random()*720-360)+"deg");e.style.setProperty("--d",(1.1+Math.random()*.9)+"s");box.appendChild(e)}
+ document.body.appendChild(box);setTimeout(()=>box.remove(),2300)}
+let AC=null;
+function tone(seq){if(ST.sound===false)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();const t0=AC.currentTime+.02;
+ for(const[f,st,du,type,vol]of seq){const o=AC.createOscillator(),g=AC.createGain();o.type=type||"triangle";o.frequency.setValueAtTime(f,t0+st);g.gain.setValueAtTime(0,t0+st);g.gain.linearRampToValueAtTime(vol||.16,t0+st+.02);g.gain.exponentialRampToValueAtTime(.001,t0+st+du);o.connect(g);g.connect(AC.destination);o.start(t0+st);o.stop(t0+st+du+.05)}}catch(e){}}
+const SND={ok:()=>tone([[660,0,.14],[880,.1,.28]]),streak:()=>tone([[660,0,.12],[880,.09,.12],[1175,.18,.3]]),ko:()=>tone([[330,0,.22,"sine",.13],[262,.16,.32,"sine",.11]]),end:()=>tone([[523,0,.16],[659,.13,.16],[784,.26,.16],[1047,.39,.5]]),lvl:()=>tone([[784,0,.12],[988,.1,.12],[1175,.2,.12],[1568,.3,.6]])};
+function sparkles(){return [[6,18,14,"#ffb400",0],[86,10,10,"#ff7aa2",.6],[90,52,12,"#00b3d6",1.2],[2,62,9,"#11784a",1.8]].map(([l,t,s,c,dl])=>'<svg class="spark" style="left:'+l+'%;top:'+t+'%;animation-delay:'+dl+'s" width="'+s*2+'" height="'+s*2+'" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1l2.6 8.4L23 12l-8.4 2.6L12 23l-2.6-8.4L1 12l8.4-2.6z" fill="'+c+'"/></svg>').join("")}
+
 /* ============ ÉTAT ============ */
 const CAP={db:null,tts:null,dict:null,sample:null,img:false,dl:0,dictNote:"",eng:0};
 const DLANGS=["fr-FR","fr"];
 const KBTIP="Pour répondre à voix haute, touche la case puis le micro de ton clavier (réglé en français).";
-let ST={name:"",stars:0,streak:0,lastDay:"",day:{d:"",stars:0},les:{},voice:true,rate:1,updated:0};
+let ST={name:"",stars:0,streak:0,lastDay:"",day:{d:"",stars:0},les:{},voice:true,sound:true,rate:1,updated:0};
 let EXTRA=[];let LESSONS=BASE.slice();
 let VIEW={v:"home"};let Q=null;let MIC_ON=false;let micTarget=null,micBase="";let gateAns=0;let PENDING=null;
 const LS="revisions-cm1-v1";
@@ -623,7 +778,7 @@ function kalou(w,mood){const happy=mood!=="think";return '<svg viewBox="0 0 230 
  '<path d="M131 52Q164 38 190 58Q168 55 142 64z" fill="#e8552a"/>'+
  '<path d="M135 63Q180 58 204 96Q176 82 137 84z" fill="#ffb400"/>'+
  '<path d="M137 84Q172 86 196 99Q164 97 139 91z" fill="#e69200"/>'+
- '<circle cx="122" cy="68" r="10" fill="#fff"/><circle cx="124" cy="'+(happy?68:70)+'" r="5.5" fill="#111"/><circle cx="126" cy="66" r="1.9" fill="#fff"/>'+
+ '<g class="k-eye"><circle cx="122" cy="68" r="10" fill="#fff"/><circle cx="124" cy="'+(happy?68:70)+'" r="5.5" fill="#111"/><circle cx="126" cy="66" r="1.9" fill="#fff"/></g>'+
  '<path d="M113 57q9-6 19 0" stroke="#111" stroke-width="2.4" fill="none" stroke-linecap="round"/>'+
  (happy?'<circle cx="108" cy="84" r="5" fill="#ff8fa3" opacity=".6"/>':'')+
  '<path d="M96 166v12M114 166v12" stroke="#ffb400" stroke-width="5" stroke-linecap="round"/></svg>'}
@@ -640,12 +795,12 @@ function render(){const a=$("#app");const v=VIEW.v;
 function homeV(){const lv=level();const nm=esc(ST.name||"championne");const td=ST.day.d===today()?ST.day.stars:0;
  const weak=LESSONS.map(l=>[l,mastery(l.id),ST.les[l.id]]).filter(x=>x[1]!=null&&x[1]<.6&&x[2].n>=3).sort((a,b)=>a[1]-b[1])[0];
  const msg=td?"Tu as déjà gagné "+td+" étoile"+(td>1?"s":"")+" aujourd'hui. Bravo, continue !":ST.streak>1&&ST.lastDay!==today()?"Tu as révisé "+ST.streak+" jours de suite. On continue aujourd'hui ?":"Prête pour réviser ? Je te pose des questions sur tes leçons !";
- return (standalone()||installedKnown?'':'<button class="btn g big" style="margin-bottom:14px" data-a="install">Installer l\'application</button>')+(ST.name?'':'<div class="card stack" style="margin-bottom:14px"><b>Comment t\'appelles-tu ?</b><div class="inrow"><input id="fname" class="inp" maxlength="30" autocomplete="off"><button class="btn" data-a="setname">OK</button></div></div>')+'<section class="hero"><div><h1 class="cur">Bonjour '+nm+' !</h1><div class="bubble">'+esc(msg)+'</div></div><div class="kal">'+kalou("100%")+'</div></section>'+
+ return (standalone()||installedKnown?'':'<button class="btn g big" style="margin-bottom:14px" data-a="install">Installer l\'application</button>')+(ST.name?'':'<div class="card stack" style="margin-bottom:14px"><b>Comment t\'appelles-tu ?</b><div class="inrow"><input id="fname" class="inp" maxlength="30" autocomplete="off"><button class="btn" data-a="setname">OK</button></div></div>')+'<section class="hero"><div><h1 class="cur">Bonjour '+nm+' !</h1><div class="bubble">'+esc(msg)+'</div></div><div class="kal">'+sparkles()+kalou("100%")+'</div></section>'+
  '<div class="stats" style="margin-top:14px"><div class="card stat">'+IC.star(26)+'<b>'+ST.stars+'</b><span>étoiles</span></div><div class="card stat">'+IC.fire+'<b>'+ST.streak+'</b><span>jour'+(ST.streak>1?"s":"")+' de suite</span></div><div class="card stat">'+IC.leaf+'<b style="font-size:17px;line-height:1.3">'+esc(lv.name)+'</b><span>'+(lv.next?"encore "+lv.need+" étoiles":"niveau max")+'</span></div></div>'+
  '<div class="stack" style="margin-top:16px"><button class="btn big" data-a="mix">Interroge-moi ! (10 questions)</button><button class="btn big g" data-a="recent">Mes leçons de la semaine</button>'+
- (weak?'<div class="card"><b>Kalou te conseille de revoir :</b><div class="row" style="margin-top:8px"><span style="flex:1">'+esc(weak[0].t)+'</span><button class="btn sm" data-a="lesson" data-p="'+esc(weak[0].id)+'">Revoir</button></div></div>':'')+
+ (weak?'<div class="card"><b>Le Professeur te conseille de revoir :</b><div class="row" style="margin-top:8px"><span style="flex:1">'+esc(weak[0].t)+'</span><button class="btn sm" data-a="lesson" data-p="'+esc(weak[0].id)+'">Revoir</button></div></div>':'')+
  '</div><h2 class="cur" style="margin:26px 0 10px">Mes matières</h2><div class="subjs">'+
- SORDER.map(s=>{const m=subjMastery(s);return'<button class="card subj" data-a="subj" data-p="'+s+'">'+SIC[s]+'<b>'+SUBJ[s].n+'</b><span class="small muted">'+m.n+" leçons · "+m.done+" travaillées</span><div class=\"bar\" style=\"--c:"+SUBJ[s].c+'"><i style="width:'+Math.round(m.avg*100)+'%"></i></div></button>'}).join("")+
+ SORDER.map((s,i)=>{const m=subjMastery(s);return'<button class="card subj" style="--c:'+SUBJ[s].c+';--i:'+i+'" data-a="subj" data-p="'+s+'">'+SIC[s]+'<b>'+SUBJ[s].n+'</b><span class="small muted">'+m.n+" leçons · "+m.done+" travaillées</span><div class=\"bar\" style=\"--c:"+SUBJ[s].c+'"><i style="width:'+Math.round(m.avg*100)+'%"></i></div></button>'}).join("")+
  '</div>'+''+'<p style="margin-top:28px;text-align:center"><button class="link" data-a="gate">Espace parent</button></p>'}
 
 function subjV(s){const S=SUBJ[s];const ls=LESSONS.filter(l=>l.s===s).sort((a,b)=>(b.d||"").localeCompare(a.d||""));const doms=[...new Set(ls.map(l=>l.dom))];
@@ -657,9 +812,9 @@ function lessonV(id){const l=byId(id);if(!l)return homeV();const S=SUBJ[l.s]||SU
  return '<div class="top"><button class="btn gh sm" data-a="subj" data-p="'+l.s+'">'+IC.back+" "+esc(S.n)+'</button><span class="sp"></span>'+chip(id)+'</div>'+
  '<span class="tag" style="--c:'+S.c+'">'+esc(l.dom)+" · "+fmtDate(l.d)+'</span><h1 class="cur" style="margin:8px 0 12px">'+esc(l.t)+'</h1>'+
  '<div class="card rule">'+ruleHtml(l.r)+(canSpeak()?'<button class="btn gh sm" data-a="readrule" data-p="'+esc(id)+'">'+IC.spk+" Écouter la leçon</button>":"")+'</div>'+
- '<div class="stack" style="margin-top:16px"><button class="btn big" data-a="practice" data-p="'+esc(id)+'">Je m\'entraîne</button>'+
+ '<div class="stack" style="margin-top:16px"><button class="btn big" data-a="practice" data-p="'+esc(id)+'">Je m\'entraîne (10 questions)</button>'+(gensFor(l,true).length?'<button class="btn big deep" data-a="deep" data-p="'+esc(id)+'">'+IC.star(24)+' Pour aller plus loin</button>':"")+
  (l.defi?'<button class="btn big g" data-a="defi" data-p="'+esc(id)+'">Défi d\'écriture</button>':"")+
- (CAP.sample?'<button class="btn big gh" data-a="invent" data-p="'+esc(id)+'">Kalou invente de nouvelles questions</button>':"")+'</div>'}
+ (CAP.sample?'<button class="btn big gh" data-a="invent" data-p="'+esc(id)+'">Le Professeur invente de nouvelles questions</button>':"")+'</div>'}
 
 /* ---- construction des quiz ---- */
 function normQ(raw){if(Array.isArray(raw)){const[q,b,c,d]=raw;if(Array.isArray(b))return{t:"qcm",q,o:b,x:c};if(typeof b==="number")return{t:"num",q,a:b};return{t:"open",q,a:b,k:c||[],n:d||1}}
@@ -667,14 +822,18 @@ function normQ(raw){if(Array.isArray(raw)){const[q,b,c,d]=raw;if(Array.isArray(b
 function coursItem(c,l){if(c.t==="qcm")return mkQ(c.q,c.o[0],c.o.slice(1),c.x||"");
  if(c.t==="num")return{kind:"num",q:c.q,a:c.a,at:fmt(c.a),x:c.x||""};return{kind:"open",q:c.q,at:c.a,k:c.k,need:c.n||1,x:c.x||"",rule:l.r}}
 function tagItem(it,l){it.lid=l.id;it.lt=l.t;it.s=l.s;return it}
-function itemsFor(l,n){const out=[];const L=levelFor(l.id);const cq=shuffle((l.q||[]).map(normQ));const g=l.g&&GEN[l.g];let ci=0;
- for(let k=0;k<n;k++){let it=null;const wantCours=!g||(k%3===1&&ci<cq.length);if(wantCours&&ci<cq.length)it=coursItem(cq[ci++],l);else if(g){try{it=GEN[l.g](L)}catch(e){it=null}}if(!it&&ci<cq.length)it=coursItem(cq[ci++],l);if(!it)break;out.push(tagItem(it,l))}
+function gensFor(l,deep){const g=[];if(l.g&&GEN[l.g])g.push(l.g);for(const x of(GEN_FOR[l.id]||[]))if(GEN[x]&&!g.includes(x))g.push(x);if(deep&&DEEP[l.id]&&GEN[DEEP[l.id]])g.push(DEEP[l.id],DEEP[l.id]);return g}
+function itemsFor(l,n,deep){const out=[];const L=deep?4:levelFor(l.id);const cq=shuffle((l.q||[]).map(normQ));const gs=gensFor(l,deep);let ci=0;const seen=new Set();
+ for(let k=0;k<n;k++){let it=null;const wantCours=!gs.length||(!deep&&k%3===1)||(deep&&k%5===4);
+  if(wantCours&&ci<cq.length)it=coursItem(cq[ci++],l);
+  else if(gs.length){for(let t=0;t<10&&!it;t++){try{const c=GEN[pick(gs)](L);if(c&&c.q&&(!seen.has(c.q+"|"+c.at)||t>=8))it=c}catch(e){}}}
+  if(!it&&ci<cq.length)it=coursItem(cq[ci++],l);if(!it)break;seen.add(it.q+"|"+it.at);out.push(tagItem(it,l))}
  return out}
 function defiItem(l){return tagItem({kind:"defi",q:l.defi,at:"",x:"",rule:l.r},l)}
 function weighted(pool,n){const latest=Math.max(...pool.map(l=>dayNum(l.d||today())));const td=today();
  let arr=pool.map(l=>{const m=mastery(l.id);const st=ST.les[l.id];let w=1+(1-(m??.4))*2;if(!st)w+=1;if(latest-dayNum(l.d||td)<=14)w+=1.5;if(st&&st.last===td)w*=.4;return[l,w]});const res=[];
  while(res.length<n&&arr.length){const tot=arr.reduce((a,b)=>a+b[1],0);let r=Math.random()*tot;let i=0;while(i<arr.length-1&&(r-=arr[i][1])>0)i++;res.push(arr[i][0]);arr.splice(i,1)}return res}
-function startQuiz(items,title,back){if(!items.length){toast("Pas encore de questions pour cette leçon.");return}Q={items,i:0,res:[],stars:0,run:0,title,back,wrong:[],answered:false,retry:false};go({v:"quiz"})}
+function startQuiz(items,title,back,deep){if(!items.length){toast("Pas encore de questions pour cette leçon.");return}Q={items,i:0,res:[],stars:0,run:0,title,back,wrong:[],answered:false,retry:false,deep:!!deep};go({v:"quiz"})}
 function mixQuiz(pool,title,back){const ls=weighted(pool,Math.min(5,pool.length));let items=[];for(const l of ls)items=items.concat(itemsFor(l,2));let k=0;while(items.length<10&&k++<10){const l=pick(pool);items=items.concat(itemsFor(l,1))}startQuiz(shuffle(items).slice(0,10),title,back)}
 
 /* ---- écran question ---- */
@@ -686,7 +845,7 @@ function quizV(){const it=Q.items[Q.i];const S=SUBJ[it.s]||SUBJ.gram;
   ans='<div class="inrow">'+(ta?'<textarea id="ain" lang="fr" class="inp" placeholder="'+(it.kind==="defi"?"Écris ton texte ici…":"Ta réponse…")+'"></textarea>':'<input id="ain" lang="fr" class="inp" '+im+' autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ta réponse…">')+
   (CAP.dict?'<button class="mic" data-a="mic" aria-label="Répondre à voix haute">'+IC.mic+"</button>":"")+'</div><div class="heard" id="heard">'+(CAP.dict?"":esc(KBTIP))+'</div><div class="row" style="margin-top:12px"><button class="btn g" data-a="validate" id="vbtn">Valider</button><button class="link" data-a="dunno">Je ne sais pas</button></div>'}
  return '<div class="qtop"><button class="btn gh sm" data-a="quit">Quitter</button><div class="dots">'+dots+'</div><span class="pill">'+IC.star(20)+" "+Q.stars+'</span></div>'+
- '<div class="card"><div class="row"><span class="tag" style="--c:'+S.c+';flex:1 1 auto">'+esc(it.lt)+'</span>'+(canSpeak()?'<button class="ib" data-a="say" aria-label="Écouter la question">'+IC.spk+"</button>":"")+'</div>'+
+ '<div class="card qcard"><div class="row"><span class="tag" style="--c:'+S.c+';flex:1 1 auto">'+(Q.deep?"Pour aller plus loin · ":"")+esc(it.lt)+'</span>'+(canSpeak()?'<button class="ib" data-a="say" aria-label="Écouter la question">'+IC.spk+"</button>":"")+'</div>'+
  '<div class="qtext">'+rt(it.q)+'</div>'+(it.vis||"")+'<div id="ans">'+ans+'</div><div id="fb"></div></div>'}
 function afterQuiz(){const it=Q.items[Q.i];Q.answered=false;const inp=$("#ain");if(inp&&inp.type!=="hidden"){inp.addEventListener("keydown",e=>{if(e.key==="Enter"&&inp.tagName==="INPUT"){e.preventDefault();validate()}});setTimeout(()=>inp.focus({preventScroll:true}),60)}sayItem(it)}
 
@@ -694,7 +853,7 @@ function afterQuiz(){const it=Q.items[Q.i];Q.answered=false;const inp=$("#ain");
 async function ai(prompt,opts){const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),(opts&&opts.ms)||25000);
  try{const r=await CAP.sample(prompt,Object.assign({modelTier:"quick",signal:ctl.signal},opts||{},{ms:undefined}));clearTimeout(tm);return parseJSON(r&&r.text)}catch(e){clearTimeout(tm);if(e&&e.code==="not_granted")CAP.sample=null;return null}}
 function parseJSON(t){if(!t)return null;const a=t.indexOf("{"),b=t.lastIndexOf("}");if(a<0||b<a)return null;try{return JSON.parse(t.slice(a,b+1))}catch(e){return null}}
-const ROLE="Tu es Kalou, un maître d'école bienveillant et pédagogue d'une classe de CM1 en Côte d'Ivoire (programme ivoirien). Tu t'adresses à une élève de 9 ou 10 ans : tu la tutoies, avec des phrases courtes et simples, en français correct.";
+const ROLE="Tu es le Professeur, un maître d'école bienveillant et pédagogue d'une classe de CM1 en Côte d'Ivoire (programme ivoirien). Tu t'adresses à une élève de 9 ou 10 ans : tu la tutoies, avec des phrases courtes et simples, en français correct.";
 function kwCheck(it,ans){const h=" "+normHard(ans)+" ";let hits=0;for(const k of it.k||[])if(String(k).split("|").some(a=>{const n=normHard(a);return n&&h.includes(n)}))hits++;return hits>=(it.need||1)}
 function sound(s){return String(s||"").toLowerCase().replace(/[’`]/g,"'").split(/[\s']+/).filter(Boolean).map(w=>{w=w.replace(/[.!?,;:]/g,"");if(!/ment$/.test(w)&&w.length>4)w=w.replace(/ent$/,"");w=w.replace(/(aient|ais|ait|ai|ez|er|ées|és|ée|é)$/,"É");w=w.replace(/[estxd]+$/,"");return w.normalize("NFD").replace(/[\u0300-\u036f]/g,"")}).join(" ")}
 async function check(it,ans,mic){const raw=String(ans||"").trim();
@@ -721,28 +880,29 @@ function lessonBit(it){const l=byId(it.lid);if(!l||!l.r)return"";const lines=l.r
 async function answer(val,dunno,mic){if(Q.answered)return;Q.answered=true;stopMic();stopSpeak();const it=Q.items[Q.i];
  document.querySelectorAll("#ans button,#ans input,#ans textarea").forEach(e=>e.disabled=true);
  const fb=$("#fb");let res;
- if(dunno)res={ok:false};else if(it.kind==="open"||it.kind==="defi"){fb.innerHTML='<div class="fb"><span class="spin"></span> Kalou lit ta réponse…</div>';res=await check(it,val,mic)}else res=await check(it,val,mic);
+ if(dunno)res={ok:false};else if(it.kind==="open"||it.kind==="defi"){fb.innerHTML='<div class="fb"><span class="spin"></span> Le Professeur lit ta réponse…</div>';res=await check(it,val,mic)}else res=await check(it,val,mic);
  if(it.kind==="qcm"){const bs=document.querySelectorAll(".opt");bs[it.a]&&bs[it.a].classList.add("good");if(!res.ok&&!dunno&&bs[+val])bs[+val].classList.add("bad")}
  Q.res[Q.i]=res.ok;const st=ST.les[it.lid]||(ST.les[it.lid]={n:0,ok:0,h:"",last:""});
  if(!Q.retry){st.n++;if(res.ok)st.ok++;st.h=(st.h+(res.ok?"1":"0")).slice(-20)}st.last=today();
- let gained=0;if(res.ok){Q.run++;gained=Q.retry?1:(Q.run>=3?2:1);Q.stars+=gained}else{Q.run=0;if(!Q.retry)Q.wrong.push(it)}
+ let gained=0;if(res.ok){Q.run++;gained=Q.retry?1:(Q.run>=3?2:1)+(Q.deep?1:0);Q.stars+=gained}else{Q.run=0;if(!Q.retry)Q.wrong.push(it)}
  persistLocal();
  const head=res.ok?praise()+(Q.run>=3&&!Q.retry?" "+Q.run+" de suite !":""):dunno?"Voici la bonne réponse.":"Faux.";const bit=!res.ok&&it.kind!=="defi"?lessonBit(it):"";const why=!res.ok&&it.x&&it.x!==bit?it.x:"";
  const showAns=it.kind!=="defi"&&it.at&&!(res.ok&&it.kind!=="open");
  const exp=(res.msg?"<p>"+esc(res.msg)+"</p>":"")+(res.note?"<p>"+esc(res.note)+"</p>":"")+(showAns?"<p><b>"+(it.kind==="open"?"Réponse modèle":"La bonne réponse")+" :</b> "+rt(it.at)+"</p>":"")+(why?"<p><b>Pourquoi ?</b> "+rt(why)+"</p>":"")+(res.ok&&it.x&&it.kind==="qcm"&&Math.random()<.4?"<p>"+rt(it.x)+"</p>":"")+(!res.ok&&it.pose?it.pose:"")+(bit?'<div class="recall"><b>Rappelle-toi la leçon :</b> '+rt(bit)+"</div>":"")+(it.kind==="defi"&&!CAP.sample?"<p class=\"small\">Vérifie avec la règle : "+rt(it.rule.split("\n")[0])+"</p>":"");
- fb.innerHTML='<div class="fb '+(res.ok?"ok":"ko")+'"><div class="h">'+(res.ok?IC.ok:IC.ko)+"<span>"+esc(head)+"</span>"+(gained?'<span class="pill burst" style="margin-left:auto">+'+gained+" "+IC.star(18)+"</span>":"")+"</div>"+exp+'<div class="row" style="margin-top:12px"><button class="btn" data-a="next" id="nbtn">'+(Q.i+1<Q.items.length?"Question suivante":"Voir mon score")+"</button></div></div>";
+ fb.innerHTML='<div class="fb '+(res.ok?"ok":"ko")+'"><div class="h"><div class="prof '+(res.ok?"hop":"nod")+'">'+prof(res.ok?"ok":"ko")+'</div><span style="flex:1"><span class="who">Le Professeur</span>'+(res.ok?IC.ok:IC.ko).replace('width="30" height="30"','width="22" height="22" style="display:inline-block;vertical-align:-4px;margin-right:6px"')+esc(head)+"</span>"+(gained?'<span class="pill burst" style="margin-left:auto">+'+gained+" "+IC.star(18)+"</span>":"")+"</div>"+exp+'<div class="row" style="margin-top:12px"><button class="btn" data-a="next" id="nbtn">'+(Q.i+1<Q.items.length?"Question suivante":"Voir mon score")+"</button></div></div>";
  const p=document.querySelector(".pill");if(p)p.innerHTML=IC.star(20)+" "+Q.stars;
  const dots=document.querySelectorAll(".dots i");if(dots[Q.i])dots[Q.i].className=res.ok?"g":"r";
+ if(res.ok){(Q.run>=3?SND.streak:SND.ok)();try{const r=fb.getBoundingClientRect();confetti(Q.run>=3?44:24,r.left+40,r.top+30)}catch(e){}}else SND.ko();
  speak(res.ok?head+(res.msg?" "+res.msg:""):head+(res.msg?" "+res.msg:"")+(showAns?" La bonne réponse est : "+(it.at||"")+".":"")+(why?" Pourquoi ? "+why:bit?" Rappelle-toi la leçon : "+bit:""));
  const nb=$("#nbtn");try{nb.scrollIntoView({behavior:"smooth",block:"nearest"});nb.focus({preventScroll:true})}catch(e){}}
 function validate(){const inp=$("#ain");if(!inp)return;const v=inp.value;if(!v.trim()){toast("Écris ou dis ta réponse, ou touche « Je ne sais pas ».");return}answer(v,false,inp.dataset.mic==="1")}
-function finishQuiz(){const n=Q.items.length,ok=Q.res.filter(Boolean).length;let bonus=0;if(!Q.retry&&n>=6&&ok===n)bonus=3;Q.bonus=bonus;
+function finishQuiz(){const lv0=level().name;const n=Q.items.length,ok=Q.res.filter(Boolean).length;let bonus=0;if(!Q.retry&&n>=6&&ok===n)bonus=3;Q.bonus=bonus;
  ST.stars+=Q.stars+bonus;const td=today();if(ST.day.d!==td)ST.day={d:td,stars:0};ST.day.stars+=Q.stars+bonus;
  if(ST.lastDay!==td){ST.streak=ST.lastDay&&dayNum(td)-dayNum(ST.lastDay)===1?ST.streak+1:1;ST.lastDay=td}
- save();go({v:"end"})}
+ const lv1=level().name;Q.lvlup=lv1!==lv0?lv1:"";save();go({v:"end"})}
 function endV(){const n=Q.items.length,ok=Q.res.filter(Boolean).length,p=ok/n;const msg=p>=.9?"Magnifique ! Tu maîtrises très bien.":p>=.7?"Très bien ! Encore un petit effort.":p>=.5?"C'est bien, continue à t'entraîner.":"On va revoir ça ensemble, tu vas y arriver !";
- setTimeout(()=>speak(ok+" sur "+n+". "+msg),200);
- return '<div class="card endsc stack"><div style="max-width:220px;margin:0 auto">'+kalou("100%")+'</div><div class="score burst">'+ok+" / "+n+'</div><p style="font-size:20px;margin:0">'+esc(msg)+'</p><p class="row" style="justify-content:center;margin:0"><span class="pill">+'+(Q.stars+(Q.bonus||0))+" "+IC.star(20)+"</span>"+(Q.bonus?'<span class="pill">Sans faute : +3 bonus</span>':"")+'</p>'+
+ setTimeout(()=>{if(Q.lvlup){SND.lvl()}else if(p>=.5)SND.end();if(p>=.7){confetti(70,innerWidth/2,innerHeight*.35);setTimeout(()=>confetti(50,innerWidth*.25,innerHeight*.3),350)}speak(ok+" sur "+n+". "+msg+(Q.lvlup?" Bravo, tu passes au niveau "+Q.lvlup+" !":""))},250);
+ return '<div class="card endsc stack"><div class="kal" style="max-width:220px;margin:0 auto">'+sparkles()+kalou("100%")+'</div><div class="score burst">'+ok+" / "+n+'</div>'+(Q.lvlup?'<div class="lvl burst">'+IC.leaf+" Nouveau niveau : "+esc(Q.lvlup)+" !</div>":"")+'<p style="font-size:20px;margin:0">'+esc(msg)+'</p><p class="row" style="justify-content:center;margin:0"><span class="pill">+'+(Q.stars+(Q.bonus||0))+" "+IC.star(20)+"</span>"+(Q.bonus?'<span class="pill">Sans faute : +3 bonus</span>':"")+'</p>'+
  (Q.wrong.length&&!Q.retry?'<button class="btn big" data-a="retry">Corriger mes '+Q.wrong.length+" erreur"+(Q.wrong.length>1?"s":"")+"</button>":"")+
  '<button class="btn big g" data-a="again">Encore un quiz</button><button class="btn big gh" data-a="'+(Q.back&&Q.back.v==="lesson"?"lesson":Q.back&&Q.back.v==="subj"?"subj":"home")+'" data-p="'+esc(Q.back&&(Q.back.id||Q.back.s)||"")+'">Retour</button></div>'}
 
@@ -771,7 +931,7 @@ function parentV(){const td=today();const rows=LESSONS.map(l=>[l,mastery(l.id),S
  const voiceNote=(CAP.tts?"Voix : active.":"speechSynthesis" in window?"Voix : voix de l'appareil.":"Voix : indisponible sur cet appareil.")+" "+(CAP.dict?"Micro : actif (en français).":CAP.dictNote?CAP.dictNote:"Micro : indisponible ici. Il fonctionne quand la page est ouverte dans Chrome (Android ou ordinateur) ; sinon l'élève écrit ses réponses.");
  return '<div class="top"><button class="btn gh sm" data-a="home">'+IC.back+' Accueil</button></div><h1 class="cur">Espace parent</h1>'+
  '<div class="card stack" style="margin-top:14px"><h3><b>Réglages</b></h3><label>Prénom de l\'élève<input id="pname" class="inp" value="'+esc(ST.name)+'" maxlength="30" style="margin-top:6px"></label>'+
- '<label class="sw"><input type="checkbox" id="pvoice" '+(ST.voice?"checked":"")+'> Lire les questions à voix haute</label>'+
+ '<label class="sw"><input type="checkbox" id="pvoice" '+(ST.voice?"checked":"")+'> Lire les questions à voix haute</label>'+'<label class="sw"><input type="checkbox" id="psound" '+(ST.sound!==false?"checked":"")+'> Petits sons de jeu (bonne réponse, erreur, fin)</label>'+
  '<div class="row"><span>Vitesse de la voix</span><div class="seg">'+[[.85,"Lente"],[1,"Normale"],[1.15,"Rapide"]].map(([r,n])=>'<button data-a="rate" data-p="'+r+'" class="'+(ST.rate===r?"on":"")+'">'+n+"</button>").join("")+'</div><button class="btn gh sm" data-a="testvoice">Tester</button></div>'+
  '<button class="btn sm" data-a="savename">Enregistrer</button><p class="note">'+esc(voiceNote)+(CAP.db?"":" Les progrès sont enregistrés sur ce téléphone.")+'</p></div>'+
  '<div class="card stack" style="margin-top:16px"><h3><b>Progrès</b></h3><p>'+ST.stars+" étoiles · "+tot+" réponses · "+rows.length+" leçons travaillées · "+never+' jamais travaillées</p>'+
@@ -805,29 +965,30 @@ const ACT={
  mix:()=>mixQuiz(LESSONS,"Interroge-moi",{v:"home"}),
  mixs:p=>mixQuiz(LESSONS.filter(l=>l.s===p),SUBJ[p].n,{v:"subj",s:p}),
  recent:()=>{const lat=Math.max(...LESSONS.map(l=>dayNum(l.d)));const pool=LESSONS.filter(l=>lat-dayNum(l.d)<=7);mixQuiz(pool.length?pool:LESSONS,"Leçons de la semaine",{v:"home"})},
- practice:p=>{const l=byId(p);if(!l)return;const it=itemsFor(l,8);if(l.defi)it.push(defiItem(l));startQuiz(it,l.t,{v:"lesson",id:p})},
+ practice:p=>{const l=byId(p);if(!l)return;const it=itemsFor(l,10);if(l.defi)it.push(defiItem(l));startQuiz(it,l.t,{v:"lesson",id:p})},
+ deep:p=>{const l=byId(p);if(!l)return;startQuiz(itemsFor(l,10,true),l.t,{v:"lesson",id:p},true)},
  defi:p=>{const l=byId(p);l&&startQuiz([defiItem(l)],l.t,{v:"lesson",id:p})},
- invent:async(p,b)=>{const l=byId(p);if(!l||!CAP.sample)return;b.disabled=true;b.innerHTML='<span class="spin"></span> Kalou invente…';
+ invent:async(p,b)=>{const l=byId(p);if(!l||!CAP.sample)return;b.disabled=true;b.innerHTML='<span class="spin"></span> Le Professeur prépare des questions…';
   const r=await ai(ROLE+"\n\nLeçon : "+l.t+" ("+SUBJ[l.s].n+", "+l.dom+")\nContenu de la leçon :\n"+l.r+"\n\nInvente 6 nouvelles questions variées pour vérifier qu'elle a compris ET qu'elle sait appliquer cette leçon (surtout des exercices d'application). Questions courtes, niveau CM1, exemples tirés de la vie en Côte d'Ivoire quand c'est possible. Pour l'orthographe, uniquement des qcm. Réponds UNIQUEMENT en JSON :\n{\"q\":[{\"type\":\"qcm\",\"q\":\"…\",\"o\":[\"bonne réponse\",\"fausse 1\",\"fausse 2\"],\"x\":\"courte explication\"},{\"type\":\"num\",\"q\":\"…\",\"a\":123,\"x\":\"…\"},{\"type\":\"open\",\"q\":\"…\",\"a\":\"réponse modèle\",\"k\":[\"mot clé\",\"autre|synonyme\"],\"x\":\"…\"}]}\nDans un qcm, la bonne réponse est toujours la première. Les nombres décimaux JSON utilisent un point.",{modelTier:"default",ms:60000});
   const qs=r&&Array.isArray(r.q)?r.q.map(x=>{try{return tagItem(coursItem(normQ(x),l),l)}catch(e){return null}}).filter(it=>it&&it.q&&(it.kind!=="qcm"||it.o.length>1)):[];
-  if(!qs.length){b.disabled=false;b.textContent="Kalou invente de nouvelles questions";toast("Kalou n'a pas réussi cette fois. Réessaie dans un instant.");return}startQuiz(qs,l.t,{v:"lesson",id:p})},
+  if(!qs.length){b.disabled=false;b.textContent="Le Professeur invente de nouvelles questions";toast("Le Professeur n'a pas réussi cette fois. Réessaie dans un instant.");return}startQuiz(qs,l.t,{v:"lesson",id:p})},
  readrule:p=>{const l=byId(p);l&&speak(l.t+". "+l.r.replace(/•/g,""),true)},
  say:()=>Q&&sayItem(Q.items[Q.i]),
  choose:p=>answer(p),validate:()=>validate(),dunno:()=>answer("",true),
  next:()=>{if(Q.i+1<Q.items.length){Q.i++;render()}else finishQuiz()},
  quit:()=>{if(Q&&Q.i>0){ST.stars+=Q.stars;save()}go(Q&&Q.back||{v:"home"})},
  retry:()=>{const w=Q.wrong.map(it=>Object.assign({},it));const back=Q.back;Q={items:w,i:0,res:[],stars:0,run:0,title:"Corrections",back,wrong:[],answered:false,retry:true};go({v:"quiz"})},
- again:()=>{const b=Q&&Q.back;if(b&&b.v==="lesson")ACT.practice(b.id);else if(b&&b.v==="subj")ACT.mixs(b.s);else ACT.mix()},
+ again:()=>{const b=Q&&Q.back;if(b&&b.v==="lesson")(Q.deep?ACT.deep:ACT.practice)(b.id);else if(b&&b.v==="subj")ACT.mixs(b.s);else ACT.mix()},
  mic:()=>{const d=CAP.dict;if(!d)return;if(MIC_ON){d.stop().catch(()=>{});return}try{CAP.tts&&CAP.tts.stop()}catch(e){}try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}
   micTarget=$("#ain");if(micTarget)micTarget.dataset.mic="1";micBase=micTarget&&micTarget.type!=="hidden"?micTarget.value.trim():"";if(micTarget&&micTarget.type==="hidden")micTarget.value="";
   d.start({language:DLANGS[Math.min(CAP.dl,DLANGS.length-1)]}).catch(e=>{MIC_ON=false;document.querySelectorAll(".mic").forEach(b=>b.classList.remove("on"));if(e&&(e.code==="unavailable"||e.code==="invalid_argument")){CAP.dl++;if(CAP.dl>=DLANGS.length)disableMic("Le micro de la page ne propose pas le français ici. "+KBTIP);else toast("Touche encore le micro pour réessayer.");return}if(e&&e.code==="stopped")return;if(e&&e.code==="no_speech"){toast("Je n'ai rien entendu. Touche le micro et parle.");return}if(e&&e.code==="not_granted"){CAP.dict=null;toast("Le micro n'est pas autorisé : tu peux écrire ta réponse.");document.querySelectorAll(".mic").forEach(b=>b.remove())}else toast("Le micro ne répond pas. Réessaie.")})},
- setname:()=>{const v=($("#fname").value||"").trim().slice(0,30);if(!v)return;ST.name=v;save();render();speak("Bonjour "+v+" ! Je suis Kalou. On révise ensemble ?",true)},
+ setname:()=>{const v=($("#fname").value||"").trim().slice(0,30);if(!v)return;ST.name=v;save();render();speak("Bonjour "+v+" ! Je suis Kalou. Le Professeur et moi, on révise avec toi !",true)},
  install:()=>{if(doInstall())return;installWait=Date.now();setTimeout(()=>{if(installWait){installWait=0;toast(standalone()?"L'application est déjà installée.":"L'application est déjà installée sur ce téléphone, ou ce navigateur ne permet pas l'installation (utilise Chrome).",6000)}},4500)},
  gate:()=>go({v:"gate"}),
  gatego:()=>{if(+($("#gin").value||0)===gateAns)go({v:"parent"});else toast("Ce n'est pas le bon résultat.")},
- savename:()=>{ST.name=($("#pname").value||"").trim().slice(0,30);ST.voice=$("#pvoice").checked;save();toast("Réglages enregistrés.")},
+ savename:()=>{ST.name=($("#pname").value||"").trim().slice(0,30);ST.voice=$("#pvoice").checked;ST.sound=$("#psound").checked;save();toast("Réglages enregistrés.")},
  rate:p=>{ST.rate=+p;save();render()},
- testvoice:()=>speak("Bonjour "+(ST.name||"")+" ! Je suis Kalou. On révise ensemble ?",true),
+ testvoice:()=>speak("Bonjour "+(ST.name||"")+" ! Je suis Kalou. Le Professeur et moi, on révise avec toi !",true),
  analyze:()=>analyze(),savepending:()=>savePending(),cancelpending:()=>{PENDING=null;render()},
  dellesson:async(p,b)=>{if(b.dataset.c!=="1"){b.dataset.c="1";b.textContent="Confirmer ?";return}if(CAP.db){try{await CAP.db.collection("lessons").doc(p).delete()}catch(e){toast("Suppression impossible.")}}else{EXTRA=EXTRA.filter(l=>l.id!==p);try{localStorage.setItem(LS+"-extra",JSON.stringify(EXTRA))}catch(e){}rebuild();render()}},
  reset:(p,b)=>{if(b.dataset.c!=="1"){b.dataset.c="1";b.textContent="Confirmer l'effacement";return}const keep={name:ST.name,voice:ST.voice,rate:ST.rate};ST=Object.assign({stars:0,streak:0,lastDay:"",day:{d:"",stars:0},les:{},updated:0},keep);save();toast("Progrès effacés.");render()}

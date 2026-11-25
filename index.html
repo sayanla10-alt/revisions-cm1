@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Révisions CM1</title>
 <meta name="theme-color" content="#2343c4">
 <meta name="mobile-web-app-capable" content="yes">
@@ -137,10 +137,51 @@ table{border-collapse:collapse;width:100%;font-size:15px}th,td{text-align:left;p
 .spin{width:22px;height:22px;border:3px solid var(--l2);border-top-color:var(--blue);border-radius:50%;animation:sp 1s linear infinite;display:inline-block;vertical-align:middle}@keyframes sp{to{transform:rotate(360deg)}}
 .scroll{overflow-x:auto}
 @media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--soft)}.stack td:empty{display:none}}
+
+/* ---- mise en page : téléphone, tablette, ordinateur ---- */
+body{background-image:linear-gradient(var(--l2) 1px,transparent 1px),linear-gradient(var(--l1) 1px,transparent 1px)!important;background-size:100% 32px,100% 8px!important}
+#app{position:relative;max-width:1080px;margin:0 auto;padding:max(20px,env(safe-area-inset-top)) 28px calc(110px + env(safe-area-inset-bottom)) 64px}
+#app::before{content:"";position:absolute;left:36px;top:0;bottom:0;width:2px;background:var(--mg)}
+@media(max-width:600px){#app{padding:max(14px,env(safe-area-inset-top)) 14px calc(104px + env(safe-area-inset-bottom)) 26px}#app::before{left:11px}}
+@media(min-width:900px){#app{padding-bottom:60px}}
+.narrow{max-width:720px;margin-inline:auto}
+.center{text-align:center}
+h3.step{margin:22px 0 10px;font-size:18px}
+@media(max-width:600px){.hero{text-align:center}.hero .bubble{text-align:left}}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px}
+.mode{appearance:none;font:inherit;color:var(--ink);text-align:left;cursor:pointer;display:flex;gap:14px;align-items:center;width:100%;min-height:92px;background:color-mix(in srgb,var(--c) 10%,var(--card));border-color:color-mix(in srgb,var(--c) 40%,var(--edge));animation:rise .45s ease-out backwards}
+.mode .mi{flex:none;width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:var(--c);color:#fff}
+.mode .mi svg{width:30px;height:30px}.mode .mi svg.ic{width:54px;height:54px}
+.mode b{display:block;font-size:19px;line-height:1.25;margin-bottom:2px}
+.mode.on{outline:3px solid var(--c);outline-offset:2px}
+.mode:active{transform:scale(.98)}
+.subjs{grid-template-columns:repeat(auto-fill,minmax(min(100%,150px),1fr))}
+@media(min-width:900px){.subjs{grid-template-columns:repeat(4,minmax(0,1fr))}.stats{max-width:720px;margin-inline:auto}}
+.seg.wrap{display:flex;flex-wrap:wrap;border:0;gap:8px;overflow:visible}.seg.wrap button{border:2px solid var(--edge);border-radius:14px;flex:1 1 auto}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:7;display:flex;justify-content:space-around;align-items:center;background:var(--card);border-top:2px solid var(--edge);padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -4px 14px rgba(0,0,0,.06)}
+.nav:empty{display:none}
+.nav button{appearance:none;border:0;background:none;color:var(--soft);font:700 12px/1.2 Andika,sans-serif;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:64px;min-height:52px;padding:4px 8px;border-radius:12px;cursor:pointer}
+.nav button.on{color:var(--blue);background:color-mix(in srgb,var(--blue) 11%,transparent)}
+.nav .brand{display:none}
+@media(min-width:900px){.nav{position:sticky;top:0;bottom:auto;justify-content:flex-end;gap:6px;border-top:0;border-bottom:2px solid var(--edge);padding:8px max(24px,calc((100% - 1080px)/2 + 28px));box-shadow:0 2px 10px rgba(0,0,0,.04)}.nav button{flex-direction:row;font-size:15px;padding:8px 16px;min-height:44px;gap:8px}.nav .brand{display:block;margin-right:auto;font-family:"Playwrite FR Moderne",cursive;color:var(--blue);font-size:20px}}
+.timer{display:inline-flex;align-items:center;gap:6px;font:700 19px/1 ui-monospace,Menlo,Consolas,monospace;padding:8px 12px;border-radius:12px;background:var(--hl);color:var(--ink)}
+.timer.warn{background:var(--ko);color:var(--red);animation:pulse 1.2s infinite}
+.qtop .timer{margin-inline:auto}
+.grid-q{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:18px 0}
+.qn{appearance:none;width:44px;height:44px;border-radius:12px;border:2px solid var(--edge);background:var(--card);font:700 16px Andika,sans-serif;color:var(--ink);cursor:pointer}
+.qn.done{background:color-mix(in srgb,var(--blue) 15%,var(--card));border-color:var(--blue)}.qn.cur{outline:3px solid var(--sun);outline-offset:1px}
+.opt.sel{border-color:var(--blue);background:color-mix(in srgb,var(--blue) 12%,var(--card));box-shadow:0 3px 0 var(--blue)}
+.exnav{justify-content:space-between;margin-top:14px}
+.note20{font-size:72px;font-weight:700;line-height:1;color:var(--blue)}.note20 small{font-size:28px;color:var(--soft)}
+.corr.ok{border-color:color-mix(in srgb,var(--green) 45%,var(--edge))}.corr.ko{border-color:color-mix(in srgb,var(--red) 45%,var(--edge))}
+.boxes{display:flex;gap:6px;margin-top:8px}.boxes i{width:28px;height:8px;border-radius:4px;background:var(--l2)}.boxes i.on{background:var(--green)}
+.endsc .row,.endsc .btn{justify-content:center}
+@media(min-width:700px){.opts.two{grid-template-columns:1fr 1fr}}
 </style>
 <script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
 </head>
 <body>
+<nav id="nav" class="nav" aria-label="Menu"></nav>
 <main id="app"><p class="muted">Chargement des révisions…</p></main>
 <div id="toast" class="toast" hidden></div>
 <script>
@@ -784,25 +825,166 @@ function kalou(w,mood){const happy=mood!=="think";return '<svg viewBox="0 0 230 
  (happy?'<circle cx="108" cy="84" r="5" fill="#ff8fa3" opacity=".6"/>':'')+
  '<path d="M96 166v12M114 166v12" stroke="#ffb400" stroke-width="5" stroke-linecap="round"/></svg>'}
 
+/* ============ MODES RÉVISION & COMPOSITION ============ */
+const ACCORD=[
+ ["Les filles sont ___ (arriver) en retard.","arrivées","Avec être, le participe passé s'accorde avec le sujet : les filles (féminin pluriel) → arrivées.",0],
+ ["Awa est ___ (tomber) dans la cour.","tombée","Avec être, le participe passé s'accorde avec le sujet : Awa (féminin singulier) → tombée.",0],
+ ["Mes frères sont ___ (partir) au village.","partis","Avec être, le participe passé s'accorde avec le sujet : mes frères (masculin pluriel) → partis.",0],
+ ["La porte est ___ (fermer).","fermée","Avec être, le participe passé s'accorde avec le sujet : la porte (féminin singulier) → fermée.",0],
+ ["Les mangues sont ___ (cueillir) ce matin.","cueillies","Avec être, le participe passé s'accorde avec le sujet : les mangues (féminin pluriel) → cueillies.",0],
+ ["Koffi et Yao sont ___ (rentrer) de l'école.","rentrés","Avec être, le participe passé s'accorde avec le sujet : Koffi et Yao (masculin pluriel) → rentrés.",0],
+ ["Ma petite sœur est ___ (naître) en 2018.","née","Avec être, le participe passé s'accorde avec le sujet : ma petite sœur (féminin singulier) → née.",0],
+ ["Les enfants ont ___ (manger) des bananes.","mangé","Avec avoir, le participe passé ne s'accorde pas avec le sujet : ont mangé.",1],
+ ["Maman a ___ (préparer) le repas.","préparé","Avec avoir, le participe passé ne s'accorde pas avec le sujet : a préparé.",1],
+ ["Les élèves ont ___ (finir) leurs devoirs.","fini","Avec avoir, le participe passé ne s'accorde pas avec le sujet : ont fini.",1],
+ ["Awa et Mariam ont ___ (chanter) l'hymne national.","chanté","Avec avoir, le participe passé ne s'accorde pas avec le sujet : ont chanté.",1],
+ ["Nous avons ___ (voir) un éléphant au parc.","vu","Avec avoir, le participe passé ne s'accorde pas avec le sujet : avons vu.",1],
+ ["Les filles ont ___ (laver) la vaisselle.","lavé","Avec avoir, le participe passé ne s'accorde pas avec le sujet : ont lavé.",1],
+ ["Les mangues que j'ai ___ (acheter) sont sucrées.","achetées","Avec avoir, le participe passé s'accorde avec le COD placé AVANT le verbe : que (= les mangues) → achetées.",3],
+ ["Ces lettres, je les ai ___ (écrire) hier.","écrites","Avec avoir, le participe passé s'accorde avec le COD placé AVANT le verbe : les (= ces lettres) → écrites.",3],
+ ["La robe que maman a ___ (coudre) est jolie.","cousue","Avec avoir, le participe passé s'accorde avec le COD placé AVANT le verbe : que (= la robe) → cousue.",3],
+ ["Les fenêtres ___ (casser) seront réparées.","cassées","Sans auxiliaire, le participe passé s'accorde comme un adjectif avec le nom : les fenêtres → cassées.",2],
+ ["Voici une maison bien ___ (construire).","construite","Sans auxiliaire, le participe passé s'accorde comme un adjectif avec le nom : une maison → construite.",2],
+ ["Les enfants ___ (fatiguer) dorment déjà.","fatigués","Sans auxiliaire, le participe passé s'accorde comme un adjectif avec le nom : les enfants → fatigués.",2],
+ ["La table ___ (laver) brille.","lavée","Sans auxiliaire, le participe passé s'accorde comme un adjectif avec le nom : la table → lavée.",2],
+ ["Les cahiers ___ (ranger) sont sur l'étagère.","rangés","Sans auxiliaire, le participe passé s'accorde comme un adjectif avec le nom : les cahiers → rangés.",2],
+ ["J'aime les histoires ___ (raconter) par grand-père.","racontées","Sans auxiliaire, le participe passé s'accorde comme un adjectif avec le nom : les histoires → racontées.",2]];
+const ACCL=["avec être","avec avoir","sans auxiliaire","avec avoir, COD placé avant"];
+function accordItem(deep){const pool=ACCORD.filter(a=>deep||a[3]!==3);const[s,a,x]=pick(pool);const full=s.replace("___",a).replace(/ \([^)]*\)/,"");
+ return{kind:"text",q:"Dictée : écoute et écris le participe passé bien accordé. "+s,say:"Écoute bien. "+full+" . Écris le participe passé bien accordé.",a,at:a,x,strict:true,blank:true,_lid:"f-ortho-pp"}}
+function dicteeGen(key,id){return L=>{if(!key&&Math.random()<.32)return accordItem((L||2)>=3);let s,a,x,lid;const r=key?0:Math.random();
+ if(key||r<.62){const k=key||pick(["mais","cetait","la","ces"]);[s,a,x]=pick(HOMO[k].it);lid=id||{mais:"f-ortho-mais",cetait:"f-ortho-cetait",la:"f-ortho-la",ces:"f-ortho-ces"}[k]}
+ else if(r<.8){const h=pick(HOMN);s=h[0];a=h[1];x=h[3];lid="f-voc-homonymes"}
+ else{const t=pick(TEMPS);s=t[0].replace(/ \([^)]*\)/,"");a=t[1];x=t[3];lid="f-exp-recit"}
+ const st=s.startsWith("___");const good=st?cap(a):a;const full=s.replace("___",good);
+ return{kind:"text",q:"Dictée : écoute et écris le mot qui manque. "+s,say:"Écoute bien. "+full+" . Écris le mot qui manque.",a:good,at:good,x,strict:true,blank:true,_lid:lid}}}
+Object.assign(GEN,{accords:L=>accordItem((L||2)>=3),dictee:dicteeGen(),dictee_mais:dicteeGen("mais","f-ortho-mais"),dictee_cetait:dicteeGen("cetait","f-ortho-cetait"),dictee_la:dicteeGen("la","f-ortho-la"),dictee_ces:dicteeGen("ces","f-ortho-ces")});
+BASE.push({id:"f-ortho-pp",s:"ortho",dom:"Orthographe",d:"2026-11-25",t:"L'accord du participe passé",g:"accords",
+r:"Avec l'auxiliaire être, le participe passé s'accorde en genre et en nombre avec le sujet : Les filles sont arrivées. Awa est tombée.\nAvec l'auxiliaire avoir, le participe passé ne s'accorde pas avec le sujet : Les enfants ont mangé.\nPour aller plus loin : avec avoir, il s'accorde avec le COD s'il est placé avant le verbe : Les mangues que j'ai achetées.\nSans auxiliaire, le participe passé s'accorde comme un adjectif avec le nom : des fenêtres cassées, une maison construite.",
+q:[["Avec être, avec quoi s'accorde le participe passé ?",["Avec le sujet","Avec le COD","Il ne s'accorde jamais"]],["Avec avoir, le participe passé s'accorde-t-il avec le sujet ?",["Non, jamais avec le sujet","Oui, toujours","Seulement au pluriel"]],["Sans auxiliaire, le participe passé s'accorde…",["comme un adjectif, avec le nom","avec le verbe","jamais"]],["Complète : Les filles sont (partir)…",["parties","parti","partie"]],["Complète : Les filles ont (chanter)…",["chanté","chantées","chantés"]]]});
+rebuild();
+Object.assign(GEN_FOR,{"f-ortho-mais":["dictee_mais"],"f-ortho-cetait":["dictee_cetait"],"f-ortho-la":["dictee_la"],"f-ortho-ces":["dictee_ces"]});
+Object.assign(IC,{
+ book:'<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4z" fill="currentColor" opacity=".85"/><path d="M20 4h-5a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h6z" fill="currentColor"/></svg>',
+ exam:'<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="13" height="18" rx="2" fill="currentColor" opacity=".85"/><path d="M7 8h7M7 12h7M7 16h4" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/><path d="M15 19l5-5 2 2-5 5h-2z" fill="currentColor"/></svg>',
+ home:'<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="currentColor"/></svg>',
+ rev:'<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4a8 8 0 1 1-7.4 5" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M3 4v5h5" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>',
+ user:'<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z" fill="currentColor"/></svg>',
+ clock:'<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>'
+});
+/* ---- carnet d'erreurs (répétition espacée : J+1, J+3, J+7, J+14) ---- */
+const BOX=[1,3,7,14];
+function addDays(d,n){const t=new Date(d+"T12:00:00");t.setDate(t.getDate()+n);return t.getFullYear()+"-"+pad(t.getMonth()+1)+"-"+pad(t.getDate())}
+function ekey(it){return(it.lid||"")+"|"+it.q+"|"+it.at}
+function slim(it){const o={};for(const k of["kind","q","o","a","at","alts","x","pose","vis","k","need","lid","lt","s","say","blank","strict","hint","rule"])if(it[k]!==undefined)o[k]=it[k];return o}
+function errRecord(it,ok){if(!it||it.kind==="defi")return;ST.err=ST.err||{};const k=it._ek||ekey(it);const e=ST.err[k];
+ if(!ok){ST.err[k]={it:slim(it),box:0,next:addDays(today(),1),n:(e?e.n:0)+1,last:today()};const ks=Object.keys(ST.err);if(ks.length>150){ks.sort((a,b)=>(ST.err[a].last||"").localeCompare(ST.err[b].last||""));for(const x of ks.slice(0,ks.length-150))delete ST.err[x]}}
+ else if(e){e.box++;e.last=today();if(e.box>=BOX.length)delete ST.err[k];else e.next=addDays(today(),BOX[e.box])}}
+function reshuffle(x){if(x.kind==="qcm"&&Array.isArray(x.o)){const g=x.o[x.a];x.o=shuffle(x.o);x.a=x.o.indexOf(g)}return x}
+function errItems(all){const td=today();return Object.entries(ST.err||{}).filter(([k,e])=>all||e.next<=td).map(([k,e])=>reshuffle(Object.assign({},e.it,{_ek:k})))}
+function creditStars(n){const td=today();ST.stars+=n;if(ST.day.d!==td)ST.day={d:td,stars:0};ST.day.stars+=n;if(ST.lastDay!==td){ST.streak=ST.lastDay&&dayNum(td)-dayNum(ST.lastDay)===1?ST.streak+1:1;ST.lastDay=td}}
+function modeCard(a,t,sub,c,ic,p,on){return'<button class="card mode'+(on?" on":"")+'" style="--c:'+c+'" data-a="'+a+'"'+(p!=null?' data-p="'+esc(p)+'"':"")+'><span class="mi">'+ic+'</span><span><b>'+esc(t)+'</b><span class="small muted">'+esc(sub)+'</span></span></button>'}
+function revisionV(){const due=errItems(false).length,tot=Object.keys(ST.err||{}).length;
+ return'<h1 class="cur center">Mode révision</h1><p class="center muted" style="margin-top:0">Un peu chaque jour, c\'est le secret pour réussir !</p><div class="modes">'+
+ modeCard("revday","Révision du jour",due?due+" erreur"+(due>1?"s":"")+" à revoir, puis tes leçons à renforcer":"12 questions sur les leçons à renforcer","#11784a",IC.rev)+
+ modeCard("mix","Interroge-moi !","10 questions mélangées sur tout le cahier","#2343c4",IC.star(28))+
+ modeCard("recent","Mes leçons de la semaine","Les leçons les plus récentes du cahier","#c25e00",IC.fire)+
+ modeCard("dictee","Dictée","12 mots : homophones, participes passés (être, avoir, sans auxiliaire), conjugaison","#6a34a8",IC.spk)+
+ modeCard("carnet","Mon carnet d'erreurs",tot?tot+" question"+(tot>1?"s":"")+" à maîtriser":"Vide pour l'instant, bravo !","#c92a42",IC.book)+'</div>'}
+function carnetV(){const es=Object.entries(ST.err||{}).sort((a,b)=>(a[1].next||"").localeCompare(b[1].next||""));const td=today();
+ return'<div class="top"><button class="btn gh sm" data-a="revision">'+IC.back+' Révision</button></div><h1 class="cur center">Mon carnet d\'erreurs</h1>'+
+ (es.length?'<p class="center muted" style="margin-top:0">Chaque erreur revient le lendemain, puis 3 jours, 1 semaine et 2 semaines après. Réussie 4 fois, elle quitte le carnet.</p><button class="btn big" data-a="carnetgo">Réviser mon carnet ('+Math.min(12,es.length)+' questions)</button><div class="stack" style="margin-top:16px">'+
+ es.map(([k,e])=>'<div class="card corr"><div class="row" style="justify-content:space-between"><span class="tag" style="--c:'+((SUBJ[e.it.s]||SUBJ.gram).c)+'">'+esc(e.it.lt||"")+'</span><span class="small muted">'+(e.next<=td?"À revoir aujourd\'hui":"À revoir le "+fmtDate(e.next))+'</span></div><p style="margin:8px 0 4px">'+rt(e.it.q)+'</p><p style="margin:0" class="small"><b>Bonne réponse :</b> '+rt(e.it.at||"")+'</p><div class="boxes">'+BOX.map((_,i)=>'<i class="'+(i<e.box?"on":"")+'"></i>').join("")+'</div></div>').join("")+'</div>'
+ :'<div class="card center stack"><div style="max-width:200px;margin:0 auto">'+kalou("100%")+'</div><p style="font-size:19px;margin:0">Ton carnet est vide. Les questions que tu rates viendront ici pour que tu les maîtrises.</p></div>')}
+/* ---- composition blanche ---- */
+const COMPO={
+ fr:{n:"Français",min:30,c:"#c92a42",ic:"francais",sec:[["Orthographe",["ortho"],4],["Conjugaison",["conj"],4],["Grammaire",["gram"],3],["Vocabulaire",["voc"],3],["Dictée à trous","dictee",3],["Accord du participe passé","accords",2]]},
+ maths:{n:"Mathématiques",min:35,c:"#2343c4",ic:"maths",sec:[["Calcul",["m-addition","m-soustraction","m-multiplication","m-division"],4],["Numération",["m-nombres","m-romains","m-ranger","m-decimaux","m-dec-comparer"],4],["Fractions",["m-fractions","m-frac-equiv","m-frac-dec","m-frac-comparer"],3],["Problèmes","prob",3]]},
+ eveil:{n:"Éveil",sub:"Sciences, Histoire, Géographie, EDHC",min:25,c:"#11784a",ic:"sciences",sec:[["Sciences et technologie",["sciences"],5],["Histoire",["histoire"],3],["Géographie",["geo"],3],["EDHC",["edhc"],3]]},
+ all:{n:"Toutes les matières",min:35,c:"#6a34a8",ic:"edhc",sec:[["Français",["ortho","conj","gram","voc"],5],["Dictée à trous","dictee",2],["Mathématiques",["maths"],5],["Problème","prob",1],["Éveil",["sciences","histoire","geo","edhc"],4]]}
+};
+const PERIODS=[["2w","Les 2 dernières semaines",14],["1m","Le dernier mois",31],["all","Tout le cahier",99999]];
+let CSEL={k:"fr",p:"all"},EX=null,EXT=null;
+const cnt=k=>COMPO[k].sec.reduce((a,s)=>a+s[2],0);
+function mention(n){return n>=16?"Très bien":n>=14?"Bien":n>=12?"Assez bien":n>=10?"Passable":"Insuffisant"}
+function compoV(){const hist=(ST.compos||[]).slice(0,8);
+ return'<h1 class="cur center">Composition blanche</h1><p class="center muted" style="margin-top:0">Comme le jour de la composition : un temps limité, pas de correction avant la fin, puis ta note sur 20 et le corrigé du Professeur.</p>'+
+ '<h3 class="step">1. Choisis la matière</h3><div class="modes">'+Object.entries(COMPO).map(([k,c])=>modeCard("csel",c.n,(c.sub?c.sub+" · ":"")+cnt(k)+" questions · "+c.min+" min",c.c,SIC[c.ic],k,CSEL.k===k)).join("")+'</div>'+
+ '<h3 class="step">2. Quelles leçons ?</h3><div class="seg wrap">'+PERIODS.map(([k,t])=>'<button data-a="cper" data-p="'+k+'" class="'+(CSEL.p===k?"on":"")+'">'+t+'</button>').join("")+'</div>'+
+ '<button class="btn big g" style="margin-top:20px" data-a="cstart">'+IC.clock+' Commencer la composition</button>'+
+ (hist.length?'<h3 class="step">Mes dernières compositions</h3><div class="card"><table><tbody>'+hist.map(h=>'<tr><td>'+fmtDate(h.d)+'</td><td>'+esc((COMPO[h.k]||{}).n||"")+'</td><td class="n"><b>'+String(h.note).replace(".",",")+' / 20</b></td><td class="n"><span class="chip '+(h.note>=14?"ok":h.note>=10?"mid":"lo")+'">'+mention(h.note)+'</span></td></tr>').join("")+'</tbody></table></div>':"")}
+function poolFor(sel,days){const lat=Math.max(...LESSONS.map(l=>dayNum(l.d||today())));const ok=l=>sel.includes(l.s)||sel.includes(l.id);let p=LESSONS.filter(l=>ok(l)&&lat-dayNum(l.d||today())<=days);if(!p.length)p=LESSONS.filter(ok);return p}
+function buildExam(k,per){const C=COMPO[k];const days=(PERIODS.find(x=>x[0]===per)||PERIODS[2])[2];const items=[];const seen=new Set();
+ C.sec.forEach(([name,sel,n],si)=>{let pool=Array.isArray(sel)?shuffle(poolFor(sel,days)):[];let pi=0;
+  for(let j=0;j<n;j++){let it=null;for(let t=0;t<8&&!it;t++){let c=null,l=null;
+    if(sel==="dictee"){c=GEN.dictee();l=byId(c._lid)}
+    else if(sel==="accords"){c=GEN.accords(2);l=byId("f-ortho-pp")}
+    else if(sel==="prob"){const g=pick(["probSoustraction","probMultiplication","probDeuxEtapes","probAchat","probPartage"]);c=GEN[g](2);l=byId(g==="probMultiplication"||g==="probAchat"?"m-pb-multiplication":g==="probPartage"?"m-division":"m-pb-soustraction")}
+    else if(pool.length){l=pool[pi++%pool.length];c=(itemsFor(l,1)[0])||null}
+    if(c&&c.kind!=="defi"&&!seen.has(c.q+"|"+c.at)){it=l?tagItem(c,l):c}}
+   if(it){seen.add(it.q+"|"+it.at);it.sec=name;it.si=si+1;items.push(it)}}});
+ return{k,per,items,ans:items.map(()=>null),i:0,end:Date.now()+C.min*60000,done:false,warned:false,quit:false}}
+function exSave(){if(!EX)return;const inp=$("#ain");if(inp&&inp.type!=="hidden")EX.ans[EX.i]=inp.value}
+function fmtLeft(ms){const s=Math.max(0,Math.round(ms/1000));return pad(Math.floor(s/60))+":"+pad(s%60)}
+function tick(){if(!EX||EX.done){clearInterval(EXT);EXT=null;return}const left=EX.end-Date.now();const t=$("#timer");if(t){t.lastChild.textContent=fmtLeft(left);t.classList.toggle("warn",left<300000)}
+ if(left<300000&&!EX.warned){EX.warned=true;toast("Plus que 5 minutes !");speak("Attention, il te reste cinq minutes.")}if(left<=0){exSave();submitExam(true)}}
+function examV(){const it=EX.items[EX.i];const C=COMPO[EX.k];const last=EX.i===EX.items.length-1;const a=EX.ans[EX.i];let ans;
+ if(it.kind==="qcm")ans='<div class="opts">'+it.o.map((o,i)=>'<button class="opt'+(a===i?" sel":"")+'" data-a="exopt" data-p="'+i+'"><span class="lt">'+"ABCD"[i]+"</span><span>"+rt(o)+"</span></button>").join("")+"</div>";
+ else{const ta=it.kind==="open";const im=it.kind==="num"?'inputmode="decimal"':"";ans='<div class="inrow">'+(ta?'<textarea id="ain" lang="fr" class="inp" placeholder="Ta réponse…">'+esc(a||"")+'</textarea>':'<input id="ain" lang="fr" class="inp" '+im+' autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ta réponse…" value="'+esc(a||"")+'">')+(CAP.dict?'<button class="mic" data-a="mic" aria-label="Répondre à voix haute">'+IC.mic+"</button>":"")+'</div><div class="heard" id="heard"></div>'}
+ return'<div class="qtop"><button class="btn gh sm" data-a="exquit">Arrêter</button><span class="timer" id="timer">'+IC.clock+'<span>'+fmtLeft(EX.end-Date.now())+'</span></span><span class="pill">'+(EX.i+1)+" / "+EX.items.length+'</span></div>'+
+ '<div class="card qcard"><div class="row"><span class="tag" style="--c:'+C.c+';flex:1 1 auto">Exercice '+it.si+" : "+esc(it.sec)+'</span>'+(canSpeak()?'<button class="ib" data-a="exsay" aria-label="Écouter la question">'+IC.spk+"</button>":"")+'</div><div class="qtext">'+rt(it.q)+'</div>'+(it.vis||"")+ans+'</div>'+
+ '<div class="row exnav"><button class="btn gh" data-a="exprev"'+(EX.i?"":" disabled")+'>Précédent</button>'+(last?"":'<button class="btn" data-a="exnext">Suivant</button>')+'</div>'+
+ '<div class="grid-q">'+EX.items.map((x,k)=>'<button class="qn'+(EX.ans[k]!=null&&String(EX.ans[k]).trim()!==""?" done":"")+(k===EX.i?" cur":"")+'" data-a="exgo" data-p="'+k+'" aria-label="Question '+(k+1)+'">'+(k+1)+"</button>").join("")+'</div>'+
+ '<button class="btn big g" data-a="exsubmit" id="exsub">Rendre ma copie</button>'}
+function afterExam(){const inp=$("#ain");if(inp&&inp.type!=="hidden")setTimeout(()=>inp.focus({preventScroll:true}),60);sayItem(EX.items[EX.i]);if(!EXT)EXT=setInterval(tick,1000)}
+function exGo(k){exSave();stopMic();stopSpeak();EX.i=Math.max(0,Math.min(EX.items.length-1,k));render();window.scrollTo(0,0)}
+async function submitExam(auto){if(!EX||EX.done)return;EX.done=true;clearInterval(EXT);EXT=null;stopMic();stopSpeak();
+ VIEW={v:"grading"};render();if(auto)speak("Le temps est écoulé. Le Professeur ramasse ta copie.");
+ let ok=0;const res=[];
+ for(let k=0;k<EX.items.length;k++){const it=EX.items[k],a=EX.ans[k];let r={ok:false};
+  if(a!=null&&String(a).trim()!=="")r=await check(it,it.kind==="qcm"?String(a):String(a),false);
+  res.push(r);if(r.ok)ok++;errRecord(it,r.ok);const st=ST.les[it.lid]||(ST.les[it.lid]={n:0,ok:0,h:"",last:""});st.n++;if(r.ok)st.ok++;st.h=(st.h+(r.ok?"1":"0")).slice(-20);st.last=today()}
+ const n=EX.items.length;const note=Math.round(ok/n*40)/2;EX.res=res;EX.ok=ok;EX.note=note;
+ const lv0=level().name;creditStars(Math.round(note/2)+(note>=16?3:0));EX.lvlup=level().name!==lv0?level().name:"";
+ ST.compos=[{d:today(),k:EX.k,n,ok,note}].concat(ST.compos||[]).slice(0,30);save();go({v:"examres"})}
+function gradingV(){return'<div class="card center stack" style="margin-top:30px"><div class="prof hop" style="margin:0 auto;width:90px;height:90px">'+prof("ok").replace('width="58" height="58"','width="90" height="90"')+'</div><p style="font-size:20px;margin:0"><span class="spin"></span> Le Professeur corrige ta copie…</p></div>'}
+function examResV(){const C=COMPO[EX.k];const m=mention(EX.note);const n=EX.items.length;
+ const msg=EX.note>=16?"Excellent travail ! Tu es prête pour la composition.":EX.note>=14?"Bien ! Encore un peu de révision et ce sera parfait.":EX.note>=12?"Assez bien. Revois les exercices où tu as fait des erreurs.":EX.note>=10?"C'est juste la moyenne. Reprends tes leçons et corrige tes erreurs.":"Il faut encore réviser. Corrige tes erreurs avec moi, tu vas progresser !";
+ setTimeout(()=>{if(EX.note>=14){SND.end();confetti(80,innerWidth/2,innerHeight*.3)}else if(EX.note>=10)SND.ok();speak("Tu as obtenu "+String(EX.note).replace(".",",")+" sur 20. Mention "+m+". "+msg)},300);
+ const secs=COMPO[EX.k].sec.map((s,i)=>{const idx=EX.items.map((it,k)=>it.si===i+1?k:-1).filter(k=>k>=0);const g=idx.filter(k=>EX.res[k].ok).length;return idx.length?'<tr><td>Exercice '+(i+1)+" : "+esc(s[0])+'</td><td class="n"><b>'+g+" / "+idx.length+"</b></td></tr>":""}).join("");
+ const wrong=EX.items.filter((it,k)=>!EX.res[k].ok).length;
+ return'<div class="card center stack"><span class="tag" style="--c:'+C.c+';margin:0 auto">Composition blanche · '+esc(C.n)+'</span><div class="note20 burst">'+String(EX.note).replace(".",",")+'<small> / 20</small></div><div><span class="chip '+(EX.note>=14?"ok":EX.note>=10?"mid":"lo")+'" style="font-size:16px;padding:6px 14px">Mention : '+m+'</span></div>'+
+ (EX.lvlup?'<div class="lvl burst">'+IC.leaf+" Nouveau niveau : "+esc(EX.lvlup)+" !</div>":"")+
+ '<div class="h row" style="justify-content:center;text-align:left;gap:12px"><div class="prof '+(EX.note>=10?"hop":"nod")+'">'+prof(EX.note>=10?"ok":"ko")+'</div><p style="margin:0;max-width:420px"><span class="who">Le Professeur</span>'+esc(msg)+'</p></div>'+
+ '<table style="max-width:460px;margin:0 auto"><tbody>'+secs+'<tr><td><b>Total</b></td><td class="n"><b>'+EX.ok+" / "+n+'</b></td></tr></tbody></table>'+
+ '<div class="row" style="justify-content:center">'+(wrong?'<button class="btn" data-a="exretry">Corriger mes '+wrong+" erreur"+(wrong>1?"s":"")+'</button>':"")+'<button class="btn g" data-a="compo">Nouvelle composition</button></div></div>'+
+ '<h2 class="cur center" style="margin:24px 0 10px">Le corrigé</h2><div class="stack">'+EX.items.map((it,k)=>{const r=EX.res[k];const a=EX.ans[k];const given=a==null||String(a).trim()===""?"<i>pas de réponse</i>":it.kind==="qcm"?rt(it.o[a]||""):esc(a);const bit=!r.ok?lessonBit(it):"";
+  return'<div class="card corr '+(r.ok?"ok":"ko")+'"><div class="row" style="justify-content:space-between"><span class="small muted">Question '+(k+1)+" · "+esc(it.sec)+'</span>'+(r.ok?IC.ok:IC.ko).replace('width="30" height="30"','width="24" height="24"')+'</div><p style="margin:6px 0">'+rt(it.q)+'</p><p style="margin:0"><b>Ta réponse :</b> '+given+'</p>'+
+  (r.ok?"":'<p style="margin:4px 0 0"><b>Bonne réponse :</b> '+rt(it.at||"")+'</p>'+(r.msg?'<p style="margin:4px 0 0">'+esc(r.msg)+"</p>":"")+(it.x?'<p style="margin:4px 0 0"><b>Pourquoi ?</b> '+rt(it.x)+"</p>":"")+(it.pose||"")+(bit?'<div class="recall"><b>Rappelle-toi la leçon :</b> '+rt(bit)+"</div>":""))+"</div>"}).join("")+"</div>"}
+function navV(){const v=VIEW.v;if(["quiz","exam","grading"].includes(v))return"";const act={subj:"home",lesson:"home",carnet:"revision",end:Q&&Q.back&&Q.back.v==="revision"?"revision":"home",examres:"compo",parent:"gate"}[v]||v;
+ return'<span class="brand">Révisions CM1</span>'+[["home","Accueil",IC.home],["revision","Révision",IC.rev],["compo","Composition",IC.exam],["gate","Parent",IC.user]].map(([a,t,ic])=>'<button class="'+(act===a?"on":"")+'" data-a="'+a+'">'+ic+"<span>"+t+"</span></button>").join("")}
+
 /* ============ RENDU ============ */
 function rt(s){return esc(s).replace(/\[(\d+|\?)\/(\d+|\?)\]/g,(m,a,b)=>'<span class="fr"><span>'+a+"</span><span>"+b+"</span></span>").replace(/___/g,'<span class="blank">?</span>')}
 function ruleHtml(r){const lines=String(r||"").split("\n");let h="",inL=false;for(const ln of lines){const t=ln.trim();if(!t)continue;if(t.startsWith("•")){if(!inL){h+="<ul>";inL=true}h+="<li>"+rt(t.replace(/^•\s*/,""))+"</li>"}else{if(inL){h+="</ul>";inL=false}h+="<p>"+rt(t)+"</p>"}}return h+(inL?"</ul>":"")}
 function toast(m,ms){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,ms||3500)}
 function go(v){stopSpeak();stopMic();VIEW=v;render();window.scrollTo(0,0)}
 function render(){const a=$("#app");const v=VIEW.v;
- a.innerHTML=v==="home"?homeV():v==="subj"?subjV(VIEW.s):v==="lesson"?lessonV(VIEW.id):v==="quiz"?quizV():v==="end"?endV():v==="gate"?gateV():v==="parent"?parentV():homeV();
- if(v==="quiz")afterQuiz()}
+ const html=v==="home"?homeV():v==="subj"?subjV(VIEW.s):v==="lesson"?lessonV(VIEW.id):v==="quiz"?quizV():v==="end"?endV():v==="gate"?gateV():v==="parent"?parentV():v==="revision"?revisionV():v==="carnet"?carnetV():v==="compo"?compoV():v==="exam"&&EX?examV():v==="grading"?gradingV():v==="examres"&&EX?examResV():homeV();
+ a.innerHTML=v==="home"?html:'<div class="narrow">'+html+'</div>';
+ const n=$("#nav");if(n)n.innerHTML=navV();
+ if(v==="quiz")afterQuiz();if(v==="exam")afterExam()}
 
 function homeV(){const lv=level();const nm=esc(ST.name||"championne");const td=ST.day.d===today()?ST.day.stars:0;
  const weak=LESSONS.map(l=>[l,mastery(l.id),ST.les[l.id]]).filter(x=>x[1]!=null&&x[1]<.6&&x[2].n>=3).sort((a,b)=>a[1]-b[1])[0];
  const msg=td?"Tu as déjà gagné "+td+" étoile"+(td>1?"s":"")+" aujourd'hui. Bravo, continue !":ST.streak>1&&ST.lastDay!==today()?"Tu as révisé "+ST.streak+" jours de suite. On continue aujourd'hui ?":"Prête pour réviser ? Je te pose des questions sur tes leçons !";
  return (standalone()||installedKnown?'':'<button class="btn g big" style="margin-bottom:14px" data-a="install">Installer l\'application</button>')+(ST.name?'':'<div class="card stack" style="margin-bottom:14px"><b>Comment t\'appelles-tu ?</b><div class="inrow"><input id="fname" class="inp" maxlength="30" autocomplete="off"><button class="btn" data-a="setname">OK</button></div></div>')+'<section class="hero"><div><h1 class="cur">Bonjour '+nm+' !</h1><div class="bubble">'+esc(msg)+'</div></div><div class="kal">'+sparkles()+kalou("100%")+'</div></section>'+
  '<div class="stats" style="margin-top:14px"><div class="card stat">'+IC.star(26)+'<b>'+ST.stars+'</b><span>étoiles</span></div><div class="card stat">'+IC.fire+'<b>'+ST.streak+'</b><span>jour'+(ST.streak>1?"s":"")+' de suite</span></div><div class="card stat">'+IC.leaf+'<b style="font-size:17px;line-height:1.3">'+esc(lv.name)+'</b><span>'+(lv.next?"encore "+lv.need+" étoiles":"niveau max")+'</span></div></div>'+
- '<div class="stack" style="margin-top:16px"><button class="btn big" data-a="mix">Interroge-moi ! (10 questions)</button><button class="btn big g" data-a="recent">Mes leçons de la semaine</button>'+
+ '<div class="modes" style="margin-top:16px">'+modeCard("revday","Révision du jour",(errItems(false).length?errItems(false).length+" erreur(s) à revoir + ":"")+"tes leçons à renforcer","#11784a",IC.rev)+modeCard("compo","Composition blanche","Une vraie épreuve chronométrée, notée sur 20","#c92a42",IC.exam)+modeCard("mix","Interroge-moi !","10 questions mélangées","#2343c4",IC.star(28))+'</div><div class="stack" style="margin-top:14px">'+
  (weak?'<div class="card"><b>Le Professeur te conseille de revoir :</b><div class="row" style="margin-top:8px"><span style="flex:1">'+esc(weak[0].t)+'</span><button class="btn sm" data-a="lesson" data-p="'+esc(weak[0].id)+'">Revoir</button></div></div>':'')+
  '</div><h2 class="cur" style="margin:26px 0 10px">Mes matières</h2><div class="subjs">'+
  SORDER.map((s,i)=>{const m=subjMastery(s);return'<button class="card subj" style="--c:'+SUBJ[s].c+';--i:'+i+'" data-a="subj" data-p="'+s+'">'+SIC[s]+'<b>'+SUBJ[s].n+'</b><span class="small muted">'+m.n+" leçons · "+m.done+" travaillées</span><div class=\"bar\" style=\"--c:"+SUBJ[s].c+'"><i style="width:'+Math.round(m.avg*100)+'%"></i></div></button>'}).join("")+
- '</div>'+''+'<p style="margin-top:28px;text-align:center"><button class="link" data-a="gate">Espace parent</button></p>'}
+ '</div>'+''+''}
 
 function subjV(s){const S=SUBJ[s];const ls=LESSONS.filter(l=>l.s===s).sort((a,b)=>(b.d||"").localeCompare(a.d||""));const doms=[...new Set(ls.map(l=>l.dom))];
  return '<div class="top"><button class="btn gh sm" data-a="home">'+IC.back+' Accueil</button></div><div class="row">'+SIC[s]+'<h1 class="cur" style="flex:1">'+S.n+'</h1></div>'+
@@ -865,7 +1047,7 @@ async function check(it,ans,mic){const raw=String(ans||"").trim();
  case"frac":{const[a,b]=it.a;const m=raw.match(/(\d+)\s*(?:\/|sur)\s*(\d+)/i);if(m)return{ok:+m[1]===a&&+m[2]===b};
   const sp=normHard(raw).split(" sur ");if(sp.length===2){const x=wordsToNum(sp[0]),y=wordsToNum(sp[1]);if(x!=null&&y!=null)return{ok:x===a&&y===b}}
   const strip=s=>normHard(s).replace(/s\b/g,"");const m2=normHard(raw).match(/^(\d+) ([a-z]+)$/);if(m2&&+m2[1]===a)return{ok:strip(m2[2])===strip(fracWords(a,b).split(" ").slice(-1)[0])};return{ok:strip(raw)===strip(fracWords(a,b))}}
- case"text":{const alts=[it.a,...(it.alts||[])];const ns=normSoft(raw);if(alts.some(x=>normSoft(x)===ns))return{ok:true};if(alts.some(x=>normHard(x)===normHard(raw)))return{ok:true,note:"Attention aux accents : on écrit « "+it.a+" »."};if(mic&&alts.some(x=>sound(x)===sound(raw)))return{ok:true,note:"Bien dit ! À l'écrit, on écrit : « "+it.a+" »."};return{ok:false}}
+ case"text":{const alts=[it.a,...(it.alts||[])];const ns=normSoft(raw);if(alts.some(x=>normSoft(x)===ns))return{ok:true};if(alts.some(x=>normHard(x)===normHard(raw)))return it.strict?{ok:false,note:"Attention aux accents : on écrit « "+it.a+" »."}:{ok:true,note:"Attention aux accents : on écrit « "+it.a+" »."};if(mic&&alts.some(x=>sound(x)===sound(raw)))return{ok:true,note:"Bien dit ! À l'écrit, on écrit : « "+it.a+" »."};return{ok:false}}
  case"open":{if(!raw)return{ok:false};const kw=kwCheck(it,raw);if(CAP.sample){const r=await ai(ROLE+"\n\nQuestion posée : "+it.q+"\nRéponse attendue (modèle) : "+it.at+"\nRéponse de l'élève (elle peut venir de la dictée vocale, l'orthographe peut être approximative) : « "+raw+" »\nCe que dit la leçon :\n"+(it.rule||"")+"\n\nDécide si l'idée principale de sa réponse est juste. Sois exigeant sur le sens mais pas sur la formulation. Si c'est faux, dis-le clairement (jamais « presque » ni « pas tout à fait ») et explique pourquoi en t'appuyant sur la leçon, comme un bon maître. Réponds UNIQUEMENT avec un objet JSON : {\"ok\": true ou false, \"msg\": \"si juste : une félicitation variée ; si faux : l'explication du pourquoi en 1 ou 2 phrases courtes (35 mots maximum)\"}");if(r&&typeof r.ok==="boolean")return{ok:r.ok,msg:r.msg}}return{ok:kw}}
  case"defi":{if(!raw)return{ok:false};if(CAP.sample){const r=await ai(ROLE+"\n\nConsigne d'écriture : "+it.q+"\nRègles de la leçon :\n"+it.rule+"\nTexte de l'élève : « "+raw+" »\n\nÉvalue si la consigne est respectée dans l'ensemble (ok = true si oui, même avec de petites fautes). Réponds UNIQUEMENT en JSON : {\"ok\": true ou false, \"msg\": \"2 phrases maximum : un compliment précis, puis un conseil pour améliorer ; si une faute d'orthographe importante est présente, corrige-la\"}",{modelTier:"default"});if(r&&typeof r.ok==="boolean")return{ok:r.ok,msg:r.msg}}
   const words=raw.split(/\s+/).length;return{ok:words>=8,msg:words>=8?"Merci pour ton texte ! Relis-le avec la règle de la leçon pour vérifier que tout y est.":"Ton texte est un peu court. Essaie d'écrire au moins 2 ou 3 phrases."}}
@@ -883,7 +1065,7 @@ async function answer(val,dunno,mic){if(Q.answered)return;Q.answered=true;stopMi
  const fb=$("#fb");let res;
  if(dunno)res={ok:false};else if(it.kind==="open"||it.kind==="defi"){fb.innerHTML='<div class="fb"><span class="spin"></span> Le Professeur lit ta réponse…</div>';res=await check(it,val,mic)}else res=await check(it,val,mic);
  if(it.kind==="qcm"){const bs=document.querySelectorAll(".opt");bs[it.a]&&bs[it.a].classList.add("good");if(!res.ok&&!dunno&&bs[+val])bs[+val].classList.add("bad")}
- Q.res[Q.i]=res.ok;const st=ST.les[it.lid]||(ST.les[it.lid]={n:0,ok:0,h:"",last:""});
+ Q.res[Q.i]=res.ok;errRecord(it,res.ok);const st=ST.les[it.lid]||(ST.les[it.lid]={n:0,ok:0,h:"",last:""});
  if(!Q.retry){st.n++;if(res.ok)st.ok++;st.h=(st.h+(res.ok?"1":"0")).slice(-20)}st.last=today();
  let gained=0;if(res.ok){Q.run++;gained=Q.retry?1:(Q.run>=3?2:1)+(Q.deep?1:0);Q.stars+=gained}else{Q.run=0;if(!Q.retry)Q.wrong.push(it)}
  persistLocal();
@@ -905,7 +1087,7 @@ function endV(){const n=Q.items.length,ok=Q.res.filter(Boolean).length,p=ok/n;co
  setTimeout(()=>{if(Q.lvlup){SND.lvl()}else if(p>=.5)SND.end();if(p>=.7){confetti(70,innerWidth/2,innerHeight*.35);setTimeout(()=>confetti(50,innerWidth*.25,innerHeight*.3),350)}speak(ok+" sur "+n+". "+msg+(Q.lvlup?" Bravo, tu passes au niveau "+Q.lvlup+" !":""))},250);
  return '<div class="card endsc stack"><div class="kal" style="max-width:220px;margin:0 auto">'+sparkles()+kalou("100%")+'</div><div class="score burst">'+ok+" / "+n+'</div>'+(Q.lvlup?'<div class="lvl burst">'+IC.leaf+" Nouveau niveau : "+esc(Q.lvlup)+" !</div>":"")+'<p style="font-size:20px;margin:0">'+esc(msg)+'</p><p class="row" style="justify-content:center;margin:0"><span class="pill">+'+(Q.stars+(Q.bonus||0))+" "+IC.star(20)+"</span>"+(Q.bonus?'<span class="pill">Sans faute : +3 bonus</span>':"")+'</p>'+
  (Q.wrong.length&&!Q.retry?'<button class="btn big" data-a="retry">Corriger mes '+Q.wrong.length+" erreur"+(Q.wrong.length>1?"s":"")+"</button>":"")+
- '<button class="btn big g" data-a="again">Encore un quiz</button><button class="btn big gh" data-a="'+(Q.back&&Q.back.v==="lesson"?"lesson":Q.back&&Q.back.v==="subj"?"subj":"home")+'" data-p="'+esc(Q.back&&(Q.back.id||Q.back.s)||"")+'">Retour</button></div>'}
+ '<button class="btn big g" data-a="again">Encore un quiz</button><button class="btn big gh" data-a="'+(Q.back&&ACT[Q.back.v]?Q.back.v:"home")+'" data-p="'+esc(Q.back&&(Q.back.id||Q.back.s)||"")+'">Retour</button></div>'}
 
 /* ---- micro ---- */
 function stopMic(){if(MIC_ON&&CAP.dict){CAP.dict.stop().catch(()=>{})}MIC_ON=false}
@@ -935,7 +1117,7 @@ function parentV(){const td=today();const rows=LESSONS.map(l=>[l,mastery(l.id),S
  '<label class="sw"><input type="checkbox" id="pvoice" '+(ST.voice?"checked":"")+'> Lire les questions à voix haute</label>'+'<label class="sw"><input type="checkbox" id="psound" '+(ST.sound!==false?"checked":"")+'> Petits sons de jeu (bonne réponse, erreur, fin)</label>'+
  '<div class="row"><span>Vitesse de la voix</span><div class="seg">'+[[.85,"Lente"],[1,"Normale"],[1.15,"Rapide"]].map(([r,n])=>'<button data-a="rate" data-p="'+r+'" class="'+(ST.rate===r?"on":"")+'">'+n+"</button>").join("")+'</div><button class="btn gh sm" data-a="testvoice">Tester</button></div>'+
  '<button class="btn sm" data-a="savename">Enregistrer</button><p class="note">'+esc(voiceNote)+(CAP.db?"":" Les progrès sont enregistrés sur ce téléphone.")+'</p></div>'+
- '<div class="card stack" style="margin-top:16px"><h3><b>Progrès</b></h3><p>'+ST.stars+" étoiles · "+tot+" réponses · "+rows.length+" leçons travaillées · "+never+' jamais travaillées</p>'+
+ '<div class="card stack" style="margin-top:16px"><h3><b>Progrès</b></h3><p>'+((ST.compos||[]).length?"Compositions blanches : "+ST.compos.length+", moyenne "+String(Math.round(ST.compos.reduce((a,c)=>a+c.note,0)/ST.compos.length*10)/10).replace(".",",")+" / 20 (dernière : "+String(ST.compos[0].note).replace(".",",")+" / 20). ":"")+"Carnet d'erreurs : "+Object.keys(ST.err||{}).length+" question(s) à maîtriser.</p><p>"+ST.stars+" étoiles · "+tot+" réponses · "+rows.length+" leçons travaillées · "+never+' jamais travaillées</p>'+
  SORDER.map(s=>{const m=subjMastery(s);return'<div><div class="row"><span style="flex:1">'+SUBJ[s].n+'</span><span class="small muted">'+(m.done?Math.round(m.avg*100)+" %":"pas encore")+'</span></div><div class="bar" style="--c:'+SUBJ[s].c+'"><i style="width:'+Math.round(m.avg*100)+'%"></i></div></div>'}).join("")+
  (rows.length?'<div class="scroll"><table class="stack"><thead><tr><th>Leçon (les plus faibles en premier)</th><th>Matière</th><th>Réussite</th><th>Réponses</th></tr></thead><tbody>'+rows.map(([l,m,s])=>"<tr><td>"+esc(l.t)+"</td><td>"+esc(SUBJ[l.s].n)+'</td><td class="n">'+Math.round(m*100)+' %</td><td class="n">'+s.n+"</td></tr>").join("")+"</tbody></table></div>":'<p class="muted">Aucune leçon travaillée pour l\'instant.</p>')+'</div>'+
  '<div class="card stack" style="margin-top:16px"><h3><b>Ajouter de nouvelles leçons</b></h3>'+
@@ -963,9 +1145,9 @@ async function savePending(){if(!PENDING)return;const ls=PENDING;PENDING=null;le
 /* ============ ACTIONS ============ */
 const ACT={
  home:()=>go({v:"home"}),subj:p=>go({v:"subj",s:p}),lesson:p=>go({v:"lesson",id:p}),
- mix:()=>mixQuiz(LESSONS,"Interroge-moi",{v:"home"}),
+ mix:()=>{mixQuiz(LESSONS,"Interroge-moi",{v:VIEW.v==="revision"?"revision":"home"});if(Q)Q.again=["mix"]},
  mixs:p=>mixQuiz(LESSONS.filter(l=>l.s===p),SUBJ[p].n,{v:"subj",s:p}),
- recent:()=>{const lat=Math.max(...LESSONS.map(l=>dayNum(l.d)));const pool=LESSONS.filter(l=>lat-dayNum(l.d)<=7);mixQuiz(pool.length?pool:LESSONS,"Leçons de la semaine",{v:"home"})},
+ recent:()=>{const lat=Math.max(...LESSONS.map(l=>dayNum(l.d)));const pool=LESSONS.filter(l=>lat-dayNum(l.d)<=7);mixQuiz(pool.length?pool:LESSONS,"Leçons de la semaine",{v:"revision"});if(Q)Q.again=["recent"]},
  practice:p=>{const l=byId(p);if(!l)return;const it=itemsFor(l,10);if(l.defi)it.push(defiItem(l));startQuiz(it,l.t,{v:"lesson",id:p})},
  deep:p=>{const l=byId(p);if(!l)return;startQuiz(itemsFor(l,10,true),l.t,{v:"lesson",id:p},true)},
  defi:p=>{const l=byId(p);l&&startQuiz([defiItem(l)],l.t,{v:"lesson",id:p})},
@@ -979,12 +1161,23 @@ const ACT={
  next:()=>{if(Q.i+1<Q.items.length){Q.i++;render()}else finishQuiz()},
  quit:()=>{if(Q&&Q.i>0){ST.stars+=Q.stars;save()}go(Q&&Q.back||{v:"home"})},
  retry:()=>{const w=Q.wrong.map(it=>Object.assign({},it));const back=Q.back;Q={items:w,i:0,res:[],stars:0,run:0,title:"Corrections",back,wrong:[],answered:false,retry:true};go({v:"quiz"})},
- again:()=>{const b=Q&&Q.back;if(b&&b.v==="lesson")(Q.deep?ACT.deep:ACT.practice)(b.id);else if(b&&b.v==="subj")ACT.mixs(b.s);else ACT.mix()},
+ again:()=>{const g=Q&&Q.again;if(g&&ACT[g[0]])return ACT[g[0]](g[1]);const b=Q&&Q.back;if(b&&b.v==="lesson")(Q.deep?ACT.deep:ACT.practice)(b.id);else if(b&&b.v==="subj")ACT.mixs(b.s);else ACT.mix()},
  mic:()=>{const d=CAP.dict;if(!d)return;if(MIC_ON){d.stop().catch(()=>{});return}try{CAP.tts&&CAP.tts.stop()}catch(e){}try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}
   micTarget=$("#ain");if(micTarget)micTarget.dataset.mic="1";micBase=micTarget&&micTarget.type!=="hidden"?micTarget.value.trim():"";if(micTarget&&micTarget.type==="hidden")micTarget.value="";
   d.start({language:DLANGS[Math.min(CAP.dl,DLANGS.length-1)]}).catch(e=>{MIC_ON=false;document.querySelectorAll(".mic").forEach(b=>b.classList.remove("on"));if(e&&(e.code==="unavailable"||e.code==="invalid_argument")){CAP.dl++;if(CAP.dl>=DLANGS.length)disableMic("Le micro de la page ne propose pas le français ici. "+KBTIP);else toast("Touche encore le micro pour réessayer.");return}if(e&&e.code==="stopped")return;if(e&&e.code==="no_speech"){toast("Je n'ai rien entendu. Touche le micro et parle.");return}if(e&&e.code==="not_granted"){CAP.dict=null;toast("Le micro n'est pas autorisé : tu peux écrire ta réponse.");document.querySelectorAll(".mic").forEach(b=>b.remove())}else toast("Le micro ne répond pas. Réessaie.")})},
  setname:()=>{const v=($("#fname").value||"").trim().slice(0,30);if(!v)return;ST.name=v;save();render();speak("Bonjour "+v+" ! Je suis Kalou. Le Professeur et moi, on révise avec toi !",true)},
  install:()=>{if(doInstall())return;installWait=Date.now();setTimeout(()=>{if(installWait){installWait=0;toast(standalone()?"L'application est déjà installée.":"L'application est déjà installée sur ce téléphone, ou ce navigateur ne permet pas l'installation (utilise Chrome).",6000)}},4500)},
+ revision:()=>go({v:"revision"}),carnet:()=>go({v:"carnet"}),compo:()=>go({v:"compo"}),
+ revday:()=>{let it=shuffle(errItems(false)).slice(0,6);const ls=weighted(LESSONS,6);for(const l of ls)it=it.concat(itemsFor(l,2));startQuiz(it.slice(0,12),"Révision du jour",{v:"revision"});if(Q)Q.again=["revday"]},
+ carnetgo:()=>{startQuiz(shuffle(errItems(true)).slice(0,12),"Carnet d'erreurs",{v:"carnet"});if(Q)Q.again=["carnetgo"]},
+ dictee:()=>{const it=[];const seen=new Set();for(let k=0;k<30&&it.length<12;k++){const c=GEN.dictee(3);if(seen.has(c.q))continue;seen.add(c.q);const l=byId(c._lid);it.push(l?tagItem(c,l):c)}startQuiz(it,"Dictée",{v:"revision"});if(Q)Q.again=["dictee"]},
+ csel:p=>{CSEL.k=p;render()},cper:p=>{CSEL.p=p;render()},
+ cstart:()=>{EX=buildExam(CSEL.k,CSEL.p);if(!EX.items.length){toast("Pas assez de leçons pour cette composition.");return}go({v:"exam"});speak("La composition commence. Tu as "+COMPO[EX.k].min+" minutes. Bon courage !")},
+ exopt:p=>{EX.ans[EX.i]=+p;document.querySelectorAll(".opt").forEach((b,i)=>b.classList.toggle("sel",i===+p));const q=document.querySelectorAll(".qn")[EX.i];q&&q.classList.add("done");tone([[520,0,.06,"sine",.06]])},
+ exprev:()=>exGo(EX.i-1),exnext:()=>exGo(EX.i+1),exgo:p=>exGo(+p),exsay:()=>sayItem(EX.items[EX.i]),
+ exsubmit:(p,b)=>{exSave();const miss=EX.ans.filter(a=>a==null||String(a).trim()==="").length;if(miss&&b.dataset.c!=="1"){b.dataset.c="1";b.textContent="Il reste "+miss+" question"+(miss>1?"s":"")+" sans réponse. Rendre quand même ?";return}submitExam(false)},
+ exquit:(p,b)=>{if(b.dataset.c!=="1"){b.dataset.c="1";b.textContent="Arrêter sans note ?";return}clearInterval(EXT);EXT=null;EX.done=true;go({v:"compo"})},
+ exretry:()=>{const w=EX.items.filter((it,k)=>!EX.res[k].ok).map(it=>reshuffle(Object.assign({},it)));Q={items:w,i:0,res:[],stars:0,run:0,title:"Corrections",back:{v:"compo"},wrong:[],answered:false,retry:true};go({v:"quiz"})},
  gate:()=>go({v:"gate"}),
  gatego:()=>{if(+($("#gin").value||0)===gateAns)go({v:"parent"});else toast("Ce n'est pas le bon résultat.")},
  savename:()=>{ST.name=($("#pname").value||"").trim().slice(0,30);ST.voice=$("#pvoice").checked;ST.sound=$("#psound").checked;save();toast("Réglages enregistrés.")},
@@ -995,7 +1188,8 @@ const ACT={
  reset:(p,b)=>{if(b.dataset.c!=="1"){b.dataset.c="1";b.textContent="Confirmer l'effacement";return}const keep={name:ST.name,voice:ST.voice,rate:ST.rate};ST=Object.assign({stars:0,streak:0,lastDay:"",day:{d:"",stars:0},les:{},updated:0},keep);save();toast("Progrès effacés.");render()}
 };
 document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b||b.disabled)return;const f=ACT[b.dataset.a];if(f){e.preventDefault();f(b.dataset.p,b,e)}});
-document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="gin")ACT.gatego()});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="gin")ACT.gatego();if(e.key==="Enter"&&VIEW.v==="exam"&&e.target.id==="ain"&&e.target.tagName==="INPUT"){e.preventDefault();if(EX.i<EX.items.length-1)exGo(EX.i+1)}});
+document.addEventListener("input",e=>{if(VIEW.v==="exam"&&EX&&e.target.id==="ain"){EX.ans[EX.i]=e.target.value;const q=document.querySelectorAll(".qn")[EX.i];q&&q.classList.toggle("done",e.target.value.trim()!=="")}});
 
 /* ============ DÉMARRAGE ============ */
 try{const s=JSON.parse(localStorage.getItem(LS)||"null");if(s&&typeof s==="object")ST=Object.assign(ST,s)}catch(e){}

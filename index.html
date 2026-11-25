@@ -145,6 +145,7 @@ body{background-image:linear-gradient(var(--l2) 1px,transparent 1px),linear-grad
 @media(max-width:600px){#app{padding:max(14px,env(safe-area-inset-top)) 14px calc(104px + env(safe-area-inset-bottom)) 26px}#app::before{left:11px}}
 @media(min-width:900px){#app{padding-bottom:60px}}
 .narrow{max-width:720px;margin-inline:auto}
+.wide{max-width:920px;margin-inline:auto}.hero .kal{width:100%;max-width:320px;justify-self:center}@media(min-width:900px){.stats{max-width:none}}
 .center{text-align:center}
 h3.step{margin:22px 0 10px;font-size:18px}
 @media(max-width:600px){.hero{text-align:center}.hero .bubble{text-align:left}}
@@ -971,7 +972,7 @@ function toast(m,ms){const t=$("#toast");t.textContent=m;t.hidden=false;clearTim
 function go(v){stopSpeak();stopMic();VIEW=v;render();window.scrollTo(0,0)}
 function render(){const a=$("#app");const v=VIEW.v;
  const html=v==="home"?homeV():v==="subj"?subjV(VIEW.s):v==="lesson"?lessonV(VIEW.id):v==="quiz"?quizV():v==="end"?endV():v==="gate"?gateV():v==="parent"?parentV():v==="revision"?revisionV():v==="carnet"?carnetV():v==="compo"?compoV():v==="exam"&&EX?examV():v==="grading"?gradingV():v==="examres"&&EX?examResV():homeV();
- a.innerHTML=v==="home"?html:'<div class="narrow">'+html+'</div>';
+ a.innerHTML=v==="home"?'<div class="wide">'+html+'</div>':'<div class="narrow">'+html+'</div>';
  const n=$("#nav");if(n)n.innerHTML=navV();
  if(v==="quiz")afterQuiz();if(v==="exam")afterExam()}
 

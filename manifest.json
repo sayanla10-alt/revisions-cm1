@@ -3,6 +3,7 @@
   "short_name": "Révisions",
   "description": "Révisions du CM1 avec Kalou : quiz, exercices et lecture à voix haute.",
   "lang": "fr",
+  "id": "./",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

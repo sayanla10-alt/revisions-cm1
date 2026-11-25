@@ -118,6 +118,9 @@ table{border-collapse:collapse;width:100%;font-size:15px}th,td{text-align:left;p
 <script>
 (()=>{
 "use strict";
+let installEvt=null;const standalone=()=>{try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}catch(e){return false}};
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEvt=e;if(typeof render==="function"&&VIEW.v==="home")render()});
+window.addEventListener("appinstalled",()=>{installEvt=null;toast("Application installée ! Tu la trouves sur l'écran d'accueil.");render()});
 /* ============ MATIÈRES ============ */
 const SUBJ={
  maths:{n:"Mathématiques",c:"#2343c4"},
@@ -633,7 +636,7 @@ function homeV(){const lv=level();const nm=esc(ST.name||"championne");const td=S
  (weak?'<div class="card"><b>Kalou te conseille de revoir :</b><div class="row" style="margin-top:8px"><span style="flex:1">'+esc(weak[0].t)+'</span><button class="btn sm" data-a="lesson" data-p="'+esc(weak[0].id)+'">Revoir</button></div></div>':'')+
  '</div><h2 class="cur" style="margin:26px 0 10px">Mes matières</h2><div class="subjs">'+
  SORDER.map(s=>{const m=subjMastery(s);return'<button class="card subj" data-a="subj" data-p="'+s+'">'+SIC[s]+'<b>'+SUBJ[s].n+'</b><span class="small muted">'+m.n+" leçons · "+m.done+" travaillées</span><div class=\"bar\" style=\"--c:"+SUBJ[s].c+'"><i style="width:'+Math.round(m.avg*100)+'%"></i></div></button>'}).join("")+
- '</div><p style="margin-top:28px;text-align:center"><button class="link" data-a="gate">Espace parent</button></p>'}
+ '</div>'+(standalone()?'':'<div class="card stack" style="margin-top:22px"><b>Installer l\'application sur ce téléphone</b><button class="btn g" data-a="install">Installer l\'application</button><div id="insthelp"></div></div>')+'<p style="margin-top:28px;text-align:center"><button class="link" data-a="gate">Espace parent</button></p>'}
 
 function subjV(s){const S=SUBJ[s];const ls=LESSONS.filter(l=>l.s===s).sort((a,b)=>(b.d||"").localeCompare(a.d||""));const doms=[...new Set(ls.map(l=>l.dom))];
  return '<div class="top"><button class="btn gh sm" data-a="home">'+IC.back+' Accueil</button></div><div class="row">'+SIC[s]+'<h1 class="cur" style="flex:1">'+S.n+'</h1></div>'+
@@ -809,6 +812,8 @@ const ACT={
   micTarget=$("#ain");if(micTarget)micTarget.dataset.mic="1";micBase=micTarget&&micTarget.type!=="hidden"?micTarget.value.trim():"";if(micTarget&&micTarget.type==="hidden")micTarget.value="";
   d.start({language:DLANGS[Math.min(CAP.dl,DLANGS.length-1)]}).catch(e=>{MIC_ON=false;document.querySelectorAll(".mic").forEach(b=>b.classList.remove("on"));if(e&&(e.code==="unavailable"||e.code==="invalid_argument")){CAP.dl++;if(CAP.dl>=DLANGS.length)disableMic("Le micro de la page ne propose pas le français ici. "+KBTIP);else toast("Touche encore le micro pour réessayer.");return}if(e&&e.code==="stopped")return;if(e&&e.code==="no_speech"){toast("Je n'ai rien entendu. Touche le micro et parle.");return}if(e&&e.code==="not_granted"){CAP.dict=null;toast("Le micro n'est pas autorisé : tu peux écrire ta réponse.");document.querySelectorAll(".mic").forEach(b=>b.remove())}else toast("Le micro ne répond pas. Réessaie.")})},
  setname:()=>{const v=($("#fname").value||"").trim().slice(0,30);if(!v)return;ST.name=v;save();render();speak("Bonjour "+v+" ! Je suis Kalou. On révise ensemble ?",true)},
+ install:async()=>{if(installEvt){try{installEvt.prompt();const r=await installEvt.userChoice;if(r&&r.outcome==="accepted")toast("Installation en cours…");installEvt=null}catch(e){}return}
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);const h=$("#insthelp");if(h)h.innerHTML=ios?'<p class="note">Sur iPhone : ouvre cette page dans <b>Safari</b>, touche le bouton <b>Partager</b> (le carré avec une flèche), puis <b>« Sur l\'écran d\'accueil »</b>.</p>':'<p class="note">Dans <b>Chrome</b> : touche le menu <b>⋮</b> en haut à droite, puis <b>« Installer l\'application »</b> (ou « Ajouter à l\'écran d\'accueil » puis <b>Installer</b>). Si tu ne vois pas l\'option, recharge la page puis réessaie.</p>'},
  gate:()=>go({v:"gate"}),
  gatego:()=>{if(+($("#gin").value||0)===gateAns)go({v:"parent"});else toast("Ce n'est pas le bon résultat.")},
  savename:()=>{ST.name=($("#pname").value||"").trim().slice(0,30);ST.voice=$("#pvoice").checked;save();toast("Réglages enregistrés.")},

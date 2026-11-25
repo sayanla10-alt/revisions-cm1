@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Révisions CM1</title>
+<meta name="theme-color" content="#2343c4">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Révisions">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Playwrite+FR+Moderne:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a kind, patient maître d'école; short sentences, praise first, then the rule.
+   IDEA: the CM1 cahier itself: Seyès ruling, red margin, the teacher's blue, red and green inks.
+   PICTURE: Kalou the hornbill, perched on a pencil, cheering her on.
+   COLOUR and TYPE: white paper, ink blue, margin red, leaf green, sun yellow stars; a slate board at night. Playwrite FR Moderne (French school cursive) for titles, Andika (made for young readers) for text.
+   LAYOUT: one calm column, big 52px+ buttons, cards laid on ruled paper; stacks naturally on phones. */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#17221e);--l1:light-dark(#e6eaf8,#22302b);--l2:light-dark(#c9d2f1,#2b3c35);--mg:light-dark(#ef9aa8,#8f3d4b);
+--ink:light-dark(#1b2240,#eef3ec);--soft:light-dark(#5b6385,#a9b9b0);--card:light-dark(#ffffff,#1f2c28);--edge:light-dark(#dfe4f3,#34473f);
+--blue:light-dark(#2343c4,#9db2ff);--red:light-dark(#c92a42,#ff8f9d);--green:light-dark(#11784a,#72dfa8);--orange:light-dark(#c25e00,#ffb76b);--purple:light-dark(#6a34a8,#cca8ff);
+--btn:light-dark(#2343c4,#3d5bd9);--btnD:light-dark(#152c8c,#26399c);--gbtn:light-dark(#11784a,#1e9562);--gbtnD:light-dark(#0a5233,#146843);
+--sun:#ffb400;--ok:light-dark(#e2f6eb,#173a2a);--ko:light-dark(#fde8eb,#3f1d24);--hl:light-dark(#fff4cc,#3a3214)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;color:var(--ink);font:17px/1.55 Andika,"Trebuchet MS",system-ui,sans-serif;overflow-x:clip;background-color:var(--bg);
+background-image:linear-gradient(90deg,transparent 0 46px,var(--mg) 46px 48px,transparent 48px),linear-gradient(var(--l2) 1px,transparent 1px),linear-gradient(var(--l1) 1px,transparent 1px);
+background-size:100% 100%,100% 32px,100% 8px}
+@media(max-width:600px){body{background-image:linear-gradient(90deg,transparent 0 9px,var(--mg) 9px 11px,transparent 11px),linear-gradient(var(--l2) 1px,transparent 1px),linear-gradient(var(--l1) 1px,transparent 1px)}}
+#app{max-width:780px;margin:0 auto;padding:18px 18px 80px 64px}
+@media(max-width:600px){#app{padding:14px 12px 80px 22px}}
+h1,h2,h3{margin:0;font-weight:400}
+.cur{font-family:"Playwrite FR Moderne","Segoe Script",cursive;color:var(--blue);line-height:1.45;text-wrap:balance}
+h1.cur{font-size:clamp(26px,6vw,40px)}h2.cur{font-size:clamp(22px,5vw,30px)}
+.muted{color:var(--soft)}.small{font-size:14px}
+.card{background:var(--card);border:2px solid var(--edge);border-radius:20px;padding:18px;box-shadow:0 3px 0 var(--edge)}
+.stack>*+*{margin-top:14px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{appearance:none;border:0;border-radius:16px;min-height:52px;padding:12px 18px;font:700 18px/1.2 Andika,sans-serif;background:var(--btn);color:#fff;box-shadow:0 4px 0 var(--btnD);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;text-align:center;text-decoration:none}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--btnD)}
+.btn.g{background:var(--gbtn);box-shadow:0 4px 0 var(--gbtnD)}
+.btn.gh{background:var(--card);color:var(--blue);border:2px solid var(--edge);box-shadow:0 3px 0 var(--edge)}
+.btn.sm{min-height:44px;padding:8px 14px;font-size:16px}
+.btn.big{width:100%;min-height:64px;font-size:21px}
+.btn[disabled]{opacity:.5;pointer-events:none}
+.link{background:none;border:0;color:var(--blue);font:inherit;text-decoration:underline;cursor:pointer;min-height:44px;padding:8px 4px}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+svg{display:block}
+.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:12px;align-items:center}
+@media(max-width:600px){.hero{grid-template-columns:minmax(0,1fr)}.hero .kal{order:-1;max-width:260px;margin:0 auto}}
+.bubble{position:relative;background:var(--hl);border-radius:18px;padding:12px 16px;font-size:18px;margin-top:10px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stat{text-align:center;padding:12px 6px}.stat b{display:block;font-size:26px;line-height:1.1}.stat span{font-size:14px;color:var(--soft)}
+.stat svg{margin:0 auto 4px}
+.bar{height:10px;border-radius:6px;background:var(--l1);overflow:hidden}.bar>i{display:block;height:100%;background:var(--c,var(--green));border-radius:6px}
+.subjs{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.subj{appearance:none;font:inherit;color:var(--ink);text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:8px}
+.ic{width:46px;height:46px;flex:none}.subj .ic{width:40px;height:40px}.top .ic,.row>.ic{width:40px;height:40px}
+.subj b{font-size:17px;line-height:1.25}
+.les{appearance:none;font:inherit;color:var(--ink);text-align:left;width:100%;cursor:pointer;display:flex;gap:12px;align-items:center;padding:14px 16px}
+.les .t{flex:1}.les .t b{display:block;font-size:17px;line-height:1.3}.les .t span{font-size:14px;color:var(--soft)}
+.chip{flex:none;font-size:13px;font-weight:700;border-radius:999px;padding:4px 10px;background:var(--l1);color:var(--soft);white-space:nowrap}
+.chip.ok{background:var(--ok);color:var(--green)}.chip.mid{background:var(--hl);color:var(--orange)}.chip.lo{background:var(--ko);color:var(--red)}
+.dom{font-weight:700;color:var(--soft);font-size:15px;margin:18px 0 8px}
+.tag{display:inline-block;font-size:14px;font-weight:700;color:light-dark(var(--c,#2343c4),color-mix(in srgb,var(--c,#2343c4) 45%,#fff));background:color-mix(in srgb,var(--c,var(--blue)) 12%,transparent);border-radius:999px;padding:4px 12px}
+.rule{font-size:18px;line-height:1.7}.rule p{margin:0 0 8px}.rule ul{margin:0 0 8px;padding-left:20px}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.top .sp{flex:1}
+.qtop{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.dots{flex:1;display:flex;gap:5px;flex-wrap:wrap}.dots i{width:14px;height:14px;border-radius:50%;background:var(--l2)}.dots i.g{background:var(--green)}.dots i.r{background:var(--red)}.dots i.c{background:var(--sun);transform:scale(1.25)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-weight:700;background:var(--hl);border-radius:999px;padding:6px 12px;white-space:nowrap}
+.qtext{font-size:clamp(20px,4.6vw,24px);line-height:1.45;margin:12px 0 14px}
+.blank{display:inline-block;min-width:3.2em;border-bottom:3px dashed var(--blue);color:var(--blue);text-align:center;font-weight:700}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.15;margin:0 .15em;font-weight:700}.fr>span:first-child{border-bottom:2px solid currentColor;padding:0 .25em}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);color:var(--ink);border:2px solid var(--edge);border-radius:16px;min-height:56px;padding:10px 14px;font:inherit;font-size:19px;box-shadow:0 3px 0 var(--edge);cursor:pointer}
+.opt .lt{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--l1);color:var(--blue);font-weight:700}
+.opt.good{border-color:var(--green);background:var(--ok)}.opt.bad{border-color:var(--red);background:var(--ko)}.opt[disabled]{cursor:default}
+.inrow{display:flex;gap:10px;align-items:stretch}
+.inp{width:100%;font:inherit;font-size:20px;padding:12px 14px;border:2px solid var(--edge);border-radius:14px;background:var(--card);color:var(--ink)}
+textarea.inp{min-height:110px;resize:vertical;font-size:18px}
+.mic,.ib{flex:none;width:56px;height:56px;border-radius:50%;border:2px solid var(--edge);background:var(--card);color:var(--red);display:grid;place-items:center;cursor:pointer;box-shadow:0 3px 0 var(--edge)}
+.ib{width:48px;height:48px;color:var(--blue)}
+.mic.on{background:var(--red);color:#fff;border-color:var(--red);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px color-mix(in srgb,var(--red) 25%,transparent)}}
+.heard{font-size:15px;color:var(--soft);min-height:22px;margin-top:6px}
+.fb{margin-top:16px;border-radius:16px;padding:14px 16px;font-size:18px}
+.fb.ok{background:var(--ok)}.fb.ko{background:var(--ko)}
+.recall{margin-top:10px;background:var(--card);border-radius:12px;padding:10px 12px;font-size:17px}
+.fb .h{display:flex;align-items:center;gap:10px;font-weight:700;font-size:21px}
+.fb p{margin:8px 0 0}
+.pose{display:inline-grid;justify-items:end;font:600 22px/1.3 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;margin-top:8px;background:var(--card);border-radius:10px;padding:8px 14px}
+.pose .ln{border-top:2px solid currentColor;justify-self:stretch;text-align:right}
+.endsc{text-align:center}.endsc .score{font-size:56px;font-weight:700;line-height:1;color:var(--blue)}
+.burst{animation:pop .6s ease-out}@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.burst,.mic.on{animation:none}}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;max-width:min(92vw,520px);z-index:9;font-size:16px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+table{border-collapse:collapse;width:100%;font-size:15px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--edge);vertical-align:top}td.n{text-align:right;white-space:nowrap}
+.seg{display:inline-flex;border:2px solid var(--edge);border-radius:14px;overflow:hidden}.seg button{appearance:none;border:0;background:var(--card);color:var(--ink);font:inherit;min-height:44px;padding:8px 14px;cursor:pointer}.seg button.on{background:var(--btn);color:#fff}
+.sw{display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer}.sw input{width:22px;height:22px}
+.note{font-size:15px;background:var(--hl);border-radius:12px;padding:10px 12px}
+.prev{border:2px dashed var(--edge);border-radius:14px;padding:12px}
+.spin{width:22px;height:22px;border:3px solid var(--l2);border-top-color:var(--blue);border-radius:50%;animation:sp 1s linear infinite;display:inline-block;vertical-align:middle}@keyframes sp{to{transform:rotate(360deg)}}
+.scroll{overflow-x:auto}
+@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--soft)}.stack td:empty{display:none}}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+<main id="app"><p class="muted">Chargement des révisions…</p></main>
+<div id="toast" class="toast" hidden></div>
+<script>
+(()=>{
+"use strict";
+/* ============ MATIÈRES ============ */
+const SUBJ={
+ maths:{n:"Mathématiques",c:"#2343c4"},
+ ortho:{n:"Orthographe",c:"#c92a42"},
+ conj:{n:"Conjugaison",c:"#b0306f"},
+ gram:{n:"Grammaire",c:"#0f7c8c"},
+ voc:{n:"Vocabulaire",c:"#c25e00"},
+ expe:{n:"Expression écrite",c:"#7a4e1d"},
+ expo:{n:"Expression orale",c:"#5b4bc4"},
+ sciences:{n:"Sciences et technologie",c:"#11784a"},
+ histoire:{n:"Histoire",c:"#9a6a00"},
+ geo:{n:"Géographie",c:"#0a6aa8"},
+ edhc:{n:"EDHC",c:"#6a34a8"}
+};
+const SORDER=["maths","ortho","conj","gram","voc","expe","expo","sciences","histoire","geo","edhc"];
+const DOMMAP={"Orthographe":"ortho","Conjugaison":"conj","Grammaire":"gram","Vocabulaire":"voc","Expression écrite":"expe","Expression orale":"expo","Histoire":"histoire","Géographie":"geo"};
+function mapSubj(s,dom){if(SUBJ[s])return s;if(DOMMAP[dom])return DOMMAP[dom];return s==="histgeo"?"histoire":s==="francais"?"gram":"maths"}
+
+/* ============ LEÇONS DU CAHIER (contenu corrigé) ============
+   q : [question, [bonne, fausse, fausse]] = QCM ; [question, nombre] = réponse numérique ;
+       [question, "réponse modèle", [mots-clés], n] = réponse libre (n mots-clés requis)        */
+const BASE=[
+/* ---------- MATHÉMATIQUES ---------- */
+{id:"m-nombres",s:"maths",dom:"Nombres",d:"2026-09-17",t:"Écrire les nombres jusqu'au milliard",g:"nombresLettres",
+r:"Pour lire et écrire un grand nombre, je le découpe en classes de 3 chiffres en partant de la droite : unités simples, mille, millions, milliards.\nExemple : 21 000 000 s'écrit vingt et un millions (8 chiffres).\n100 000 000 = cent millions (9 chiffres). 1 000 000 000 = un milliard (10 chiffres).\nMille est invariable. Million et milliard prennent un s au pluriel.",
+q:[["Combien de chiffres a le nombre un million ?",7],["Combien de chiffres a le nombre cent millions ?",9],["Combien de chiffres a le nombre un milliard ?",10],["Comment écrit-on deux fois mille ?",["deux mille","deux milles","deux millent"]],["Dans 21 000 000, à quelle classe appartient 21 ?",["La classe des millions","La classe des mille","La classe des unités simples"]]]},
+{id:"m-romains",s:"maths",dom:"Nombres",d:"2026-09-19",t:"Les chiffres romains",g:"romains",
+r:"I = 1, V = 5, X = 10, L = 50, C = 100, D = 500, M = 1 000.\nUn même chiffre ne peut pas être écrit plus de trois fois de suite.\nUn chiffre plus petit placé à gauche d'un plus grand se soustrait : IV = 5 − 1 = 4.\nUn chiffre plus petit placé à droite s'ajoute : VI = 5 + 1 = 6.\nUne barre au-dessus d'un chiffre le multiplie par 1 000.",
+q:[["Combien vaut L ?",50],["Combien vaut C ?",100],["Combien vaut D ?",500],["Combien vaut M ?",1000],["Dans IV, que fait-on ?",["Une soustraction : 5 − 1","Une addition : 5 + 1","Une multiplication"]],["Combien de fois de suite peut-on écrire le même chiffre romain, au maximum ?",3],["Que veut dire une barre au-dessus d'un chiffre romain ?",["On le multiplie par 1 000","On le divise par 10","On l'efface"]]]},
+{id:"m-ranger",s:"maths",dom:"Nombres",d:"2026-09-21",t:"Comparer et ranger les grands nombres",g:"comparerEntiers",
+r:"Je compte les chiffres : le plus grand nombre est celui qui a le plus de chiffres.\nS'ils ont le même nombre de chiffres, je compare classe par classe en partant de la gauche : milliards, puis millions, puis mille, puis unités.\nLes signes : > se lit « est plus grand que », < se lit « est plus petit que », = se lit « est égal à ».",
+q:[["Deux nombres n'ont pas le même nombre de chiffres. Lequel est le plus grand ?",["Celui qui a le plus de chiffres","Celui qui a le moins de chiffres","On ne peut pas savoir"]],["Comment se lit le signe > ?",["est plus grand que","est plus petit que","est égal à"]],["Comment se lit le signe < ?",["est plus petit que","est plus grand que","est égal à"]],["S'ils ont le même nombre de chiffres, par où commence-t-on la comparaison ?",["Par la gauche, la plus grande classe","Par la droite, les unités","Par le milieu"]]]},
+{id:"m-addition",s:"maths",dom:"Opérations",d:"2026-09-28",t:"L'addition des nombres entiers",g:"addition",
+r:"Je pose l'opération en alignant les chiffres à droite : les unités sous les unités, les dizaines sous les dizaines, les centaines sous les centaines, dans chaque classe.\nJe calcule en commençant par la droite, sans oublier les retenues.\nExemple : 13 436 + 2 123 = 15 559.",
+q:[["Par quelle colonne commence-t-on une addition posée ?",["Par les unités, à droite","Par la gauche","Par les dizaines"]],["Calcule : 13 436 + 2 123",15559],["Comment s'appelle le résultat d'une addition ?",["La somme","La différence","Le produit"]]]},
+{id:"m-soustraction",s:"maths",dom:"Opérations",d:"2026-09-29",t:"La soustraction des nombres entiers",g:"soustraction",
+r:"Je place le plus grand nombre en haut et le plus petit en dessous, en alignant les unités, les dizaines et les centaines de chaque classe.\nJe calcule de droite à gauche, sans oublier les retenues.\nExemple : 48 412 − 7 051 = 41 361.",
+q:[["Dans une soustraction, quel nombre place-t-on en haut ?",["Le plus grand","Le plus petit","N'importe lequel"]],["Calcule : 28 378 − 12 014",16364],["Comment s'appelle le résultat d'une soustraction ?",["La différence","La somme","Le quotient"]]]},
+{id:"m-pb-soustraction",s:"maths",dom:"Problèmes",d:"2026-10-02",t:"Résoudre un problème de soustraction",g:"probSoustraction",
+r:"Calculer une différence, c'est résoudre un problème de soustraction. Pour cela :\n• je lis l'énoncé plusieurs fois ;\n• je repère la question posée ;\n• je cherche les informations utiles ;\n• je fais la soustraction ;\n• je relis et je vérifie mon résultat ;\n• je rédige la solution par une phrase.",
+q:[["Quelle est la première étape pour résoudre un problème ?",["Lire l'énoncé plusieurs fois","Faire le calcul tout de suite","Écrire la réponse"]],["Que fait-on à la fin d'un problème ?",["On rédige la solution par une phrase","On efface tout","On recommence"]],["Que veut dire « calculer une différence » ?",["Faire une soustraction","Faire une addition","Faire une multiplication"]]]},
+{id:"m-multiplication",s:"maths",dom:"Opérations",d:"2026-10-12",t:"La multiplication",g:"multiplication",
+r:"Je pose l'opération en alignant les unités, les dizaines et les centaines.\nJe multiplie le multiplicande (le nombre du haut) par le chiffre des unités du multiplicateur (le nombre du bas), puis par le chiffre des dizaines en décalant d'un rang, puis par celui des centaines.\nJ'additionne les produits partiels pour obtenir le produit, sans oublier les retenues.",
+q:[["Comment s'appelle le résultat d'une multiplication ?",["Le produit","La somme","Le reste"]],["Dans 245 × 12 posée, 12 est en bas. Comment s'appelle-t-il ?",["Le multiplicateur","Le multiplicande","Le produit"]],["Calcule : 25 × 12",300],["Après avoir multiplié par chaque chiffre, que fait-on des produits partiels ?",["On les additionne","On les soustrait","On les divise"]]]},
+{id:"m-pb-multiplication",s:"maths",dom:"Problèmes",d:"2026-10-15",t:"Résoudre un problème de multiplication",g:"probMultiplication",
+r:"Je relève les données numériques utiles.\nJ'identifie les étapes qui mènent à la solution.\nJe calcule, puis je réponds à la question par une phrase.\nExemple : un parent d'élève achète 25 paquets de 12 cahiers. 25 × 12 = 300. Il a acheté 300 cahiers.",
+q:[["Un parent achète 25 paquets de 12 cahiers. Combien de cahiers a-t-il achetés ?",300],["Que relève-t-on d'abord dans un problème ?",["Les données numériques utiles","Le titre","Les couleurs"]]]},
+{id:"m-division",s:"maths",dom:"Opérations",d:"2026-10-19",t:"La division par un nombre d'un chiffre",g:"division",
+r:"Je pose la division : le dividende à gauche, le diviseur à droite.\nJe m'aide de la table de multiplication du diviseur.\nJe trouve le quotient et le reste. Le reste est toujours plus petit que le diviseur.\nExemple : 245 : 3 → quotient 81, reste 2, car 3 × 81 + 2 = 245.",
+q:[["Dans 245 : 3, comment s'appelle 245 ?",["Le dividende","Le diviseur","Le quotient"]],["Dans 245 : 3, comment s'appelle 3 ?",["Le diviseur","Le dividende","Le reste"]],["Le reste est toujours…",["Plus petit que le diviseur","Plus grand que le diviseur","Égal au quotient"]],["Quel est le quotient de 245 : 3 ?",81],["Quelle table m'aide pour diviser par 3 ?",["La table de 3","La table de 10","La table de 2"]]]},
+{id:"m-fractions",s:"maths",dom:"Fractions",d:"2026-11-02",t:"Les fractions",g:"fractionsLire",
+r:"Quand on partage une unité en parts égales, chaque part représente une fraction.\nDans [3/5] : 3 est le numérateur (en haut), 5 est le dénominateur (en bas, le nombre de parts égales).\n[2/5] se lit deux cinquièmes ; [1/4] un quart ; [1/3] un tiers ; [1/2] un demi.",
+q:[["Dans [3/5], comment s'appelle 3 ?",["Le numérateur","Le dénominateur","La barre de fraction"]],["Dans [3/5], comment s'appelle 5 ?",["Le dénominateur","Le numérateur","Le quotient"]],["Comment lit-on [1/4] ?",["Un quart","Un quatrième","Un tiers"]],["Comment lit-on [1/2] ?",["Un demi","Un deuxième","Un tiers"]],["Comment lit-on [1/3] ?",["Un tiers","Un troisième","Un quart"]]]},
+{id:"m-frac-equiv",s:"maths",dom:"Fractions",d:"2026-11-03",t:"Les fractions équivalentes",g:"fractionsEquiv",
+r:"Pour écrire une fraction équivalente, je multiplie ou je divise le numérateur ET le dénominateur par un même nombre différent de zéro.\nExemple : [10/5] = [20/10] (× 2) = [200/100] (× 20).\n[10/5] = [2/1] (: 5).",
+q:[["Pour obtenir une fraction équivalente, que fait-on ?",["On multiplie ou on divise le numérateur et le dénominateur par le même nombre","On multiplie seulement le numérateur","On ajoute 1 en haut et en bas"]],["Complète : [10/5] = [20/?]",10],["Par quel nombre ne peut-on jamais multiplier ou diviser ?",["Zéro","Deux","Dix"]]]},
+{id:"m-frac-dec",s:"maths",dom:"Fractions",d:"2026-11-09",t:"Les fractions décimales",g:"fractionsDecimales",
+r:"Une fraction décimale est une fraction dont le dénominateur est 1, 10, 100 ou 1 000.\nElle peut s'écrire sous forme de nombre décimal :\n[9/10] = 0,9 ; [7/100] = 0,07 ; [406/1000] = 0,406 ; [635/100] = 6,35 ; [8/1000] = 0,008.",
+q:[["Laquelle est une fraction décimale ?",["[7/100]","[3/4]","[2/5]"]],["Écris [9/10] sous forme de nombre décimal.",0.9],["Écris [5/100] sous forme de nombre décimal.",0.05]]},
+{id:"m-decimaux",s:"maths",dom:"Nombres décimaux",d:"2026-11-09",t:"Les nombres décimaux",g:"decimauxLire",
+r:"Un nombre décimal a une partie entière, avant la virgule, et une partie décimale, après la virgule.\nExemple : 105,02 → partie entière 105, partie décimale 02.\n206,72 se lit deux cent six unités soixante-douze centièmes.\n206,7 se lit deux cent six unités sept dixièmes.",
+q:[["Dans 105,02, quelle est la partie entière ?",105],["Où se trouve la partie décimale ?",["Après la virgule","Avant la virgule","Au milieu du nombre"]],["Comment lit-on 206,7 ?",["Deux cent six unités sept dixièmes","Deux cent six unités sept centièmes","Deux mille soixante-sept"]]]},
+{id:"m-frac-comparer",s:"maths",dom:"Fractions",d:"2026-11-09",t:"Comparer des fractions",g:"fractionsComparer",
+r:"Même dénominateur : la plus grande fraction a le plus grand numérateur. [11/3] > [7/3]\nMême numérateur : la plus grande fraction a le plus petit dénominateur. [17/8] > [17/10]\nSi le numérateur est plus grand que le dénominateur, la fraction est plus grande que 1. [23/12] > 1\nSi le numérateur et le dénominateur sont égaux, la fraction est égale à 1. [37/37] = 1",
+q:[["Compare [11/3] et [7/3].",["[11/3] > [7/3]","[11/3] < [7/3]","[11/3] = [7/3]"]],["Compare [17/8] et [17/10].",["[17/8] > [17/10]","[17/8] < [17/10]","[17/8] = [17/10]"]],["Combien vaut [37/37] ?",1],["[23/12] est-elle plus grande ou plus petite que 1 ?",["Plus grande que 1","Plus petite que 1","Égale à 1"]]]},
+{id:"m-dec-comparer",s:"maths",dom:"Nombres décimaux",d:"2026-11-10",t:"Comparer des nombres décimaux",g:"decimauxComparer",
+r:"Je compare d'abord les parties entières : 34,7 > 32,62 car 34 > 32.\nSi les parties entières sont égales, je compare les dixièmes, puis les centièmes, puis les millièmes.\nExemple : 4,32 < 4,62 car 3 dixièmes < 6 dixièmes.",
+q:[["Que compare-t-on en premier ?",["Les parties entières","Les centièmes","Le nombre de chiffres après la virgule"]],["Compare 4,32 et 4,62.",["4,32 < 4,62","4,32 > 4,62","4,32 = 4,62"]],["Compare 34,7 et 32,62.",["34,7 > 32,62","34,7 < 32,62","34,7 = 32,62"]]]},
+/* ---------- FRANÇAIS : VOCABULAIRE ---------- */
+{id:"f-voc-impot",s:"francais",dom:"Vocabulaire",d:"2026-09-15",t:"Les mots du citoyen et de l'impôt",
+r:"Un contribuable : une personne qui paie l'impôt.\nUn intérêt de retard : la somme d'argent que le contribuable paie en plus à l'État lorsqu'il paie son impôt en retard.\nUne saisie de biens : le fait de confisquer les biens d'un mauvais contribuable.\nUn inspecteur des impôts : un agent des impôts chargé de vérifier les déclarations des biens.",
+q:[["Comment appelle-t-on une personne qui paie l'impôt ?",["Un contribuable","Un inspecteur","Un commerçant"]],["Qu'est-ce qu'un intérêt de retard ?","La somme que le contribuable paie en plus quand il paie son impôt en retard",["retard","plus|supplement"],2],["Qu'est-ce qu'une saisie de biens ?",["Confisquer les biens d'un mauvais contribuable","Acheter de nouveaux biens","Vendre ses biens au marché"]],["Qui vérifie les déclarations des biens ?",["L'inspecteur des impôts","Le boutiquier","Le maître d'école"]]]},
+{id:"f-voc-radical",s:"francais",dom:"Vocabulaire",d:"2026-09-21",t:"La racine ou le radical d'un mot",
+r:"La racine (ou le radical) d'un mot est la base sur laquelle se forment d'autres mots.\nExemples : vent → ventilateur, éventail, ventiler.\nplant → plantation, plante, planteur.",
+q:[["Quel est le radical commun à ventilateur, éventail et ventiler ?",["vent","venti","lateur"]],["Quel mot a le même radical que « plante » ?",["planteur","planche","plaine"]],["Qu'est-ce que le radical d'un mot ?","La base sur laquelle se forment d'autres mots",["base|racine"]],["Quel est le radical commun à terrain, terrasse et enterrer ?",["terr","ain","enter"]],["Quel mot n'est pas de la famille de « dent » ?",["soldat","dentiste","dentifrice"]]]},
+{id:"f-voc-conflit",s:"francais",dom:"Vocabulaire",d:"2026-09-29",t:"Les mots du traitement des conflits",
+r:"Le médiateur : une personne qui règle les conflits. Mots de la même famille : la médiatrice, la médiation.\nNégocier (verbe du 1er groupe) : discuter pour se mettre d'accord. Mots de la même famille : le négociateur, la négociation.\nLa réinsertion sociale : le fait de cesser d'être soldat pour retourner à la vie sociale.",
+q:[["Comment appelle-t-on une personne qui règle les conflits ?",["Un médiateur","Un soldat","Un contribuable"]],["Que veut dire « négocier » ?","Discuter pour se mettre d'accord",["discut|parl","accord"],2],["Quel mot est de la même famille que « négocier » ?",["La négociation","La neige","Le négatif"]],["Qu'est-ce que la réinsertion sociale ?",["Cesser d'être soldat pour retourner à la vie sociale","Partir à la guerre","Construire une maison"]]]},
+{id:"f-voc-prefixe",s:"francais",dom:"Vocabulaire",d:"2026-10-13",t:"Le préfixe",
+r:"Le préfixe est la lettre ou le groupe de lettres placé devant le radical d'un mot.\nQuelques préfixes : re-, a-, in-, im-, dé-, sur-, anti-…\nExemples : reposer, alourdir, surabondance, impossible, dévisser.",
+q:[["Où se place le préfixe ?",["Devant le radical","Après le radical","À la fin de la phrase"]],["Quel est le préfixe de « impossible » ?",["im","ible","poss"]],["Quel est le préfixe de « dévisser » ?",["dé","er","vis"]],["Quel est le préfixe de « surabondance » ?",["sur","ance","abond"]],["Quel mot commence par le préfixe re- ?",["refaire","rire","rouge"]]]},
+{id:"f-voc-homonymes",s:"francais",dom:"Vocabulaire",d:"2026-10-20",t:"Les homonymes",
+r:"Les homonymes sont des mots qui se prononcent de la même façon mais qui n'ont pas le même sens. Ils peuvent s'écrire de la même manière ou de manière différente.\nExemples : le bout (l'extrémité, un morceau), il bout (verbe bouillir), la boue (de la terre mouillée).",
+q:[["Que sont des homonymes ?",["Des mots qui se prononcent pareil mais n'ont pas le même sens","Des mots qui ont le même sens","Des mots contraires"]],["Dans « l'eau bout », que veut dire « bout » ?",["Elle bouillit","L'extrémité","Un morceau"]],["Comment écrit-on la terre mouillée ?",["la boue","le bout","il bout"]],["Quel est l'homonyme de « la mer » ?",["la mère","le mur","la mare"]]]},
+{id:"f-voc-orientation",s:"francais",dom:"Vocabulaire",d:"2026-11-05",t:"Les mots de l'orientation et de l'entrepreneuriat",
+r:"Une décoratrice : une femme qui fabrique ou dessine des choses qui servent à embellir un lieu ou un bâtiment.\nUne qualification : l'ensemble des savoirs, des savoir-faire et des qualités d'un travailleur.\nUne maquette : la représentation réduite d'un objet.\nL'entrepreneuriat : la création d'entreprise.",
+q:[["Qu'est-ce que l'entrepreneuriat ?",["La création d'entreprise","Un métier de la mer","Une fête du village"]],["Qu'est-ce qu'une maquette ?",["La représentation réduite d'un objet","Un grand bâtiment","Un outil de cuisine"]],["Que fait une décoratrice ?","Elle fabrique ou dessine des choses pour embellir un lieu",["embell|beau|decor"]],["La qualification, c'est…",["L'ensemble des savoirs, savoir-faire et qualités d'un travailleur","Le salaire d'un travailleur","Le bureau d'un travailleur"]]]},
+{id:"f-voc-protection",s:"francais",dom:"Vocabulaire",d:"2026-11-10",t:"Les mots de la protection de l'enfant",
+r:"Une victime : une personne sans défense qui subit des violences.\nLa maltraitance : le fait de violenter quelqu'un.\nLa discrimination : le fait de faire des différences injustes entre les uns et les autres.",
+q:[["Qu'est-ce qu'une victime ?",["Une personne sans défense qui subit des violences","Une personne qui aide les autres","Un médecin"]],["Qu'est-ce que la maltraitance ?","Le fait de violenter quelqu'un",["violen|frapp|maltrait|faire du mal"]],["Faire des différences injustes entre les personnes, c'est…",["La discrimination","La médiation","La négociation"]]]},
+{id:"f-voc-suffixe",s:"francais",dom:"Vocabulaire",d:"2026-11-17",t:"Les suffixes",
+r:"Le suffixe est un groupe de lettres qu'on ajoute après le radical d'un mot pour former d'autres mots.\nQuelques suffixes : -ment, -ation, -eur, -ie, -esse, -al…\nExemples : richesse (riche + esse), renforcement (renforce + ment), national (nation + al).",
+q:[["Où se place le suffixe ?",["Après le radical","Devant le radical","Au début du mot"]],["Quel est le suffixe de « richesse » ?",["esse","riche","ri"]],["Quel est le suffixe de « national » ?",["al","nation","na"]],["J'ajoute le suffixe -eur à « chant ». Quel mot j'obtiens ?",["chanteur","chantier","enchanté"]]]},
+/* ---------- FRANÇAIS : ORTHOGRAPHE ---------- */
+{id:"f-ortho-mais",s:"francais",dom:"Orthographe",d:"2026-09-15",t:"mais, mes, met, mets",g:"homo_mais",
+r:"mets (nom) : un repas, un plat. Il s'écrit toujours avec un s, même au singulier : J'aime les mets de mon pays.\nmais : mot de liaison qui marque une opposition (on peut dire « pourtant ») : J'ai soif mais il n'y a pas d'eau.\nmets, met (verbe mettre au présent) : je mets, tu mets, il met : Il met sa chemise.\nmes : adjectif possessif, pluriel de mon, ma : Mes activités sont florissantes.",
+q:[["Comment s'écrit le nom qui veut dire « un plat » ?",["un mets","un mai","un mes"]],["« mes » est le pluriel de…",["mon et ma","mais","mettre"]]]},
+{id:"f-ortho-adverbes",s:"francais",dom:"Orthographe",d:"2026-09-21",t:"Les adverbes en -ment, -amment, -emment",g:"adverbes",
+r:"En général, on forme l'adverbe en ajoutant -ment à l'adjectif au féminin : financière → financièrement ; morale → moralement.\nAdjectif en -ant → adverbe en -amment : vaillant → vaillamment.\nAdjectif en -ent → adverbe en -emment : violent → violemment.",
+q:[["Un adjectif en -ant donne un adverbe en…",["-amment","-emment","-ement"]],["Un adjectif en -ent donne un adverbe en…",["-emment","-amment","-antment"]],["À quelle forme de l'adjectif ajoute-t-on -ment en général ?",["Au féminin","Au pluriel","Au verbe"]]]},
+{id:"f-ortho-af",s:"francais",dom:"Orthographe",d:"2026-09-29",t:"Les mots commençant par af-, ef-, of-",g:"afefof",
+r:"Les mots commençant par af-, ef-, of- s'écrivent en général avec deux f : une affiche, effrayer, une offrande.\nSauf : afin, l'Afrique et les mots de la même famille (africain…).",
+q:[["En général, combien de f après af-, ef-, of- ?",["Deux f","Un seul f","Trois f"]],["Quels mots font exception ?",["afin et Afrique","affiche et offrir","effort et effacer"]]]},
+{id:"f-ortho-cetait",s:"francais",dom:"Orthographe",d:"2026-10-13",t:"c'était, c'étaient, s'était, s'étaient",g:"homo_cetait",
+r:"On écrit s'était / s'étaient quand on peut mettre il, elle (ou ils, elles) devant : La discussion s'était poursuivie → Elle s'était poursuivie.\nDans les autres cas, on écrit c'était / c'étaient (on peut dire « cela était ») : C'était le plus riche. C'étaient les plus riches.",
+q:[["Quand écrit-on « s'était » ?",["Quand on peut mettre il ou elle devant","Quand on peut dire « cela était »","Toujours"]],["« c'était » peut se remplacer par…",["cela était","il était lui-même","ses"]]]},
+{id:"f-ortho-la",s:"francais",dom:"Orthographe",d:"2026-10-20",t:"la, l'a, l'as, là",g:"homo_la",
+r:"la devant un nom : on peut le remplacer par une (déterminant) : la couturière → une couturière.\nla devant un verbe : on peut le remplacer par les (pronom COD) : le mécanicien la répare → les répare.\nl'a, l'as devant un participe passé : on peut les remplacer par l'avait, l'avais : Elle l'a vendue → Elle l'avait vendue. Tu l'as vendue → Tu l'avais vendue.\nlà : adverbe de lieu, on peut le remplacer par ici : Ton bureau est là → ici.",
+q:[["« là » avec un accent peut se remplacer par…",["ici","une","l'avait"]],["« l'a » peut se remplacer par…",["l'avait","une","ici"]]]},
+{id:"f-ortho-adjverbal",s:"francais",dom:"Orthographe",d:"2026-11-05",t:"Adjectif verbal ou participe présent ?",g:"adjverbal",
+r:"Les deux viennent d'un verbe et se terminent par -ant.\nLe participe présent est invariable. Il peut être précédé de « en » : Les soldats quittent le village en enlevant les enfants.\nL'adjectif verbal s'accorde en genre et en nombre avec le nom : face à la souffrance grandissante → face aux souffrances grandissantes.",
+q:[["Lequel est invariable ?",["Le participe présent","L'adjectif verbal","Les deux"]],["Lequel s'accorde avec le nom ?",["L'adjectif verbal","Le participe présent","Aucun des deux"]]]},
+{id:"f-ortho-ces",s:"francais",dom:"Orthographe",d:"2026-11-10",t:"ces, ses, s'est, c'est",g:"homo_ces",
+r:"c'est : on peut le remplacer par cela est, ceci est : C'est une loi pour les enfants.\ns'est : il est précédé de il ou elle : La pauvreté s'est développée → elle s'est développée.\nces : adjectif démonstratif, pluriel de ce, cet, cette : Ces enfants sont malades → cet enfant est malade.\nses : adjectif possessif, pluriel de son, sa : Il défend ses droits → son droit.",
+q:[["« ses » est le pluriel de…",["son et sa","ce et cette","c'est"]],["« ces » est le pluriel de…",["ce, cet, cette","son, sa","s'est"]]]},
+/* ---------- FRANÇAIS : GRAMMAIRE ---------- */
+{id:"f-gram-simple",s:"francais",dom:"Grammaire",d:"2026-09-19",t:"La phrase simple",g:"phraseSimple",
+r:"Une phrase simple contient un seul verbe conjugué.\nExemples : Maman pile du riz. Mariam lave son bébé.",
+q:[["Combien de verbes conjugués contient une phrase simple ?",1],["Quel est le verbe conjugué dans « Maman pile du riz » ?",["pile","Maman","riz"]]]},
+{id:"f-gram-ponct",s:"francais",dom:"Grammaire",d:"2026-09-25",t:"La ponctuation",g:"ponctuation",
+r:"On emploie la ponctuation pour rendre la phrase claire et facile à comprendre.\n• Le point (.) indique la fin d'une phrase.\n• La virgule (,) marque une légère pause ; le point-virgule (;) une pause plus grande.\n• Le point d'exclamation (!) exprime l'étonnement, la colère ou l'admiration.\n• Le point d'interrogation (?) sert à poser une question.\n• Les points de suspension (…) indiquent une phrase inachevée.\n• Les deux points (:) servent à rapporter des paroles ou à donner une explication.\n• Les guillemets (« ») indiquent le début et la fin d'un dialogue ou d'une citation.\n• Le tiret indique le changement d'interlocuteur dans un dialogue.",
+q:[["Quel signe marque une légère pause ?",["La virgule","Le point","Le tiret"]],["Quel signe indique le changement d'interlocuteur dans un dialogue ?",["Le tiret","La virgule","Le point-virgule"]],["À quoi servent les points de suspension ?",["À indiquer une phrase inachevée","À poser une question","À finir un dialogue"]],["À quoi servent les guillemets ?",["À indiquer le début et la fin d'un dialogue ou d'une citation","À marquer une pause","À poser une question"]]]},
+{id:"f-gram-types",s:"francais",dom:"Grammaire",d:"2026-10-02",t:"Les types de phrases",g:"typesPhrases",
+r:"Il existe 4 types de phrases :\n• la phrase déclarative informe, déclare quelque chose : Nous avons tous des droits et des devoirs.\n• la phrase interrogative pose une question : Quels sont les droits de la jeune fille ?\n• la phrase impérative donne un ordre ou un conseil : Ferme la porte en sortant.\n• la phrase exclamative exprime l'étonnement, l'admiration… Elle se termine toujours par un point d'exclamation et peut ne pas contenir de verbe : Quelle belle journée !",
+q:[["Combien y a-t-il de types de phrases ?",4],["Quelle phrase donne un ordre ou un conseil ?",["La phrase impérative","La phrase déclarative","La phrase interrogative"]],["Par quel signe se termine toujours une phrase exclamative ?",["Le point d'exclamation","Le point","Le point d'interrogation"]]]},
+{id:"f-gram-gn",s:"francais",dom:"Grammaire",d:"2026-10-23",t:"Les constituants du groupe nominal",g:"groupeNominal",
+r:"Le groupe nominal (GN) peut être constitué :\n• d'un nom propre : Koré, Yapo ;\n• d'un déterminant + un nom commun : mon oncle, ma tante ;\n• d'un déterminant + un nom commun + un adjectif : un métier plaisant, ma chère sœur ;\n• d'un déterminant + un nom commun + un complément du nom : un cahier de devoirs.",
+q:[["Quel est le mot principal d'un groupe nominal ?",["Le nom","Le verbe","L'adjectif"]],["« Yapo » est…",["Un nom propre","Un adjectif","Un verbe"]]]},
+{id:"f-gram-cod",s:"francais",dom:"Grammaire",d:"2026-11-06",t:"Le complément d'objet direct (COD)",g:"cod",
+r:"Le COD peut être un groupe nominal ou un pronom personnel.\nLes pronoms personnels COD sont : le, la, les, l' (et parfois en). Ils remplacent un groupe nominal déjà cité, pour éviter la répétition.\nQuand le COD est un pronom personnel, il se place avant le verbe.\nExemple : Les parents protègent les enfants → Les parents les protègent.",
+q:[["Où se place le COD quand c'est un pronom personnel ?",["Avant le verbe","Après le verbe","À la fin de la phrase"]],["Lequel est un pronom personnel COD ?",["les","mon","avec"]]]},
+/* ---------- FRANÇAIS : CONJUGAISON ---------- */
+{id:"f-conj-present",s:"francais",dom:"Conjugaison",d:"2026-09-19",t:"Le présent des verbes du 1er et du 2e groupe",g:"conj_present12",
+r:"1er groupe : terminaisons e, es, e, ons, ez, ent. (voter) je vote, tu votes, il/elle vote, nous votons, vous votez, ils/elles votent.\nAttention : le verbe aller appartient au 3e groupe.\n2e groupe : terminaisons is, is, it, issons, issez, issent. (unir) j'unis, tu unis, il/elle unit, nous unissons, vous unissez, ils/elles unissent.",
+q:[["Quelles sont les terminaisons du 1er groupe au présent ?",["e, es, e, ons, ez, ent","is, is, it, issons, issez, issent","ais, ais, ait, ions, iez, aient"]],["À quel groupe appartient le verbe aller ?",["Au 3e groupe","Au 1er groupe","Au 2e groupe"]]]},
+{id:"f-conj-imparfait",s:"francais",dom:"Conjugaison",d:"2026-09-25",t:"L'imparfait des verbes du 1er et du 2e groupe",g:"conj_imparfait12",
+r:"L'imparfait de l'indicatif est un temps du passé.\n1er groupe : radical + ais, ais, ait, ions, iez, aient. (citer) je citais, tu citais, il citait, nous citions, vous citiez, ils citaient.\n2e groupe : radical + issais, issais, issait, issions, issiez, issaient. (remplir) je remplissais, tu remplissais, il remplissait, nous remplissions, vous remplissiez, ils remplissaient.",
+q:[["Quelles sont les terminaisons de l'imparfait au 1er groupe ?",["ais, ais, ait, ions, iez, aient","e, es, e, ons, ez, ent","ai, as, a, âmes, âtes, èrent"]],["L'imparfait est un temps…",["du passé","du futur","du présent"]]]},
+{id:"f-conj-ps",s:"francais",dom:"Conjugaison",d:"2026-10-02",t:"Le passé simple des verbes du 1er et du 2e groupe",g:"conj_ps12",
+r:"On utilise le passé simple pour une action complètement achevée, qui a eu lieu à un moment précis du passé. Il est surtout utilisé à l'écrit, dans le récit.\nExemple : Tidiane montait les escaliers quand il glissa et se blessa.\n1er groupe : radical + ai, as, a, âmes, âtes, èrent. (chanter) je chantai, tu chantas, il chanta, nous chantâmes, vous chantâtes, ils chantèrent.\n2e groupe : radical + is, is, it, îmes, îtes, irent. (choisir) je choisis, tu choisis, il choisit, nous choisîmes, vous choisîtes, ils choisirent.",
+q:[["Quand utilise-t-on le passé simple ?",["Pour une action achevée, à un moment précis du passé","Pour une action qui se passe maintenant","Pour une action future"]],["Quelles sont les terminaisons du 2e groupe au passé simple ?",["is, is, it, îmes, îtes, irent","ai, as, a, âmes, âtes, èrent","is, is, it, issons, issez, issent"]]]},
+{id:"f-conj-pronom",s:"francais",dom:"Conjugaison",d:"2026-10-23",t:"Les verbes pronominaux au présent",g:"conj_pronom",
+r:"À l'infinitif, les verbes pronominaux sont précédés de se ou s' : se laver, se munir, s'enfuir.\nIls se conjuguent avec un pronom réfléchi placé entre le sujet et le verbe : je me, tu te, il/elle se, nous nous, vous vous, ils/elles se (m', t', s' devant une voyelle).\n1er groupe : je me lave, tu te laves, il se lave, nous nous lavons, vous vous lavez, ils se lavent.\n2e groupe : je me munis, nous nous munissons, ils se munissent.\n3e groupe : je m'enfuis, nous nous enfuyons, vous vous enfuyez, ils s'enfuient.",
+q:[["Quel pronom réfléchi va avec « nous » ?",["nous","se","me"]],["Quel pronom réfléchi va avec « tu » ?",["te","se","me"]],["Où se place le pronom réfléchi ?",["Entre le sujet et le verbe","Après le verbe","Au début de la phrase"]]]},
+{id:"f-conj-3e",s:"francais",dom:"Conjugaison",d:"2026-11-06",t:"Le présent des verbes du 3e groupe",g:"conj_present3",
+r:"Au présent, beaucoup de verbes du 3e groupe se terminent par s, s, t, ons, ez, ent.\n(mettre) je mets, tu mets, il/elle met, nous mettons, vous mettez, ils/elles mettent.\n(devoir) je dois, tu dois, il/elle doit, nous devons, vous devez, ils/elles doivent.",
+q:[["Comment écrit-on « mettre » avec « il » au présent ?",["il met","il mets","il mette"]],["Comment écrit-on « devoir » avec « nous » au présent ?",["nous devons","nous devrons","nous doivons"]]]},
+/* ---------- FRANÇAIS : EXPRESSION ---------- */
+{id:"f-exp-recit",s:"francais",dom:"Expression écrite",d:"2026-09-17",t:"Écrire un récit",
+r:"Pour écrire une histoire :\n• je respecte les parties du récit : le début, la suite et la fin ;\n• j'utilise des indicateurs de temps et de lieu ;\n• j'écris les actions dans l'ordre avec des connecteurs logiques (puis, ensuite, alors, enfin, mais, or, donc) ;\n• j'utilise des signes de ponctuation appropriés ;\n• j'utilise le présent pour les actions qui se passent au moment où je parle, le passé simple pour les actions passées et brèves, l'imparfait pour les actions passées qui durent.",
+q:[["Quelles sont les trois parties d'un récit ?","Le début, la suite et la fin",["debut","suite|milieu","fin"],3],["Quel temps pour une action passée et brève ?",["Le passé simple","L'imparfait","Le présent"]],["Quel temps pour une action passée qui dure ?",["L'imparfait","Le passé simple","Le futur"]],["Cite un connecteur logique.","puis, ensuite, alors, enfin…",["puis|ensuite|alors|enfin|mais|donc|apres|or"]]],
+defi:"Écris 3 phrases qui racontent une petite histoire, avec un début, une suite et une fin. Utilise au moins un connecteur (puis, ensuite, enfin…)."},
+{id:"f-exp-debut",s:"francais",dom:"Expression écrite",d:"2026-09-25",t:"Le début d'un récit",
+r:"Pour écrire le début d'une histoire :\n• j'annonce l'événement que je veux raconter ;\n• j'indique le temps et le lieu où l'histoire se déroule : autrefois, au début, avant, c'était, il y a longtemps, au village, à l'école, au champ… ;\n• j'utilise des verbes au présent, à l'imparfait, au passé simple et au passé composé ;\n• j'utilise des phrases simples ;\n• j'utilise des mots et des expressions en rapport avec l'histoire.",
+q:[["Que dois-je indiquer au début d'une histoire ?",["Le temps et le lieu","La fin de l'histoire","La morale"]],["Donne un indicateur de temps pour commencer une histoire.","Autrefois, il était une fois, il y a longtemps…",["autrefois|il etait une fois|il y a longtemps|au debut|avant|un jour|hier"]],["Lequel est un indicateur de lieu ?",["Au village","Autrefois","Ensuite"]]],
+defi:"Écris le début d'une histoire en 2 ou 3 phrases. Dis quand et où elle se passe."},
+{id:"f-exp-suite",s:"francais",dom:"Expression écrite",d:"2026-10-06",t:"La suite et la fin d'une histoire",
+r:"Pour écrire la suite et la fin d'une histoire :\n• j'écris les actions dans l'ordre en utilisant des connecteurs logiques (puis, ensuite, alors, enfin…) ;\n• j'utilise les signes de ponctuation appropriés ;\n• j'utilise des verbes au présent, au passé simple ou à l'imparfait ;\n• j'utilise des mots et des expressions qui expriment les sentiments des personnages.",
+q:[["Quel connecteur peut annoncer la fin ?",["Enfin","D'abord","Il était une fois"]],["Que puis-je exprimer pour rendre l'histoire vivante ?",["Les sentiments des personnages","Les numéros de téléphone","Les tables de multiplication"]],["Dans quel ordre écrit-on les actions ?",["Dans l'ordre où elles se passent","Au hasard","De la fin vers le début"]],["Cite un mot qui exprime un sentiment.","joie, peur, tristesse, colère…",["joie|peur|triste|colere|content|heureu|surpris|fier|inquiet|honte"]],["Quels temps utilise-t-on pour la suite d'une histoire ?",["Le présent, le passé simple ou l'imparfait","Seulement le futur","Aucun verbe"]]],
+defi:"Écris la fin d'une histoire en 2 ou 3 phrases. Dis ce que ressent le personnage (joie, peur, tristesse…)."},
+{id:"f-exp-lettre-ami",s:"francais",dom:"Expression écrite",d:"2026-10-19",t:"J'écris à un ami ou une amie",
+r:"Pour écrire une lettre personnelle à un ami ou une amie :\n• je respecte la présentation de la lettre ;\n• j'organise le texte en paragraphes ;\n• j'utilise les pronoms personnels tu, te… ;\n• j'utilise les adjectifs possessifs ton, ta, tes ;\n• j'utilise des phrases variées ;\n• j'utilise les temps de l'indicatif selon la situation (passé, présent, futur).",
+q:[["Dans une lettre à un ami, quel pronom j'utilise ?",["tu","vous","ils"]],["Quels adjectifs possessifs vont avec « tu » ?",["ton, ta, tes","votre, vos","leur, leurs"]],["Comment organise-t-on le texte d'une lettre ?",["En paragraphes","En une seule ligne","En colonnes"]],["Quelle formule convient pour finir une lettre à une amie ?",["Gros bisous, à bientôt !","Veuillez agréer mes salutations distinguées.","Monsieur le Directeur,"]],["Quels temps peut-on utiliser dans une lettre ?",["Le passé, le présent et le futur selon la situation","Seulement le passé simple","Aucun"]]],
+defi:"Écris 2 ou 3 phrases à ton amie pour lui raconter ta journée. Utilise « tu » et « ton », « ta » ou « tes »."},
+{id:"f-exp-lettre-adulte",s:"francais",dom:"Expression écrite",d:"2026-11-02",t:"J'écris à un adulte",
+r:"Pour écrire une lettre à un adulte, il faut :\n• respecter sa présentation : le nom et l'adresse de l'expéditeur, le lieu et la date, la formule de politesse, le nom et la signature de l'expéditeur ;\n• organiser le texte en paragraphes pour exprimer ses idées ;\n• utiliser les temps et le mode appropriés ;\n• utiliser les types de phrases appropriés ;\n• utiliser le vous de politesse ;\n• utiliser les adjectifs possessifs votre, vos.",
+q:[["À un adulte, j'écris avec…",["le vous de politesse","le tu","le il"]],["Quels adjectifs possessifs vont avec « vous » ?",["votre, vos","ton, ta, tes","mon, ma"]],["Que doit contenir la présentation de la lettre ?",["Le lieu et la date, la formule de politesse, la signature","Seulement un dessin","Le numéro de la classe"]]],
+defi:"Écris 2 phrases polies à ton maître ou à ta maîtresse pour lui demander quelque chose. Utilise « vous »."},
+{id:"f-exp-lieu",s:"francais",dom:"Expression écrite",d:"2026-11-16",t:"Décrire un lieu non animé",
+r:"Pour décrire un lieu non animé :\n• j'indique le lieu ;\n• j'utilise des indicateurs de lieu : d'un côté, de l'autre côté, devant, derrière… ;\n• je le décris dans l'ordre en utilisant des connecteurs logiques : d'abord, ensuite, enfin… ;\n• j'utilise des mots et des expressions en rapport avec la vue et l'odorat : est construit, couvre la ville, odeur nauséabonde… ;\n• j'utilise des adjectifs qualificatifs.",
+q:[["Lequel est un indicateur de lieu ?",["derrière","ensuite","hier"]],["Quels sens peut-on utiliser pour décrire un lieu ?",["La vue et l'odorat","Seulement le goût","Aucun"]],["Que veut dire « une odeur nauséabonde » ?",["Une très mauvaise odeur","Une odeur de fleur","Une odeur de pain chaud"]]],
+defi:"Décris ta chambre ou ta classe en 3 phrases. Utilise devant, derrière ou à côté, et au moins un adjectif."},
+{id:"f-oral-familier",s:"francais",dom:"Expression orale",d:"2026-10-15",t:"Je m'adresse à une personne familière",
+r:"Pour m'adresser à une personne familière, j'emploie :\n• des formules comme : s'il te plaît, merci, bonjour, au revoir… ;\n• les pronoms personnels je, tu… ;\n• les temps verbaux selon la situation : les faits sont dans le passé, le présent ou le futur.",
+q:[["À une personne familière, je dis…",["s'il te plaît","s'il vous plaît, Monsieur le Directeur","veuillez agréer"]],["Avec une personne familière, quel pronom utilise-t-on ?",["tu","vous","aucun"]],["Je raconte ce que j'ai fait hier. Les faits sont…",["dans le passé","dans le futur","dans le présent"]],["Quelle phrase convient pour parler à ta sœur ?",["Passe-moi le sel, s'il te plaît.","Veuillez me passer le sel, Madame.","Sel."]],["Cite une formule de politesse.","merci, bonjour, au revoir, s'il te plaît",["merci|bonjour|au revoir|s il te plait|bonne journee|bonsoir|pardon"]]]},
+{id:"f-oral-ami",s:"francais",dom:"Expression orale",d:"2026-10-19",t:"Je parle à un ami ou une amie",
+r:"Quand je m'adresse à un ami, j'emploie :\n• des formules comme : s'il te plaît, merci, au revoir, bonne journée ;\n• des pronoms personnels : tu, te… ;\n• des adjectifs possessifs : ton, ta, tes…",
+q:[["Avec un ami, j'utilise…",["ton, ta, tes","votre, vos","leur, leurs"]],["Quelle formule dit-on en partant ?",["Au revoir","Bonjour","Merci"]],["Quelle formule utilise-t-on pour remercier ?",["Merci","Au revoir","Bonne nuit"]],["Quel pronom personnel j'utilise avec mon ami ?",["tu","vous","ils"]],["Complète : « Prête-moi ___ crayon, s'il te plaît. »",["ton","votre","leur"]]]},
+/* ---------- SCIENCES ---------- */
+{id:"sc-sortie",s:"sciences",dom:"Milieux de vie",d:"2026-09-21",t:"La sortie dans un milieu naturel",
+r:"Pour effectuer une sortie dans un milieu de vie, il faut la préparer : choisir le lieu de la sortie et le matériel adapté.\nPendant la sortie, il faut :\n• prendre des notes et récolter des échantillons ;\n• être prudent ;\n• respecter la nature et éviter de capturer ou de tuer les petits animaux ;\n• éviter de jouer avec les objets dangereux.",
+q:[["Que faut-il faire avant la sortie ?",["La préparer : choisir le lieu et le matériel","Rien du tout","Manger beaucoup"]],["Que fait-on pendant la sortie ?",["On prend des notes et on récolte des échantillons","On casse les branches","On attrape tous les animaux"]],["Cite deux attitudes à adopter pendant une sortie.","Prendre des notes, être prudent, respecter la nature, ne pas jouer avec les objets dangereux",["note","prudent","respect","danger","echantillon","captur|tuer"],2]]},
+{id:"sc-composantes",s:"sciences",dom:"Milieux de vie",d:"2026-09-24",t:"Les composantes d'un milieu de vie",
+r:"Chaque milieu de vie est composé :\n• d'êtres vivants : les animaux, les oiseaux, les végétaux… ;\n• d'éléments non vivants : la terre, les cailloux, l'eau, l'air, les roches…\nOn appelle aussi ces milieux de vie des écosystèmes : la forêt, la savane, la lagune, la mer, la montagne…",
+q:[["Lequel est un élément non vivant ?",["le caillou","l'oiseau","l'arbre"]],["Lequel est un être vivant ?",["le manguier","l'eau","la roche"]],["Comment appelle-t-on aussi un milieu de vie ?",["Un écosystème","Un échantillon","Une maquette"]],["Cite un écosystème.","La forêt, la savane, la lagune, la mer, la montagne",["foret|savane|lagune|mer|montagne|riviere|fleuve"]]]},
+{id:"sc-eau",s:"sciences",dom:"Milieux de vie",d:"2026-10-15",t:"L'eau et les êtres vivants",
+r:"Il existe des influences réciproques entre l'eau et les êtres vivants.\nD'une part, l'eau est polluée par les déchets ou les restes d'animaux. Cette pollution représente un danger pour notre santé.\nD'autre part, l'eau est purifiée par l'oxygène produit par les végétaux.",
+q:[["Qu'est-ce qui pollue l'eau ?",["Les déchets et les restes d'animaux","L'oxygène des plantes","Le soleil"]],["Pourquoi l'eau polluée est-elle dangereuse ?",["Elle menace notre santé","Elle est trop froide","Elle est trop bleue"]],["Qu'est-ce qui aide à purifier l'eau ?",["L'oxygène produit par les végétaux","Les ordures","Le sable sec"]]]},
+{id:"sc-ecosys",s:"sciences",dom:"Milieux de vie",d:"2026-10-20",t:"Les interactions dans les écosystèmes terrestres",
+r:"Dans les écosystèmes terrestres, on observe des interactions entre le sol et les êtres vivants, et entre les êtres vivants eux-mêmes (de la même espèce ou d'espèces différentes).\nCes interactions peuvent être bénéfiques ou nuisibles.\nElles se présentent sous forme de commensalisme, de parasitisme, de symbiose, de compétition ou de coopération.",
+q:[["Les interactions entre êtres vivants peuvent être…",["bénéfiques ou nuisibles","toujours bénéfiques","toujours nuisibles"]],["Cite une forme d'interaction entre êtres vivants.","Commensalisme, parasitisme, symbiose, compétition, coopération",["commensal|parasit|symbiose|competition|cooperation"]],["Quand des êtres vivants travaillent ensemble pour s'aider, c'est…",["la coopération","la compétition","la pollution"]]]},
+{id:"sc-proteger",s:"sciences",dom:"Environnement",d:"2026-10-22",t:"J'agis pour protéger la nature",
+r:"La pollution, la déforestation, le braconnage, les feux de brousse et l'urbanisation incontrôlée détruisent la nature.\nLeurs conséquences : la dégradation de la faune et de la flore, de notre environnement immédiat et de notre santé.\nPour protéger la nature et mon cadre de vie, je dois l'entretenir, appliquer le code de protection de l'environnement et inviter mes amis à faire comme moi.",
+q:[["Cite une action qui détruit la nature.","La pollution, la déforestation, le braconnage, les feux de brousse, l'urbanisation incontrôlée",["pollu|deforest|braconn|feu|urbanis|couper|ordure"]],["Qu'est-ce que le braconnage ?",["Chasser les animaux sans autorisation","Planter des arbres","Nettoyer la cour"]],["Que puis-je faire pour protéger la nature ?",["Entretenir mon cadre de vie","Brûler les herbes","Jeter les ordures dans la rivière"]]]},
+{id:"sc-tiges",s:"sciences",dom:"Les plantes",d:"2026-11-05",t:"Les différents types de tiges",
+r:"Il existe deux types de tiges :\n• les tiges aériennes : elles sont dressées (le manguier) ou grimpantes (le haricot) ;\n• les tiges souterraines : ce sont les tubercules comme l'igname et la pomme de terre.",
+q:[["Combien de types de tiges y a-t-il ?",2],["La tige du manguier est…",["aérienne et dressée","souterraine","grimpante"]],["La tige du haricot est…",["grimpante","souterraine","dressée comme un tronc"]],["L'igname est…",["une tige souterraine (un tubercule)","une tige grimpante","une feuille"]]]},
+{id:"sc-reproduction",s:"sciences",dom:"Les plantes",d:"2026-11-05",t:"La reproduction végétale",
+r:"Pour améliorer sa production, l'homme pratique plusieurs techniques de reproduction artificielle :\n• le marcottage : on laisse la racine se développer, puis on coupe les rejets au ras du tronc pour les transplanter ;\n• le greffage : on introduit dans les tissus d'une plante un fragment prélevé sur une autre plante, pour qu'il continue à croître en faisant corps avec elle ;\n• le bouturage : on prélève un morceau de tige, de racine ou de feuille et on l'enfouit dans le sol (l'ananas, le manioc, l'hibiscus).",
+q:[["Planter un morceau de tige de manioc dans le sol, c'est…",["le bouturage","le greffage","le marcottage"]],["Introduire un fragment d'une plante dans une autre plante, c'est…",["le greffage","le bouturage","l'arrosage"]],["Pourquoi l'homme pratique-t-il ces techniques ?",["Pour améliorer sa production","Pour détruire les plantes","Pour décorer sa maison"]],["Cite une plante qu'on peut bouturer.","l'ananas, le manioc, l'hibiscus",["ananas|manioc|hibiscus"]]]},
+{id:"sc-vertebres",s:"sciences",dom:"Les animaux",d:"2026-11-06",t:"La classe des vertébrés",g:"vertebres",
+r:"Les animaux qui possèdent une colonne vertébrale sont des vertébrés. Ils se répartissent en 5 groupes :\n• les poissons : ils vivent dans l'eau, leur corps est couvert d'écailles et ils nagent grâce à leurs nageoires et à leur forme hydrodynamique ;\n• les batraciens (ou amphibiens) : leur peau est nue ; ils vivent dans l'eau et sur la terre : la grenouille, le crapaud ;\n• les reptiles : leur corps est couvert d'écailles soudées ; certains n'ont aucun membre (les serpents), d'autres ont des membres (le crocodile, le lézard, la tortue) ;\n• les oiseaux : leur corps est couvert de plumes, ils ont des ailes et la plupart se déplacent en volant : l'aigle, le pigeon, le perroquet ;\n• les mammifères : leur corps est couvert de poils et les femelles ont des mamelles : le singe, le rat, la lionne.",
+q:[["Qu'est-ce qu'un vertébré ?",["Un animal qui a une colonne vertébrale","Un animal sans os","Une plante"]],["Combien de groupes de vertébrés y a-t-il ?",5],["Le corps des oiseaux est couvert de…",["plumes","poils","écailles"]],["Les femelles de quel groupe ont des mamelles ?",["Les mammifères","Les reptiles","Les poissons"]]]},
+/* ---------- HISTOIRE-GÉOGRAPHIE ---------- */
+{id:"hg-histoire",s:"histgeo",dom:"Histoire",d:"2026-09-25",t:"L'importance de l'étude de l'histoire",
+r:"L'histoire est l'étude et la reconstitution du passé de l'humanité. C'est le récit des événements qui ont marqué les sociétés humaines.\nElle s'appuie sur trois sources :\n• les sources orales : les récits des griots, les contes, les proverbes et les devinettes ;\n• les sources écrites : les textes originaux, les documents, les ouvrages, les lettres… ;\n• les vestiges archéologiques : les objets laissés par les hommes, les ruines des maisons, les ossements.",
+q:[["Qu'est-ce que l'histoire ?","L'étude et la reconstitution du passé de l'humanité",["passe|autrefois"]],["Sur combien de sources s'appuie l'histoire ?",3],["Les récits des griots sont des sources…",["orales","écrites","archéologiques"]],["Les ruines et les ossements sont des…",["vestiges archéologiques","sources orales","sources écrites"]],["Une lettre ancienne est une source…",["écrite","orale","archéologique"]]]},
+{id:"hg-chrono",s:"histgeo",dom:"Histoire",d:"2026-11-02",t:"La chronologie",
+r:"La chronologie est la science des temps et des dates. Elle sert à fixer les dates et les repères des événements historiques.\nOn représente les événements sur une frise chronologique :\n• l'Antiquité : de l'apparition de l'écriture (vers 3 000 avant J.-C.) à 476 ;\n• le Moyen Âge : de la chute de l'Empire romain (476) à 1492 ;\n• l'époque moderne : de la découverte de l'Amérique (1492) à 1789 ;\n• l'époque contemporaine : depuis la Révolution française (1789).",
+q:[["Qu'est-ce que la chronologie ?",["La science des temps et des dates","L'étude des plantes","La science des nombres"]],["Sur quoi représente-t-on les événements ?",["Une frise chronologique","Une carte","Un tableau de conjugaison"]],["Quel événement de 476 marque la fin de l'Antiquité ?",["La chute de l'Empire romain","La découverte de l'Amérique","La Révolution française"]],["En quelle année a eu lieu la découverte de l'Amérique ?",1492],["En quelle année commence l'époque contemporaine ?",1789],["Quelle période vient après le Moyen Âge ?",["L'époque moderne","L'Antiquité","L'époque contemporaine"]]]},
+{id:"hg-kong",s:"histgeo",dom:"Histoire",d:"2026-11-09",t:"Le royaume de Kong",
+r:"La ville de Kong existe depuis le XIe siècle. Des commerçants malinkés musulmans s'y installent peu à peu et en font un important centre d'échanges et un centre religieux.\nVers 1710, Sékou Ouattara, à la tête d'une puissante armée, conquiert la ville et fonde le royaume de Kong.\nLe royaume est divisé en provinces. Le roi a tous les pouvoirs.\nAu XIXe siècle, le royaume s'affaiblit à cause de la rébellion des groupes ethniques, de l'attaque de Samory et de la colonisation française.",
+q:[["Qui a fondé le royaume de Kong ?",["Sékou Ouattara","Samory","Le roi de France"]],["Vers quelle année le royaume de Kong est-il fondé ?",1710],["Qui s'est installé à Kong et en a fait un centre d'échanges ?",["Des commerçants malinkés musulmans","Des pêcheurs","Des soldats français"]],["Cite une cause de l'affaiblissement du royaume.","La rébellion des groupes ethniques, l'attaque de Samory, la colonisation française",["rebel|samory|colonis|guerre"]],["Qui avait tous les pouvoirs dans le royaume ?",["Le roi","Les commerçants","Les provinces"]]]},
+{id:"hg-geo",s:"histgeo",dom:"Géographie",d:"2026-11-02",t:"La géographie et ses outils",
+r:"La géographie est l'étude de la Terre et des relations entre elle et les humains.\nElle a deux grandes branches : la géographie physique et la géographie humaine.\nC'est une science importante parce qu'elle aide à comprendre les phénomènes sur la Terre et à les améliorer.\nPour lire une carte, il faut un titre, une légende et une échelle.",
+q:[["Qu'est-ce que la géographie ?","L'étude de la Terre et des relations entre elle et les humains",["terre"]],["Quelles sont les deux grandes branches de la géographie ?",["Physique et humaine","Ancienne et moderne","Orale et écrite"]],["Que faut-il pour lire une carte ?",["Un titre, une légende et une échelle","Une règle et une gomme","Un dictionnaire"]]]},
+{id:"hg-ci",s:"histgeo",dom:"Géographie",d:"2026-11-06",t:"La Côte d'Ivoire",g:"ciVoisins",
+r:"La Côte d'Ivoire est située en Afrique de l'Ouest.\nElle est limitée au nord par le Burkina Faso et le Mali, à l'est par le Ghana, à l'ouest par la Guinée et le Liberia, au sud par l'océan Atlantique.\nSa superficie est de 322 462 km². Elle a une forme presque carrée d'environ 600 km de côté.\nQuelques villes : Yamoussoukro (la capitale politique), Abidjan, Bouaké, Korhogo, Odienné, Daloa, Divo, Gagnoa, Tabou.",
+q:[["Dans quelle partie de l'Afrique se trouve la Côte d'Ivoire ?",["L'Afrique de l'Ouest","L'Afrique du Sud","L'Afrique de l'Est"]],["Quelle est la superficie de la Côte d'Ivoire, en km² ?",322462],["Quel océan borde la Côte d'Ivoire au sud ?",["L'océan Atlantique","L'océan Indien","L'océan Pacifique"]],["Quelle est la capitale politique de la Côte d'Ivoire ?",["Yamoussoukro","Abidjan","Bouaké"]]]},
+/* ---------- EDHC ---------- */
+{id:"ed-droits",s:"edhc",dom:"Citoyenneté",d:"2026-09-25",t:"Les droits et les devoirs du citoyen",
+r:"Être protégé, être informé, être soigné, aller à l'école sont des droits de tout citoyen.\nLe citoyen a aussi des devoirs : payer l'impôt, respecter les lois et les institutions de son pays et les défendre.\nJouir de ses droits et accomplir ses devoirs garantissent la cohésion sociale.",
+q:[["Lequel est un droit ?",["Aller à l'école","Payer l'impôt","Respecter les lois"]],["Lequel est un devoir ?",["Payer l'impôt","Être soigné","Être informé"]],["Cite un droit du citoyen.","Être protégé, être informé, être soigné, aller à l'école",["proteg|inform|soign|ecole"]],["Cite un devoir du citoyen.","Payer l'impôt, respecter les lois et les institutions, les défendre",["impot|loi|institution|defend|respect"]],["Que garantissent les droits et les devoirs respectés ?",["La cohésion sociale","La guerre","La pollution"]]]},
+{id:"ed-elections",s:"edhc",dom:"Citoyenneté",d:"2026-11-02",t:"Les élections",
+r:"L'élection est le choix, au moyen du vote, d'une personne ou d'une liste pour représenter un groupe de personnes ou pour exercer une fonction.\nJe dois participer aux élections de mon milieu (par exemple à l'école) pour exprimer mon choix.",
+q:[["Qu'est-ce qu'une élection ?","Le choix, par le vote, d'une personne pour représenter un groupe ou exercer une fonction",["vote|choi"]],["Comment choisit-on lors d'une élection ?",["Par le vote","Par la force","Au hasard"]],["Pourquoi participer aux élections de mon milieu ?",["Pour exprimer mon choix","Pour manquer l'école","Pour me disputer"]]]},
+{id:"ed-president",s:"edhc",dom:"Citoyenneté",d:"2026-11-09",t:"Le président de la République",
+r:"Le président de la République est une institution de la République. Il est le chef de l'État.\nIl détient le pouvoir exécutif et il est élu par le peuple pour le représenter.\nJe dois le respecter.",
+q:[["Qui est le chef de l'État ?",["Le président de la République","Le maire","Le directeur d'école"]],["Quel pouvoir détient le président de la République ?",["Le pouvoir exécutif","Le pouvoir de faire pleuvoir","Aucun pouvoir"]],["Par qui le président de la République est-il élu ?",["Par le peuple","Par les soldats","Par les enfants seulement"]]]}
+];
+
+BASE.forEach(l=>{l.s=mapSubj(l.s,l.dom)});
+/* ============ OUTILS ============ */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const NB="\u202f";
+const fmt=n=>{if(typeof n!=="number")return String(n);const neg=n<0;n=Math.abs(n);let[i,d]=String(+n.toFixed(6)).split(".");i=i.replace(/\B(?=(\d{3})+(?!\d))/g,NB);return(neg?"−":"")+i+(d?","+d:"")};
+const pad=n=>String(n).padStart(2,"0");
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
+const dayNum=s=>Math.round(Date.parse(s+"T12:00:00")/864e5);
+const MOIS=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+const fmtDate=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||"");return m?(+m[3])+" "+MOIS[+m[2]-1]:""};
+function normSoft(s){return String(s||"").toLowerCase().replace(/[’`]/g,"'").replace(/[\u00a0\u202f]/g," ").replace(/\s+/g," ").replace(/^[\s«"]+|[\s.!?;:,»"]+$/g,"").trim()}
+function normHard(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/œ/g,"oe").replace(/[’'`\-]/g," ").replace(/[^a-z0-9 ,./]/g," ").replace(/[.,/](?=\s|$)/g," ").replace(/\s+/g," ").trim()}
+
+/* ---- nombres en lettres ---- */
+const U=["zéro","un","deux","trois","quatre","cinq","six","sept","huit","neuf","dix","onze","douze","treize","quatorze","quinze","seize","dix-sept","dix-huit","dix-neuf"];
+const T=["","","vingt","trente","quarante","cinquante","soixante"];
+function w99(n,fin){if(n<20)return U[n];const t=Math.floor(n/10),u=n%10;
+ if(t===7){return n===71?"soixante et onze":"soixante-"+U[n-60]}
+ if(t===9){return "quatre-vingt-"+U[n-80]}
+ if(t===8){return u===0?(fin?"quatre-vingts":"quatre-vingt"):"quatre-vingt-"+U[u]}
+ if(u===0)return T[t];if(u===1)return T[t]+" et un";return T[t]+"-"+U[u]}
+function w999(n,fin){const c=Math.floor(n/100),r=n%100;let s="";if(c===1)s="cent";else if(c>1)s=U[c]+" cent"+(r===0&&fin?"s":"");if(r)s+=(s?" ":"")+w99(r,fin);return s}
+function toWords(n){if(n===0)return "zéro";const p=[];let rest=n;
+ for(const[v,name]of[[1e9,"milliard"],[1e6,"million"],[1e3,"mille"]]){const q=Math.floor(rest/v);rest%=v;if(!q)continue;
+  if(name==="mille")p.push(q===1?"mille":w999(q,false)+" mille");else p.push(w999(q,true)+" "+name+(q>1?"s":""))}
+ if(rest)p.push(w999(rest,true));return p.join(" ")}
+const NW={zero:0,un:1,une:1,deux:2,trois:3,quatre:4,cinq:5,six:6,sept:7,huit:8,neuf:9,dix:10,onze:11,douze:12,treize:13,quatorze:14,quinze:15,seize:16,vingt:20,vingts:20,trente:30,quarante:40,cinquante:50,soixante:60,cent:100,cents:100,mille:1000,million:1e6,millions:1e6,milliard:1e9,milliards:1e9};
+function seqNum(a){let res=0,g=0,prev=null;for(const v of a){if(v>=1000){res+=(g||1)*v;g=0}else if(v===100){g=(g||1)*100}else if(v===20&&prev===4){g+=76}else g+=v;prev=v}return res+g}
+function wordsToNum(t){const toks=normHard(t).split(" ");let found=false;const parts=[[]];
+ for(const k of toks){if(k==="virgule"){parts.push([]);continue}if(k in NW){parts[parts.length-1].push(NW[k]);found=true}else if(/^\d+$/.test(k)){parts[parts.length-1].push(+k);found=true}}
+ if(!found)return null;const iv=seqNum(parts[0]);if(parts.length<2)return iv;
+ const ft=parts[1];let lead=0;while(ft[lead]===0)lead++;const rest=ft.slice(lead);const fs="0".repeat(lead)+(rest.length?String(seqNum(rest)):"");return parseFloat(iv+"."+(fs||"0"))}
+function parseNum(s){if(s==null)return null;let t=String(s).trim().toLowerCase().replace(/[\u00a0\u202f]/g," ");if(!t)return null;
+ t=t.replace(/(\d)\s*virgule\s*(\d)/g,"$1,$2");const m=t.replace(/\s+/g,"").replace(/[.!]$/,"");
+ if(/^-?[\d.,]+$/.test(m)){let x=m;if(x.includes(","))x=x.replace(/\./g,"").replace(",",".");else if(/^\d{1,3}(\.\d{3})+$/.test(x))x=x.replace(/\./g,"");const v=parseFloat(x);return isNaN(v)?null:v}
+ const dm=t.match(/-?\d[\d ]*(?:[.,]\d+)?/);if(dm){const v=parseFloat(dm[0].replace(/ /g,"").replace(",","."));if(!isNaN(v))return v}
+ return wordsToNum(t)}
+
+/* ---- fractions ---- */
+const DEN={2:"demi",3:"tiers",4:"quart",5:"cinquième",6:"sixième",7:"septième",8:"huitième",9:"neuvième",10:"dixième",11:"onzième",12:"douzième",100:"centième",1000:"millième"};
+function fracWords(a,b){const d=DEN[b]||(b+"ième");const n=a===1?"un":w99(a,true);let dd=d;if(a>1&&!d.endsWith("s"))dd=d+"s";return n+" "+dd}
+const fr=(a,b)=>"["+a+"/"+b+"]";
+
+/* ---- chiffres romains ---- */
+const RM=[[1000,"M"],[900,"CM"],[500,"D"],[400,"CD"],[100,"C"],[90,"XC"],[50,"L"],[40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]];
+function toRoman(n){let s="";for(const[v,r]of RM)while(n>=v){s+=r;n-=v}return s}
+function romanExplain2(n){const parts=[];let m=1000,r=n;while(m>=1){const p=Math.floor(r/m)*m;if(p)parts.push(toRoman(p)+" pour "+fmt(p));r%=m;m/=10}return "On découpe : "+parts.join(", ")+". Donc "+fmt(n)+" = "+toRoman(n)+"."}
+
+/* ---- nombres aléatoires ---- */
+function rndDigits(d){let s=String(R(1,9));for(let i=1;i<d;i++)s+=Math.random()<.3?"0":String(R(0,9));return +s}
+function mutate(n){const s=String(n).split("");const i=R(0,s.length-1);let d;do{d=String(i===0?R(1,9):R(0,9))}while(d===s[i]);s[i]=d;return +s.join("")}
+function rndN(d){return R(10**(d-1),10**d-1)}
+
+/* ---- fabrique d'exercices ---- */
+function mkQ(q,good,wrongs,x,say){const o=shuffle([good,...[...new Set(wrongs)].filter(w=>w!==good).slice(0,3)]);return{kind:"qcm",q,o,a:o.indexOf(good),at:good,x,say}}
+const SIGN={">":"> est plus grand que","<":"< est plus petit que","=":"= est égal à"};
+function signQ(q,a,b,x,say){const s=a>b?">":a<b?"<":"=";return mkQ(q,SIGN[s],Object.values(SIGN).filter(v=>v!==SIGN[s]),x,say)}
+function pose(a,b,op,res){return '<div class="pose"><span>'+fmt(a)+'</span><span>'+op+" "+fmt(b)+'</span><span class="ln">'+fmt(res)+"</span></div>"}
+function lvlRange(L,a,b,c){return L===1?a:L===2?b:c}
+
+/* ---- conjugaison ---- */
+const PR=["je","tu","il","elle","nous","vous","ils","elles"],PI=[0,1,2,2,3,4,5,5],PD=["je","tu","il/elle","nous","vous","ils/elles"];
+const END={present1:["e","es","e","ons","ez","ent"],imparfait1:["ais","ais","ait","ions","iez","aient"],ps1:["ai","as","a","âmes","âtes","èrent"],present2:["is","is","it","issons","issez","issent"],imparfait2:["issais","issais","issait","issions","issiez","issaient"],ps2:["is","is","it","îmes","îtes","irent"]};
+const V1=["chanter","voter","parler","danser","jouer","travailler","citer","porter","marcher","laver","donner","aimer","écouter","regarder","monter","habiter"];
+const V2=["finir","choisir","remplir","unir","grandir","obéir","réussir","bâtir","rougir","applaudir","agir"];
+const V3={mettre:["mets","mets","met","mettons","mettez","mettent"],devoir:["dois","dois","doit","devons","devez","doivent"],prendre:["prends","prends","prend","prenons","prenez","prennent"],partir:["pars","pars","part","partons","partez","partent"],venir:["viens","viens","vient","venons","venez","viennent"],voir:["vois","vois","voit","voyons","voyez","voient"],faire:["fais","fais","fait","faisons","faites","font"],dire:["dis","dis","dit","disons","dites","disent"]};
+const vow=s=>/^[aeiouyhéèêâîôû]/i.test(s);
+const subj=(p,f)=>p==="je"&&vow(f)?"j'"+f:p+" "+f;
+function forms(v,tense){if(V3[v])return V3[v];const g=v.endsWith("ir")?2:1;const rad=v.slice(0,-2);return END[tense+g].map(e=>rad+e)}
+function table(fs,pron){return fs.map((f,i)=>pron?pron(PD[i].split("/")[0],i,f):subj(PD[i].split("/")[0],f)).map((s,i)=>i===2||i===5?s.replace(/^(il|ils) /,PD[i]+" "):s).join(", ")}
+const TL={present:"au présent",imparfait:"à l'imparfait",ps:"au passé simple"};
+const TN={present:"Présent",imparfait:"Imparfait",ps:"Passé simple"};
+function conjQ(v,tense,label){const fs=forms(v,tense);const k=R(0,7);const p=PR[k];const f=fs[PI[k]];const full=subj(p,f);
+ const others=[...new Set(fs.filter(x=>x!==f))].map(x=>subj(p,x));
+ if(!V3[v]){for(const t of["present","imparfait","ps"])if(t!==tense)others.push(subj(p,forms(v,t)[PI[k]]))}
+ const q="Conjugue « "+v+" » "+label+" avec « "+p+" ».";const x=TN[tense]+" de "+v+" : "+table(fs)+".";
+ const hint=V3[v]?"("+v+")":v.endsWith("ir")?"2e groupe":"1er groupe";
+ if(Math.random()<.5)return Object.assign(mkQ(q,full,shuffle(others),x),{hint});
+ return{kind:"text",q,a:full,alts:[f],at:full,x,hint}}
+const PRON=[["se laver","laver"],["se coucher","coucher"],["se réveiller","réveiller"],["se dépêcher","dépêcher"],["s'habiller","habiller"],["s'amuser","amuser"],["se munir","munir"],["se nourrir","nourrir"],["s'enrichir","enrichir"],["s'enfuir","enfuir",["enfuis","enfuis","enfuit","enfuyons","enfuyez","enfuient"]]];
+const REF=["me","te","se","nous","vous","se"];
+function pform(p,i,f){const r=REF[i];const rf=(["me","te","se"].includes(r)&&vow(f))?r[0]+"'"+f:r+" "+f;return p+" "+rf}
+
+/* ---- banques de phrases ---- */
+const HOMO={
+ mais:{o:["mais","mes","met","mets"],it:[["J'aime les ___ de mon pays.","mets","C'est un nom (un plat). Il s'écrit toujours avec un s."],["J'ai soif ___ il n'y a pas d'eau.","mais","Il marque une opposition : on peut dire « pourtant »."],["Il ___ sa chemise.","met","C'est le verbe mettre avec « il » : il met."],["Tu ___ ta chemise.","mets","C'est le verbe mettre avec « tu » : tu mets."],["___ activités sont florissantes.","mes","C'est le pluriel de « mon, ma » : mes activités."],["Je ___ mon cahier dans mon sac.","mets","Verbe mettre avec « je » : je mets."],["Le foutou est un ___ ivoirien.","mets","Un mets, c'est un plat : il garde toujours son s."],["Je range ___ crayons dans ma trousse.","mes","Pluriel de « mon » : mes crayons."],["Il pleut, ___ nous sortons quand même.","mais","Opposition : on peut dire « pourtant »."],["Maman ___ la table pour le dîner.","met","Verbe mettre avec « elle » (maman) : elle met."]]},
+ cetait:{o:["c'était","c'étaient","s'était","s'étaient"],it:[["La discussion ___ poursuivie.","s'était","On peut dire « elle s'était poursuivie »."],["___ le plus riche du village.","c'était","On peut dire « cela était »."],["___ les plus riches du village.","c'étaient","« Cela était » + un pluriel (les plus riches) : c'étaient."],["Les enfants ___ cachés derrière la case.","s'étaient","On peut dire « ils s'étaient cachés »."],["Mon frère ___ levé très tôt.","s'était","On peut dire « il s'était levé »."],["___ une belle journée.","c'était","On peut dire « cela était »."],["Les filles ___ promis de venir.","s'étaient","On peut dire « elles s'étaient promis »."],["___ mes meilleurs amis.","c'étaient","« Cela était » + un pluriel : c'étaient."]]},
+ la:{o:["la","l'a","l'as","là"],it:[["___ couturière coud une robe.","la","Devant un nom : on peut dire « une couturière »."],["Le mécanicien ___ répare.","la","Devant un verbe : on peut dire « les répare »."],["Sa poule ? Elle ___ vendue au marché.","l'a","On peut dire « elle l'avait vendue »."],["Ta poupée ? Tu ___ perdue ?","l'as","Avec « tu » : on peut dire « tu l'avais perdue »."],["Ton bureau est ___.","là","On peut dire « ton bureau est ici »."],["Ce livre, papa ___ acheté hier.","l'a","On peut dire « papa l'avait acheté »."],["Pose ton sac ___, près de la porte.","là","On peut dire « pose ton sac ici »."],["Awa mange ___ mangue.","la","Devant un nom : on peut dire « une mangue »."]]},
+ ces:{o:["ces","ses","s'est","c'est"],it:[["___ une loi pour les enfants.","c'est","On peut dire « cela est une loi »."],["La pauvreté ___ développée.","s'est","On peut dire « elle s'est développée »."],["___ enfants sont malades.","ces","Pluriel de « cet enfant » : ces enfants."],["Il défend ___ droits.","ses","Pluriel de « son droit » : ses droits."],["Elle ___ lavée avant de partir.","s'est","Il y a « elle » devant : elle s'est lavée."],["___ mon ami Yao.","c'est","On peut dire « cela est mon ami »."],["Awa range ___ cahiers.","ses","Pluriel de « son cahier » : ses cahiers."],["Regarde ___ beaux oiseaux !","ces","Pluriel de « cet oiseau » : ces oiseaux."]]}
+};
+function homoQ(key){const H=HOMO[key];const[s,a,x]=pick(H.it);const st=s.startsWith("___");const o=st?H.o.map(cap):H.o;const good=st?cap(a):a;
+ return Object.assign(mkQ(s,good,o,x,s.replace("___","…")),{blank:true})}
+const ADV=[["financier","financièrement"],["moral","moralement"],["doux","doucement"],["rapide","rapidement"],["courageux","courageusement"],["heureux","heureusement"],["sérieux","sérieusement"],["joyeux","joyeusement"],["clair","clairement"],["vaillant","vaillamment"],["bruyant","bruyamment"],["élégant","élégamment"],["savant","savamment"],["méchant","méchamment"],["abondant","abondamment"],["violent","violemment"],["patient","patiemment"],["prudent","prudemment"],["évident","évidemment"],["fréquent","fréquemment"],["différent","différemment"]];
+const AFEF=[["une affiche","une afiche"],["effrayer","éfrayer"],["une offrande","une ofrande"],["afin","affin"],["l'Afrique","l'Affrique"],["offrir","ofrir"],["un effort","un éfort"],["une affaire","une afaire"],["africain","affricain"],["un officier","un oficier"],["effacer","éfacer"],["affreux","afreux"],["offenser","ofenser"],["un effet","un éfet"]];
+const ADJV=[["Les soldats quittent le village en enlevant les enfants.","enlevant",0],["Face aux souffrances grandissantes, ils partent.","grandissantes",1],["Nous avons l'eau courante à la maison.","courante",1],["En courant, il est tombé.","courant",0],["Ces enfants obéissants écoutent le maître.","obéissants",1],["Les élèves, écoutant le maître, se taisent.","écoutant",0],["Grand-mère raconte une histoire amusante.","amusante",1],["Elle chante en marchant.","marchant",0],["Ce sont des films effrayants.","effrayants",1],["Il est arrivé en souriant.","souriant",0]];
+const SIMPLE=[["Maman pile du riz.",1],["Mariam lave son bébé.",1],["Le chat dort sur la natte.",1],["Je mange et je bois.",0],["Quand il pleut, nous restons à la maison.",0],["Il court, il saute et il rit.",0],["Les élèves chantent l'hymne national.",1],["Papa lit le journal pendant que maman cuisine.",0],["Le soleil brille.",1],["Awa prend son sac et part à l'école.",0]];
+const PONCT=[["Quel beau pagne ___","!",["?","."]],["Comment t'appelles-tu ___","?",["!","."]],["Le soleil se lève à l'est ___",".",["?",":"]],["As-tu fini tes devoirs ___","?",[".","!"]],["Comme ce gâteau est bon ___","!",["?",";"]],["Le maître dit ___ « Sortez vos ardoises. »",":",[";","?"]],["J'ai acheté des mangues___ des bananes et des oranges.",",",[".","?"]],["Il ouvrit doucement la porte et___","…",["?",":"]]];
+const PNAME={"!":"le point d'exclamation","?":"le point d'interrogation",".":"le point",":":"les deux points",",":"la virgule","…":"les points de suspension",";":"le point-virgule"};
+const TYPES=["Déclarative","Interrogative","Impérative","Exclamative"];
+const TYPEX=["Elle informe, elle déclare quelque chose.","Elle pose une question et se termine par un point d'interrogation.","Elle donne un ordre ou un conseil.","Elle exprime l'étonnement ou l'admiration et se termine par un point d'exclamation."];
+const PHR=[["Nous avons tous des droits et des devoirs.",0],["Quels sont les droits de la jeune fille ?",1],["Ferme la porte en sortant.",2],["Quelle belle journée !",3],["Range tes affaires.",2],["As-tu fait tes devoirs ?",1],["Le marché est loin de l'école.",0],["Comme cet oiseau est beau !",3],["Lave-toi les mains avant de manger.",2],["Où habite ta grand-mère ?",1],["Mon père travaille à Abidjan.",0],["Quel courage !",3]];
+const GNC=["Un nom propre","Un déterminant + un nom","Un déterminant + un nom + un adjectif","Un déterminant + un nom + un complément du nom"];
+const GNL=[["Koré",0],["Yapo",0],["Abidjan",0],["mon oncle",1],["ma tante",1],["le marché",1],["un métier plaisant",2],["ma chère sœur",2],["une robe neuve",2],["un cahier de devoirs",3],["la maison de Koffi",3],["un sac de riz",3]];
+const CODL=[["Awa mange la mangue.","la mangue","Awa la mange.","Awa","mange",["Awa mange la.","Awa les mange."]],["Le maître corrige les cahiers.","les cahiers","Le maître les corrige.","Le maître","corrige",["Le maître corrige les.","Le maître la corrige."]],["Papa lave le vélo.","le vélo","Papa le lave.","Papa","lave",["Papa lave le.","Papa la lave."]],["Les parents protègent les enfants.","les enfants","Les parents les protègent.","Les parents","protègent",["Les parents protègent les.","Les parents le protègent."]],["Maman prépare l'attiéké.","l'attiéké","Maman le prépare.","Maman","prépare",["Maman prépare le.","Maman les prépare."]],["Koffi range ses livres.","ses livres","Koffi les range.","Koffi","range",["Koffi range les.","Koffi la range."]],["Je regarde la télévision.","la télévision","Je la regarde.","Je","regarde",["Je regarde la.","Je les regarde."]]];
+const VERT={"Les poissons":["le tilapia","le requin","le capitaine","la carpe","le mâchoiron"],"Les batraciens":["la grenouille","le crapaud"],"Les reptiles":["le serpent","le crocodile","le lézard","la tortue","le margouillat","la vipère"],"Les oiseaux":["l'aigle","le pigeon","le perroquet","la poule","le calao","l'hirondelle"],"Les mammifères":["le singe","le rat","la lionne","la chèvre","l'éléphant","le dauphin","la chauve-souris"]};
+const VERTX={"Les poissons":"ils vivent dans l'eau et ont des écailles et des nageoires.","Les batraciens":"leur peau est nue et ils vivent dans l'eau et sur la terre.","Les reptiles":"leur corps est couvert d'écailles soudées.","Les oiseaux":"leur corps est couvert de plumes et ils ont des ailes.","Les mammifères":"leur corps est couvert de poils et les femelles ont des mamelles."};
+const SPECIAL={"le dauphin":"Le dauphin vit dans l'eau, mais il respire de l'air et la femelle allaite ses petits : c'est un mammifère.","la chauve-souris":"La chauve-souris vole, mais elle a des poils et allaite ses petits : c'est un mammifère.","la poule":"La poule vole très peu, mais elle a des plumes et des ailes : c'est un oiseau."};
+const CI={"au nord":["le Burkina Faso","le Mali"],"à l'est":["le Ghana"],"à l'ouest":["la Guinée","le Liberia"],"au sud":["l'océan Atlantique"]};
+
+/* ============ GÉNÉRATEURS ============ */
+const GEN={
+ nombresLettres:L=>{const d=lvlRange(L,R(4,6),R(7,8),R(9,10));const n=rndDigits(d);const v=R(0,2);
+  if(v===0)return{kind:"num",q:"Écris ce nombre en chiffres : « "+toWords(n)+" »",say:"Écris ce nombre en chiffres : "+toWords(n),a:n,at:fmt(n),x:"On écrit chaque classe de 3 chiffres : "+fmt(n)+"."};
+  if(v===1){const w=new Set();let g=0;while(w.size<2&&g++<50){const m=mutate(n);if(m!==n)w.add(toWords(m))}return mkQ("Comment s'écrit en lettres le nombre "+fmt(n)+" ?",toWords(n),[...w],fmt(n)+" s'écrit « "+toWords(n)+" ».")}
+  return{kind:"num",q:"Combien de chiffres a le nombre "+fmt(n)+" ?",a:String(n).length,at:String(String(n).length),x:"Je compte tous les chiffres : "+fmt(n)+" en a "+String(n).length+"."}},
+ romains:L=>{const n=R(1,lvlRange(L,39,400,3999));const r=toRoman(n);
+  if(Math.random()<.5)return{kind:"roman",q:"Écris "+fmt(n)+" en chiffres romains.",a:r,at:r,x:romanExplain2(n)};
+  return{kind:"num",q:"Combien vaut "+r+" ?",say:"Combien vaut le nombre romain "+r.split("").join(" ")+" ?",a:n,at:fmt(n),x:romanExplain2(n)}},
+ comparerEntiers:L=>{const d=lvlRange(L,R(4,6),R(6,8),R(8,10));const a=rndDigits(d);let b;const r=Math.random();
+  if(r<.1)b=a;else if(r<.75)b=mutate(a);else b=rndDigits(Math.max(2,d+pick([-1,1])));
+  const la=String(a).length,lb=String(b).length;let x;
+  if(a===b)x="Les deux nombres sont identiques.";else if(la!==lb)x=fmt(a)+" a "+la+" chiffres et "+fmt(b)+" en a "+lb+". Celui qui a le plus de chiffres est le plus grand.";
+  else{const sa=String(a),sb=String(b);let i=0;while(sa[i]===sb[i])i++;x="Même nombre de chiffres : je compare de gauche à droite. Le premier chiffre différent : "+sa[i]+" et "+sb[i]+"."}
+  return signQ("Compare : "+fmt(a)+" … "+fmt(b),a,b,x,"Compare "+a+" et "+b+". Est-il plus grand, plus petit ou égal ?")},
+ addition:L=>{const a=rndN(lvlRange(L,R(3,4),5,R(6,7))),b=rndN(lvlRange(L,3,R(4,5),R(5,6)));return{kind:"num",q:"Calcule : "+fmt(a)+" + "+fmt(b),say:"Calcule "+a+" plus "+b,a:a+b,at:fmt(a+b),x:"J'aligne les unités et je n'oublie pas les retenues.",pose:pose(a,b,"+",a+b)}},
+ soustraction:L=>{let a=rndN(lvlRange(L,R(3,4),5,R(6,7))),b=rndN(lvlRange(L,3,R(4,5),R(5,6)));if(b>a)[a,b]=[b,a];if(a===b)a+=R(1,99);return{kind:"num",q:"Calcule : "+fmt(a)+" − "+fmt(b),say:"Calcule "+a+" moins "+b,a:a-b,at:fmt(a-b),x:"Le plus grand en haut, j'aligne les unités, et je n'oublie pas les retenues.",pose:pose(a,b,"−",a-b)}},
+ multiplication:L=>{const a=rndN(lvlRange(L,2,3,R(3,4))),b=lvlRange(L,R(2,9),rndN(2),rndN(R(2,3)));return{kind:"num",q:"Calcule : "+fmt(a)+" × "+fmt(b),say:"Calcule "+a+" fois "+b,a:a*b,at:fmt(a*b),x:"Je multiplie par le chiffre des unités, puis des dizaines (en décalant), et j'additionne les produits partiels.",pose:pose(a,b,"×",a*b)}},
+ division:L=>{const d=R(2,9);const n=L===1?R(11,99):R(100,999);const q=Math.floor(n/d),r=n%d;const ask=Math.random()<.65?"q":"r";
+  return{kind:"num",q:"Calcule "+fmt(n)+" : "+d+". Quel est le "+(ask==="q"?"quotient":"reste")+" ?",say:"Calcule "+n+" divisé par "+d+". Quel est le "+(ask==="q"?"quotient":"reste")+" ?",a:ask==="q"?q:r,at:String(ask==="q"?q:r),x:"Quotient "+q+", reste "+r+", car "+d+" × "+q+" + "+r+" = "+fmt(n)+". Le reste est plus petit que "+d+"."}},
+ probSoustraction:L=>{let a=rndN(lvlRange(L,R(3,4),5,R(6,7))),b=rndN(lvlRange(L,3,R(4,5),R(5,6)));if(b>=a)[a,b]=[b+R(10,500),a];
+  const T=[[`Au marché, une commerçante avait ${fmt(a)} F CFA. Elle dépense ${fmt(b)} F CFA. Combien d'argent lui reste-t-il ?`,"F CFA"],[`Un planteur a récolté ${fmt(a)} kg de cacao. Il en a vendu ${fmt(b)} kg. Combien de kilogrammes lui reste-t-il ?`,"kg"],[`Une ville compte ${fmt(a)} habitants. ${fmt(b)} sont des enfants. Combien y a-t-il d'adultes ?`,"adultes"],[`Papa veut acheter une moto à ${fmt(a)} F CFA. Il a déjà économisé ${fmt(b)} F CFA. Combien lui manque-t-il ?`,"F CFA"]];
+  const[q,u]=pick(T);return{kind:"num",q,a:a-b,at:fmt(a-b)+" "+u,x:"On cherche une différence : "+fmt(a)+" − "+fmt(b)+" = "+fmt(a-b)+" "+u+".",pose:pose(a,b,"−",a-b)}},
+ probMultiplication:L=>{const a=rndN(lvlRange(L,2,R(2,3),3)),b=lvlRange(L,R(3,12),rndN(2),rndN(R(2,3)));
+  const T=[[`Un parent d'élève achète ${a} paquets de ${b} cahiers. Combien de cahiers a-t-il achetés ?`,"cahiers"],[`Une caisse contient ${b} mangues. Combien de mangues y a-t-il dans ${a} caisses ?`,"mangues"],[`Un sac de riz pèse ${b} kg. Combien pèsent ${a} sacs ?`,"kg"],[`Un ticket de gbaka coûte ${b*25} F CFA. Combien paie-t-on pour ${a} tickets ?`,"F CFA",b*25]];
+  const t=pick(T);const m=t[2]||b;return{kind:"num",q:t[0],a:a*m,at:fmt(a*m)+" "+t[1],x:"On multiplie : "+fmt(a)+" × "+fmt(m)+" = "+fmt(a*m)+" "+t[1]+".",pose:pose(a,m,"×",a*m)}},
+ fractionsLire:L=>{const b=pick(L===1?[2,3,4,5,6]:[3,4,5,6,8,10,12]),a=R(1,b-1);const v=R(0,2);
+  if(v===0)return{kind:"frac",q:"Quelle fraction de la bande est coloriée ?",vis:barSvg(a,b),a:[a,b],at:a+"/"+b+" ("+fracWords(a,b)+")",x:"La bande est partagée en "+b+" parts égales (le dénominateur) et "+a+" sont coloriées (le numérateur)."};
+  if(v===1){const b2=pick(Object.keys(DEN).map(Number).filter(z=>z!==b&&z<=12));return mkQ("Comment lit-on "+fr(a,b)+" ?",fracWords(a,b),[fracWords(a,b2),a===1?fracWords(1,b).replace("un ","une "):fracWords(a+1>=b?1:a+1,b)],fr(a,b)+" se lit « "+fracWords(a,b)+" ».")}
+  const w=Math.random()<.5;return{kind:"num",q:"Dans "+fr(a,b)+", quel est le "+(w?"numérateur":"dénominateur")+" ?",a:w?a:b,at:String(w?a:b),x:"Le numérateur est en haut ("+a+"), le dénominateur est en bas ("+b+")."}},
+ fractionsEquiv:L=>{const a=R(1,9),b=R(2,10),k=R(2,lvlRange(L,5,10,12));const v=R(0,2);
+  if(v===0)return{kind:"num",q:"Complète : "+fr(a,b)+" = "+fr("?",b*k),a:a*k,at:String(a*k),x:"Le dénominateur a été multiplié par "+k+" ("+b+" × "+k+" = "+b*k+"), donc je multiplie aussi le numérateur : "+a+" × "+k+" = "+a*k+"."};
+  if(v===1)return{kind:"num",q:"Complète : "+fr(a*k,b*k)+" = "+fr("?",b),a:a,at:String(a),x:"Le dénominateur a été divisé par "+k+", donc je divise aussi le numérateur : "+a*k+" : "+k+" = "+a+"."};
+  return{kind:"num",q:"Complète : "+fr(a,b)+" = "+fr(a*k,"?"),a:b*k,at:String(b*k),x:"Le numérateur a été multiplié par "+k+", donc le dénominateur aussi : "+b+" × "+k+" = "+b*k+"."}},
+ fractionsDecimales:L=>{const den=pick(L===1?[10,100]:[10,100,1000]);let num=R(1,L===1?99:2500);if(num%10===0)num+=R(1,9);const val=num/den;const z=String(den).length-1;
+  if(Math.random()<.6)return{kind:"num",q:"Écris "+fr(num,den)+" sous forme de nombre décimal.",a:val,at:fmt(val),x:"Le dénominateur "+fmt(den)+" a "+z+" zéro"+(z>1?"s":"")+", donc "+z+" chiffre"+(z>1?"s":"")+" après la virgule : "+fmt(val)+"."};
+  return{kind:"num",q:"Complète : "+fmt(val)+" = "+fr("?",den),a:num,at:String(num),x:fmt(val)+" = "+fr(num,den)+" : il y a "+z+" chiffre"+(z>1?"s":"")+" après la virgule, comme les "+z+" zéro"+(z>1?"s":"")+" de "+fmt(den)+"."}},
+ decimauxLire:L=>{const ip=R(1,L===1?99:999);const k=R(1,L===1?2:3);let ds="";for(let i=0;i<k;i++)ds+=R(0,9);if(ds.endsWith("0"))ds=ds.slice(0,-1)+R(1,9);const str=ip+","+ds;const val=parseFloat(ip+"."+ds);const v=R(0,2);
+  if(v===0)return{kind:"num",q:"Dans "+str+", quelle est la partie entière ?",a:ip,at:String(ip),x:"La partie entière est avant la virgule : "+ip+"."};
+  if(v===1){const pos=R(1,k);const nm=["dixièmes","centièmes","millièmes"][pos-1];return{kind:"num",q:"Dans "+str+", quel est le chiffre des "+nm+" ?",a:+ds[pos-1],at:ds[pos-1],x:"Après la virgule : 1er chiffre = dixièmes, 2e = centièmes, 3e = millièmes. Dans "+str+", le chiffre des "+nm+" est "+ds[pos-1]+"."}}
+  const nm=["dixième","centième","millième"][k-1];const dn=+ds;const words=(ip===1?"une unité":toWords(ip)+" unités")+" "+toWords(dn)+" "+nm+(dn>1?"s":"");
+  return{kind:"num",q:"Écris en chiffres : « "+words+" »",say:"Écris en chiffres : "+words,a:val,at:str,x:words+" s'écrit "+str+"."}},
+ fractionsComparer:L=>{const v=R(0,2);
+  if(v===0){const b=R(3,12);let a1=R(1,20),a2=R(1,20);if(Math.random()<.85)while(a2===a1)a2=R(1,20);return signQ("Compare : "+fr(a1,b)+" … "+fr(a2,b),a1,a2,"Même dénominateur : la plus grande fraction a le plus grand numérateur.")}
+  if(v===1){const a=R(1,20);let b1=R(2,15),b2=R(2,15);while(b2===b1)b2=R(2,15);return signQ("Compare : "+fr(a,b1)+" … "+fr(a,b2),b2,b1,"Même numérateur : la plus grande fraction a le plus PETIT dénominateur.")}
+  const b=R(2,15);const r=Math.random();const a=r<.4?R(b+1,b+12):r<.8?R(1,b-1):b;return signQ("Compare : "+fr(a,b)+" … 1",a,b,a>b?"Le numérateur est plus grand que le dénominateur : la fraction est plus grande que 1.":a<b?"Le numérateur est plus petit que le dénominateur : la fraction est plus petite que 1.":"Numérateur et dénominateur égaux : la fraction est égale à 1.")},
+ decimauxComparer:L=>{const i1=R(1,L===1?20:99);const same=Math.random()<.7;const i2=same?i1:R(1,L===1?20:99);const rd=()=>{const k=R(1,3);let s="";for(let j=0;j<k;j++)s+=R(0,9);if(s.endsWith("0"))s=s.slice(0,-1)+R(1,9);return s};
+  let d1=rd(),d2=rd();if(Math.random()<.1){d2=d1+"0";}const s1=i1+","+d1,s2=i2+","+d2;const v1=parseFloat(i1+"."+d1),v2=parseFloat(i2+"."+d2);
+  const x=i1!==i2?"Je compare d'abord les parties entières : "+i1+" et "+i2+".":v1===v2?"Un zéro à la fin de la partie décimale ne change pas la valeur.":"Parties entières égales : je compare les dixièmes, puis les centièmes, puis les millièmes, chiffre par chiffre.";
+  return signQ("Compare : "+s1+" … "+s2,v1,v2,x,"Compare "+s1+" et "+s2+".")},
+ homo_mais:()=>homoQ("mais"),homo_cetait:()=>homoQ("cetait"),homo_la:()=>homoQ("la"),homo_ces:()=>homoQ("ces"),
+ adverbes:()=>{const[adj,adv]=pick(ADV);const m=/amment$/.test(adv)?"amment":/emment$/.test(adv)?"emment":null;
+  if(m&&Math.random()<.4){const st=adv.slice(0,-m.length);return mkQ("Complète l'adverbe formé avec « "+adj+" » : "+st+"…",st+m,[st+(m==="amment"?"emment":"amment"),st+"ement"],m==="amment"?"Adjectif en -ant → adverbe en -amment.":"Adjectif en -ent → adverbe en -emment.")}
+  return{kind:"text",q:"Forme l'adverbe à partir de l'adjectif « "+adj+" ».",a:adv,at:adv,x:m==="amment"?adj+" se termine par -ant → "+adv+".":m==="emment"?adj+" se termine par -ent → "+adv+".":"On ajoute -ment à l'adjectif au féminin → "+adv+"."}},
+ afefof:()=>{const[g,b]=pick(AFEF);return mkQ("Quelle est la bonne orthographe ?",g,[b],/^(afin|l'afrique|africain)$/i.test(g)?"Exception : afin, Afrique et les mots de sa famille s'écrivent avec un seul f.":"Les mots en af-, ef-, of- prennent en général deux f.","Quelle est la bonne orthographe ? "+g)},
+ adjverbal:()=>{const[s,w,t]=pick(ADJV);return mkQ("Dans « "+s+" », le mot « "+w+" » est…",t?"un adjectif verbal":"un participe présent",[t?"un participe présent":"un adjectif verbal"],t?"Il s'accorde avec le nom : c'est un adjectif verbal.":"Il est invariable (souvent précédé de « en ») : c'est un participe présent.")},
+ phraseSimple:()=>{const[s,ok]=pick(SIMPLE);return mkQ("« "+s+" » est-elle une phrase simple ?",ok?"Oui, un seul verbe conjugué":"Non, plusieurs verbes conjugués",[ok?"Non, plusieurs verbes conjugués":"Oui, un seul verbe conjugué"],"Une phrase simple contient un seul verbe conjugué.")},
+ ponctuation:()=>{const[s,a,w]=pick(PONCT);return Object.assign(mkQ(s,a,w,"Ici, il faut "+PNAME[a]+".","Quel signe de ponctuation manque ? "+s.replace("___","")),{blank:true})},
+ typesPhrases:()=>{const[s,t]=pick(PHR);return mkQ("Quel est le type de la phrase : « "+s+" » ?",TYPES[t],TYPES.filter((x,i)=>i!==t),"C'est une phrase "+TYPES[t].toLowerCase()+". "+TYPEX[t])},
+ groupeNominal:()=>{const[g,c]=pick(GNL);return mkQ("Comment est construit le groupe nominal « "+g+" » ?",GNC[c],GNC.filter((x,i)=>i!==c),"« "+g+" » : "+GNC[c].toLowerCase()+".")},
+ cod:()=>{const[s,c,rep,su,vb,wr]=pick(CODL);if(Math.random()<.5)return mkQ("Quel est le COD dans « "+s+" » ?",c,[su,vb],"On pose la question « "+su+" "+vb+" quoi ? » → "+c+".");return mkQ("Remplace le COD par un pronom : « "+s+" »",rep,wr,"Le pronom COD se place avant le verbe : "+rep)},
+ conj_present12:()=>conjQ(pick(Math.random()<.55?V1:V2),"present",TL.present),
+ conj_imparfait12:()=>conjQ(pick(Math.random()<.55?V1:V2),"imparfait",TL.imparfait),
+ conj_ps12:()=>conjQ(pick(Math.random()<.55?V1:V2),"ps",TL.ps),
+ conj_present3:()=>conjQ(pick(Math.random()<.6?["mettre","devoir"]:Object.keys(V3)),"present",TL.present),
+ conj_pronom:()=>{const[inf,v,f3]=pick(PRON);const fs=f3||forms(v,"present");const k=R(0,7);const p=PR[k];const i=PI[k];const full=pform(p,i,fs[i]);
+  const others=fs.filter(x=>x!==fs[i]).map(x=>pform(p,i,x));others.push(p+" "+fs[i]);
+  const q="Conjugue « "+inf+" » au présent avec « "+p+" ».";const x="Présent de "+inf+" : "+fs.map((f,j)=>pform(PD[j],j,f)).join(", ")+".";
+  const hint=f3?"3e groupe":v.endsWith("ir")?"2e groupe":"1er groupe";if(Math.random()<.5)return Object.assign(mkQ(q,full,shuffle(others),x),{hint});return{kind:"text",q,a:full,alts:[full.replace(/^\S+ /,"")],at:full,x,hint}},
+ vertebres:()=>{const gs=Object.keys(VERT);const g=pick(gs);const an=pick(VERT[g]);return mkQ("À quel groupe de vertébrés appartient "+an+" ?",g,shuffle(gs.filter(x=>x!==g)).slice(0,2),SPECIAL[an]||cap(an)+" fait partie des "+g.slice(4).toLowerCase()+" : "+VERTX[g])},
+ ciVoisins:()=>{const dirs=Object.keys(CI);if(Math.random()<.5){const d=pick(dirs);const g=pick(CI[d]);const wr=shuffle([...dirs.filter(x=>x!==d).flatMap(x=>CI[x]),"le Sénégal","le Niger"]).slice(0,2);return mkQ("Qu'est-ce qui se trouve "+d+" de la Côte d'Ivoire ?",cap(g),wr.map(cap),"La Côte d'Ivoire est limitée au nord par le Burkina Faso et le Mali, à l'est par le Ghana, à l'ouest par la Guinée et le Liberia, au sud par l'océan Atlantique.")}
+  const d=pick(dirs.filter(x=>x!=="au sud"));const g=pick(CI[d]);return mkQ("Où se trouve "+g+" par rapport à la Côte d'Ivoire ?",cap(d),dirs.filter(x=>x!==d).map(cap),cap(g)+" est "+d+" de la Côte d'Ivoire.")}
+};
+const GEN_DESC="Générateurs d'exercices disponibles (champ g) : nombresLettres (lire/écrire les grands nombres), romains, comparerEntiers, addition, soustraction, multiplication, division (par un chiffre), probSoustraction, probMultiplication, fractionsLire, fractionsEquiv, fractionsDecimales, decimauxLire, fractionsComparer, decimauxComparer, homo_mais (mais/mes/met/mets), homo_cetait, homo_la (la/l'a/l'as/là), homo_ces (ces/ses/s'est/c'est), adverbes (-ment/-amment/-emment), afefof, adjverbal, phraseSimple, ponctuation, typesPhrases, groupeNominal, cod, conj_present12, conj_imparfait12, conj_ps12, conj_present3, conj_pronom, vertebres, ciVoisins. Mets \"\" si aucun ne correspond exactement à la leçon.";
+function barSvg(a,b){const w=300,h=46,cw=w/b;let s='<svg viewBox="0 0 '+(w+4)+' '+(h+4)+'" width="100%" style="max-width:340px;margin:6px 0 14px" role="img" aria-label="Bande partagée en '+b+' parts, '+a+' coloriées">';
+ for(let i=0;i<b;i++)s+='<rect x="'+(2+i*cw)+'" y="2" width="'+cw+'" height="'+h+'" fill="'+(i<a?"#ffb400":"transparent")+'" stroke="currentColor" stroke-width="2"/>';return s+"</svg>"}
+
+/* ============ ÉTAT ============ */
+const CAP={db:null,tts:null,dict:null,sample:null,img:false,dl:0,dictNote:"",eng:0};
+const DLANGS=["fr-FR","fr"];
+const KBTIP="Pour répondre à voix haute, touche la case puis le micro de ton clavier (réglé en français).";
+let ST={name:"",stars:0,streak:0,lastDay:"",day:{d:"",stars:0},les:{},voice:true,rate:1,updated:0};
+let EXTRA=[];let LESSONS=BASE.slice();
+let VIEW={v:"home"};let Q=null;let MIC_ON=false;let micTarget=null,micBase="";let gateAns=0;let PENDING=null;
+const LS="revisions-cm1-v1";
+function rebuild(){EXTRA.forEach(l=>{l.s=mapSubj(l.s,l.dom)});const ids=new Set(BASE.map(l=>l.id));LESSONS=BASE.concat(EXTRA.filter(l=>!ids.has(l.id)))}
+const byId=id=>LESSONS.find(l=>l.id===id);
+function mastery(id){const s=ST.les[id];if(!s||!s.h)return null;const h=s.h.slice(-12);return h.split("").filter(c=>c==="1").length/h.length}
+function levelFor(id){const m=mastery(id);return m==null||m<.5?1:m<.85?2:3}
+function chip(id){const m=mastery(id);if(m==null)return'<span class="chip">Nouveau</span>';const p=Math.round(m*100);return'<span class="chip '+(p>=80?"ok":p>=50?"mid":"lo")+'">'+p+" %</span>"}
+function subjMastery(s){const ls=LESSONS.filter(l=>l.s===s);const ms=ls.map(l=>mastery(l.id)).filter(m=>m!=null);return{n:ls.length,done:ms.length,avg:ms.length?ms.reduce((a,b)=>a+b,0)/ms.length:0}}
+const LEVELS=[[0,"Petite graine"],[40,"Jeune pousse"],[120,"Petit arbre"],[300,"Grand fromager"],[600,"Baobab du savoir"]];
+function level(){let i=0;while(i+1<LEVELS.length&&ST.stars>=LEVELS[i+1][0])i++;const nx=LEVELS[i+1];return{name:LEVELS[i][1],next:nx?nx[1]:null,p:nx?(ST.stars-LEVELS[i][0])/(nx[0]-LEVELS[i][0]):1,need:nx?nx[0]-ST.stars:0}}
+
+/* ---- sauvegarde ---- */
+let saving=false,dirty=false;
+function persistLocal(){try{localStorage.setItem(LS,JSON.stringify(ST))}catch(e){}}
+async function save(){ST.updated=Date.now();persistLocal();if(!CAP.db)return;if(saving){dirty=true;return}saving=true;
+ try{await CAP.db.doc("state/main").set(JSON.parse(JSON.stringify(ST)))}catch(e){if(e&&e.code==="quota_exceeded")toast("La sauvegarde en ligne est pleine.")}
+ saving=false;if(dirty){dirty=false;save()}}
+
+/* ============ VOIX ============ */
+function speechText(s){return String(s).replace(/\[(\d+|\?)\/(\d+|\?)\]/g,(m,a,b)=>(a==="?"?"combien":a)+" sur "+(b==="?"?"combien":b)).replace(/(\d)[\u00a0\u202f ](?=\d{3}\b)/g,"$1").replace(/(\d)\s*:\s*(\d)/g,"$1 divisé par $2").replace(/×/g," fois ").replace(/−/g," moins ").replace(/\+/g," plus ").replace(/ > /g," est plus grand que ").replace(/ < /g," est plus petit que ").replace(/ = /g," est égal à ").replace(/km²/g,"kilomètres carrés").replace(/___/g,"…").replace(/[«»]/g,"")}
+let synthVoice=null;
+function pickVoice(){try{const vs=speechSynthesis.getVoices();synthVoice=vs.find(v=>/^fr[-_]FR/i.test(v.lang))||vs.find(v=>/^fr/i.test(v.lang))||null}catch(e){}}
+const canSpeak=()=>!!(CAP.tts||("speechSynthesis" in window));
+function stopSpeak(){try{CAP.tts&&CAP.tts.stop()}catch(e){}try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}}
+function speak(text,force){if(!ST.voice&&!force)return;const t=speechText(text).slice(0,1900);if(!t.trim())return;
+ if(CAP.tts){CAP.tts.speak([{text:t,language:"fr"}],{language:"fr",rate:ST.rate}).catch(e=>{if(e&&e.code==="not_granted"){CAP.tts=null;speak(text,force)}});return}
+ try{if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="fr-FR";if(synthVoice)u.voice=synthVoice;u.rate=ST.rate;speechSynthesis.speak(u)}catch(e){}}
+function sayItem(it){let s=it.say||it.q;if(it.kind==="qcm")s+=" . "+it.o.map((o,i)=>"Réponse "+"ABCD"[i]+" : "+o).join(" . ");speak(s)}
+
+/* ============ ICÔNES ============ */
+const IC={
+ star:(s=22)=>'<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="#ffb400" stroke="#d38f00" stroke-width="1.2" stroke-linejoin="round"/></svg>',
+ fire:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 5 6 5 11a5 5 0 0 1-10 0c0-3 2-4 2-7 2 1 3 3 3 5 1-2 1-5 0-9z" fill="#ff7a1a"/><path d="M12 13c1 1.5 2 2.3 2 4a2 2 0 0 1-4 0c0-1.5 1-2 2-4z" fill="#ffd24d"/></svg>',
+ leaf:'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 19C5 9 11 4 20 4c0 9-5 15-15 15z" fill="#2fa36b"/><path d="M5 19L15 9" stroke="#fff" stroke-width="1.5"/></svg>',
+ spk:'<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+ mic:'<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4M9 21h6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+ ok:'<svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#11784a"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+ ko:'<svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#c92a42"/><path d="M8 8l8 8M16 8l-8 8" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>',
+ back:'<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+};
+const SIC={
+ maths:'<svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#2343c4"/><path d="M12 17h10M17 12v10M28 15l7 7M35 15l-7 7M12 32h10M28 29h7M28 35h7" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>',
+ ortho:'<svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#c92a42"/><text x="24" y="32.64" text-anchor="middle" font-family="Andika,sans-serif" font-size="24" font-weight="700" fill="#fff">é</text></svg>',
+ conj:'<svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#b0306f"/><text x="24" y="30.12" text-anchor="middle" font-family="Andika,sans-serif" font-size="17" font-weight="700" fill="#fff">-er</text></svg>',
+ gram:'<svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#0f7c8c"/><text x="24" y="30.12" text-anchor="middle" font-family="Andika,sans-serif" font-size="17" font-weight="700" fill="#fff">GN</text></svg>',
+ voc:'<svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#c25e00"/><text x="24" y="30.84" text-anchor="middle" font-family="Andika,sans-serif" font-size="19" font-weight="700" fill="#fff">Aa</text></svg>',
+ expe:'<svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#7a4e1d"/><path d="M15 33l3-8 13-13 5 5-13 13z" fill="#fff"/><path d="M15 33l8-3" stroke="#7a4e1d" stroke-width="2"/></svg>',
+ expo:'<svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#5b4bc4"/><path d="M12 15h24v14H22l-6 5v-5h-4z" fill="#fff"/></svg>',
+ sciences:'<svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#11784a"/><path d="M13 35c0-12 8-20 22-21 0 14-8 21-22 21z" fill="#a6f0c6"/><path d="M13 35l14-13" stroke="#11784a" stroke-width="2.5"/></svg>',
+ histoire:'<svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#9a6a00"/><path d="M14 34h20M16 31h16M17 19h14M15 16l9-5 9 5z" stroke="#fff" stroke-width="2.4" fill="#fff" stroke-linejoin="round"/><path d="M19 20v10M24 20v10M29 20v10" stroke="#fff" stroke-width="2.6"/></svg>',
+ geo:'<svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#0a6aa8"/><circle cx="24" cy="24" r="12" fill="none" stroke="#fff" stroke-width="2.5"/><path d="M12 24h24M24 12c-5 6-5 18 0 24M24 12c5 6 5 18 0 24" stroke="#fff" stroke-width="2" fill="none"/></svg>',
+ edhc:'<svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#6a34a8"/><rect x="12" y="15" width="8" height="18" fill="#f77f00"/><rect x="20" y="15" width="8" height="18" fill="#fff"/><rect x="28" y="15" width="8" height="18" fill="#009e60"/></svg>'
+};
+function kalou(w,mood){const happy=mood!=="think";return '<svg viewBox="0 0 230 210" width="'+w+'" role="img" aria-label="Kalou le calao">'+
+ '<ellipse cx="112" cy="198" rx="78" ry="8" fill="rgba(0,0,0,.12)"/>'+
+ '<g transform="rotate(-5 115 176)"><rect x="24" y="168" width="168" height="18" rx="3" fill="#ffb400"/><rect x="24" y="168" width="168" height="6" fill="#ffd45c"/><path d="M192 168l28 9-28 9z" fill="#f2d3a4"/><path d="M211 174l9 3-9 3z" fill="#2b2b2b"/><rect x="14" y="168" width="14" height="18" rx="3" fill="#ef6f86"/><rect x="26" y="168" width="5" height="18" fill="#c9c9c9"/></g>'+
+ '<path d="M74 124Q34 150 38 182Q62 166 90 146z" fill="#1f2a32"/>'+
+ '<ellipse cx="104" cy="118" rx="44" ry="52" fill="#2f3c46"/>'+
+ '<ellipse cx="114" cy="132" rx="27" ry="35" fill="#f6efe2"/>'+
+ '<path d="M72 102Q60 146 98 162Q86 130 94 102z" fill="#1d262d"/>'+
+ '<circle cx="116" cy="72" r="31" fill="#2f3c46"/>'+
+ '<path d="M131 52Q164 38 190 58Q168 55 142 64z" fill="#e8552a"/>'+
+ '<path d="M135 63Q180 58 204 96Q176 82 137 84z" fill="#ffb400"/>'+
+ '<path d="M137 84Q172 86 196 99Q164 97 139 91z" fill="#e69200"/>'+
+ '<circle cx="122" cy="68" r="10" fill="#fff"/><circle cx="124" cy="'+(happy?68:70)+'" r="5.5" fill="#111"/><circle cx="126" cy="66" r="1.9" fill="#fff"/>'+
+ '<path d="M113 57q9-6 19 0" stroke="#111" stroke-width="2.4" fill="none" stroke-linecap="round"/>'+
+ (happy?'<circle cx="108" cy="84" r="5" fill="#ff8fa3" opacity=".6"/>':'')+
+ '<path d="M96 166v12M114 166v12" stroke="#ffb400" stroke-width="5" stroke-linecap="round"/></svg>'}
+
+/* ============ RENDU ============ */
+function rt(s){return esc(s).replace(/\[(\d+|\?)\/(\d+|\?)\]/g,(m,a,b)=>'<span class="fr"><span>'+a+"</span><span>"+b+"</span></span>").replace(/___/g,'<span class="blank">?</span>')}
+function ruleHtml(r){const lines=String(r||"").split("\n");let h="",inL=false;for(const ln of lines){const t=ln.trim();if(!t)continue;if(t.startsWith("•")){if(!inL){h+="<ul>";inL=true}h+="<li>"+rt(t.replace(/^•\s*/,""))+"</li>"}else{if(inL){h+="</ul>";inL=false}h+="<p>"+rt(t)+"</p>"}}return h+(inL?"</ul>":"")}
+function toast(m,ms){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,ms||3500)}
+function go(v){stopSpeak();stopMic();VIEW=v;render();window.scrollTo(0,0)}
+function render(){const a=$("#app");const v=VIEW.v;
+ a.innerHTML=v==="home"?homeV():v==="subj"?subjV(VIEW.s):v==="lesson"?lessonV(VIEW.id):v==="quiz"?quizV():v==="end"?endV():v==="gate"?gateV():v==="parent"?parentV():homeV();
+ if(v==="quiz")afterQuiz()}
+
+function homeV(){const lv=level();const nm=esc(ST.name||"championne");const td=ST.day.d===today()?ST.day.stars:0;
+ const weak=LESSONS.map(l=>[l,mastery(l.id),ST.les[l.id]]).filter(x=>x[1]!=null&&x[1]<.6&&x[2].n>=3).sort((a,b)=>a[1]-b[1])[0];
+ const msg=td?"Tu as déjà gagné "+td+" étoile"+(td>1?"s":"")+" aujourd'hui. Bravo, continue !":ST.streak>1&&ST.lastDay!==today()?"Tu as révisé "+ST.streak+" jours de suite. On continue aujourd'hui ?":"Prête pour réviser ? Je te pose des questions sur tes leçons !";
+ return (ST.name?'':'<div class="card stack" style="margin-bottom:14px"><b>Comment t\'appelles-tu ?</b><div class="inrow"><input id="fname" class="inp" maxlength="30" autocomplete="off"><button class="btn" data-a="setname">OK</button></div></div>')+'<section class="hero"><div><h1 class="cur">Bonjour '+nm+' !</h1><div class="bubble">'+esc(msg)+'</div></div><div class="kal">'+kalou("100%")+'</div></section>'+
+ '<div class="stats" style="margin-top:14px"><div class="card stat">'+IC.star(26)+'<b>'+ST.stars+'</b><span>étoiles</span></div><div class="card stat">'+IC.fire+'<b>'+ST.streak+'</b><span>jour'+(ST.streak>1?"s":"")+' de suite</span></div><div class="card stat">'+IC.leaf+'<b style="font-size:17px;line-height:1.3">'+esc(lv.name)+'</b><span>'+(lv.next?"encore "+lv.need+" étoiles":"niveau max")+'</span></div></div>'+
+ '<div class="stack" style="margin-top:16px"><button class="btn big" data-a="mix">Interroge-moi ! (10 questions)</button><button class="btn big g" data-a="recent">Mes leçons de la semaine</button>'+
+ (weak?'<div class="card"><b>Kalou te conseille de revoir :</b><div class="row" style="margin-top:8px"><span style="flex:1">'+esc(weak[0].t)+'</span><button class="btn sm" data-a="lesson" data-p="'+esc(weak[0].id)+'">Revoir</button></div></div>':'')+
+ '</div><h2 class="cur" style="margin:26px 0 10px">Mes matières</h2><div class="subjs">'+
+ SORDER.map(s=>{const m=subjMastery(s);return'<button class="card subj" data-a="subj" data-p="'+s+'">'+SIC[s]+'<b>'+SUBJ[s].n+'</b><span class="small muted">'+m.n+" leçons · "+m.done+" travaillées</span><div class=\"bar\" style=\"--c:"+SUBJ[s].c+'"><i style="width:'+Math.round(m.avg*100)+'%"></i></div></button>'}).join("")+
+ '</div><p style="margin-top:28px;text-align:center"><button class="link" data-a="gate">Espace parent</button></p>'}
+
+function subjV(s){const S=SUBJ[s];const ls=LESSONS.filter(l=>l.s===s).sort((a,b)=>(b.d||"").localeCompare(a.d||""));const doms=[...new Set(ls.map(l=>l.dom))];
+ return '<div class="top"><button class="btn gh sm" data-a="home">'+IC.back+' Accueil</button></div><div class="row">'+SIC[s]+'<h1 class="cur" style="flex:1">'+S.n+'</h1></div>'+
+ '<button class="btn big" style="margin-top:14px;--btn:'+S.c+';--btnD:color-mix(in srgb,'+S.c+' 70%,#000)" data-a="mixs" data-p="'+s+'">Quiz de '+esc(S.n)+' (10 questions)</button>'+
+ doms.map(d=>(doms.length>1?'<div class="dom">'+esc(d)+'</div>':'<div style="height:16px"></div>')+'<div class="stack">'+ls.filter(l=>l.dom===d).map(l=>'<button class="card les" data-a="lesson" data-p="'+esc(l.id)+'"><span class="t"><b>'+esc(l.t)+'</b><span>'+fmtDate(l.d)+(l.added?" · ajoutée":"")+'</span></span>'+chip(l.id)+'</button>').join("")+"</div>").join("")}
+
+function lessonV(id){const l=byId(id);if(!l)return homeV();const S=SUBJ[l.s]||SUBJ.gram;
+ return '<div class="top"><button class="btn gh sm" data-a="subj" data-p="'+l.s+'">'+IC.back+" "+esc(S.n)+'</button><span class="sp"></span>'+chip(id)+'</div>'+
+ '<span class="tag" style="--c:'+S.c+'">'+esc(l.dom)+" · "+fmtDate(l.d)+'</span><h1 class="cur" style="margin:8px 0 12px">'+esc(l.t)+'</h1>'+
+ '<div class="card rule">'+ruleHtml(l.r)+(canSpeak()?'<button class="btn gh sm" data-a="readrule" data-p="'+esc(id)+'">'+IC.spk+" Écouter la leçon</button>":"")+'</div>'+
+ '<div class="stack" style="margin-top:16px"><button class="btn big" data-a="practice" data-p="'+esc(id)+'">Je m\'entraîne</button>'+
+ (l.defi?'<button class="btn big g" data-a="defi" data-p="'+esc(id)+'">Défi d\'écriture</button>':"")+
+ (CAP.sample?'<button class="btn big gh" data-a="invent" data-p="'+esc(id)+'">Kalou invente de nouvelles questions</button>':"")+'</div>'}
+
+/* ---- construction des quiz ---- */
+function normQ(raw){if(Array.isArray(raw)){const[q,b,c,d]=raw;if(Array.isArray(b))return{t:"qcm",q,o:b,x:c};if(typeof b==="number")return{t:"num",q,a:b};return{t:"open",q,a:b,k:c||[],n:d||1}}
+ const t=raw.type||raw.t;if(t==="qcm")return{t:"qcm",q:raw.q,o:raw.o,x:raw.x};if(t==="num")return{t:"num",q:raw.q,a:+raw.a,x:raw.x};return{t:"open",q:raw.q,a:raw.a,k:raw.k||[],n:raw.n||1,x:raw.x}}
+function coursItem(c,l){if(c.t==="qcm")return mkQ(c.q,c.o[0],c.o.slice(1),c.x||"");
+ if(c.t==="num")return{kind:"num",q:c.q,a:c.a,at:fmt(c.a),x:c.x||""};return{kind:"open",q:c.q,at:c.a,k:c.k,need:c.n||1,x:c.x||"",rule:l.r}}
+function tagItem(it,l){it.lid=l.id;it.lt=l.t;it.s=l.s;return it}
+function itemsFor(l,n){const out=[];const L=levelFor(l.id);const cq=shuffle((l.q||[]).map(normQ));const g=l.g&&GEN[l.g];let ci=0;
+ for(let k=0;k<n;k++){let it=null;const wantCours=!g||(k%3===1&&ci<cq.length);if(wantCours&&ci<cq.length)it=coursItem(cq[ci++],l);else if(g){try{it=GEN[l.g](L)}catch(e){it=null}}if(!it&&ci<cq.length)it=coursItem(cq[ci++],l);if(!it)break;out.push(tagItem(it,l))}
+ return out}
+function defiItem(l){return tagItem({kind:"defi",q:l.defi,at:"",x:"",rule:l.r},l)}
+function weighted(pool,n){const latest=Math.max(...pool.map(l=>dayNum(l.d||today())));const td=today();
+ let arr=pool.map(l=>{const m=mastery(l.id);const st=ST.les[l.id];let w=1+(1-(m??.4))*2;if(!st)w+=1;if(latest-dayNum(l.d||td)<=14)w+=1.5;if(st&&st.last===td)w*=.4;return[l,w]});const res=[];
+ while(res.length<n&&arr.length){const tot=arr.reduce((a,b)=>a+b[1],0);let r=Math.random()*tot;let i=0;while(i<arr.length-1&&(r-=arr[i][1])>0)i++;res.push(arr[i][0]);arr.splice(i,1)}return res}
+function startQuiz(items,title,back){if(!items.length){toast("Pas encore de questions pour cette leçon.");return}Q={items,i:0,res:[],stars:0,run:0,title,back,wrong:[],answered:false,retry:false};go({v:"quiz"})}
+function mixQuiz(pool,title,back){const ls=weighted(pool,Math.min(5,pool.length));let items=[];for(const l of ls)items=items.concat(itemsFor(l,2));let k=0;while(items.length<10&&k++<10){const l=pick(pool);items=items.concat(itemsFor(l,1))}startQuiz(shuffle(items).slice(0,10),title,back)}
+
+/* ---- écran question ---- */
+function quizV(){const it=Q.items[Q.i];const S=SUBJ[it.s]||SUBJ.gram;
+ const dots=Q.items.map((x,k)=>'<i class="'+(k<Q.i?(Q.res[k]?"g":"r"):k===Q.i?"c":"")+'"></i>').join("");
+ let ans="";
+ if(it.kind==="qcm"){ans='<div class="opts">'+it.o.map((o,i)=>'<button class="opt" data-a="choose" data-p="'+i+'"><span class="lt">'+"ABCD"[i]+"</span><span>"+rt(o)+"</span></button>").join("")+"</div>"+(CAP.dict?'<div class="row" style="margin-top:12px"><button class="mic" data-a="mic" aria-label="Répondre à voix haute">'+IC.mic+'</button><span class="muted small">Tu peux aussi dire ta réponse</span></div><input id="ain" type="hidden"><div class="heard" id="heard"></div>':"")}
+ else{const ta=it.kind==="open"||it.kind==="defi";const im=it.kind==="num"?'inputmode="decimal"':"";
+  ans='<div class="inrow">'+(ta?'<textarea id="ain" lang="fr" class="inp" placeholder="'+(it.kind==="defi"?"Écris ton texte ici…":"Ta réponse…")+'"></textarea>':'<input id="ain" lang="fr" class="inp" '+im+' autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ta réponse…">')+
+  (CAP.dict?'<button class="mic" data-a="mic" aria-label="Répondre à voix haute">'+IC.mic+"</button>":"")+'</div><div class="heard" id="heard">'+(CAP.dict?"":esc(KBTIP))+'</div><div class="row" style="margin-top:12px"><button class="btn g" data-a="validate" id="vbtn">Valider</button><button class="link" data-a="dunno">Je ne sais pas</button></div>'}
+ return '<div class="qtop"><button class="btn gh sm" data-a="quit">Quitter</button><div class="dots">'+dots+'</div><span class="pill">'+IC.star(20)+" "+Q.stars+'</span></div>'+
+ '<div class="card"><div class="row"><span class="tag" style="--c:'+S.c+';flex:1 1 auto">'+esc(it.lt)+'</span>'+(canSpeak()?'<button class="ib" data-a="say" aria-label="Écouter la question">'+IC.spk+"</button>":"")+'</div>'+
+ '<div class="qtext">'+rt(it.q)+'</div>'+(it.vis||"")+'<div id="ans">'+ans+'</div><div id="fb"></div></div>'}
+function afterQuiz(){const it=Q.items[Q.i];Q.answered=false;const inp=$("#ain");if(inp&&inp.type!=="hidden"){inp.addEventListener("keydown",e=>{if(e.key==="Enter"&&inp.tagName==="INPUT"){e.preventDefault();validate()}});setTimeout(()=>inp.focus({preventScroll:true}),60)}sayItem(it)}
+
+/* ---- correction ---- */
+async function ai(prompt,opts){const ctl=new AbortController();const tm=setTimeout(()=>ctl.abort(),(opts&&opts.ms)||25000);
+ try{const r=await CAP.sample(prompt,Object.assign({modelTier:"quick",signal:ctl.signal},opts||{},{ms:undefined}));clearTimeout(tm);return parseJSON(r&&r.text)}catch(e){clearTimeout(tm);if(e&&e.code==="not_granted")CAP.sample=null;return null}}
+function parseJSON(t){if(!t)return null;const a=t.indexOf("{"),b=t.lastIndexOf("}");if(a<0||b<a)return null;try{return JSON.parse(t.slice(a,b+1))}catch(e){return null}}
+const ROLE="Tu es Kalou, un maître d'école bienveillant et pédagogue d'une classe de CM1 en Côte d'Ivoire (programme ivoirien). Tu t'adresses à une élève de 9 ou 10 ans : tu la tutoies, avec des phrases courtes et simples, en français correct.";
+function kwCheck(it,ans){const h=" "+normHard(ans)+" ";let hits=0;for(const k of it.k||[])if(String(k).split("|").some(a=>{const n=normHard(a);return n&&h.includes(n)}))hits++;return hits>=(it.need||1)}
+function sound(s){return String(s||"").toLowerCase().replace(/[’`]/g,"'").split(/[\s']+/).filter(Boolean).map(w=>{w=w.replace(/[.!?,;:]/g,"");if(!/ment$/.test(w)&&w.length>4)w=w.replace(/ent$/,"");w=w.replace(/(aient|ais|ait|ai|ez|er|ées|és|ée|é)$/,"É");w=w.replace(/[estxd]+$/,"");return w.normalize("NFD").replace(/[\u0300-\u036f]/g,"")}).join(" ")}
+async function check(it,ans,mic){const raw=String(ans||"").trim();
+ switch(it.kind){
+ case"qcm":return{ok:+ans===it.a};
+ case"num":{const v=parseNum(raw);return{ok:v!=null&&Math.abs(v-it.a)<1e-9}}
+ case"roman":return{ok:raw.toUpperCase().replace(/[^IVXLCDM]/g,"")===it.a};
+ case"frac":{const[a,b]=it.a;const m=raw.match(/(\d+)\s*(?:\/|sur)\s*(\d+)/i);if(m)return{ok:+m[1]===a&&+m[2]===b};
+  const sp=normHard(raw).split(" sur ");if(sp.length===2){const x=wordsToNum(sp[0]),y=wordsToNum(sp[1]);if(x!=null&&y!=null)return{ok:x===a&&y===b}}
+  const strip=s=>normHard(s).replace(/s\b/g,"");const m2=normHard(raw).match(/^(\d+) ([a-z]+)$/);if(m2&&+m2[1]===a)return{ok:strip(m2[2])===strip(fracWords(a,b).split(" ").slice(-1)[0])};return{ok:strip(raw)===strip(fracWords(a,b))}}
+ case"text":{const alts=[it.a,...(it.alts||[])];const ns=normSoft(raw);if(alts.some(x=>normSoft(x)===ns))return{ok:true};if(alts.some(x=>normHard(x)===normHard(raw)))return{ok:true,note:"Attention aux accents : on écrit « "+it.a+" »."};if(mic&&alts.some(x=>sound(x)===sound(raw)))return{ok:true,note:"Bien dit ! À l'écrit, on écrit : « "+it.a+" »."};return{ok:false}}
+ case"open":{if(!raw)return{ok:false};const kw=kwCheck(it,raw);if(CAP.sample){const r=await ai(ROLE+"\n\nQuestion posée : "+it.q+"\nRéponse attendue (modèle) : "+it.at+"\nRéponse de l'élève (elle peut venir de la dictée vocale, l'orthographe peut être approximative) : « "+raw+" »\nCe que dit la leçon :\n"+(it.rule||"")+"\n\nDécide si l'idée principale de sa réponse est juste. Sois exigeant sur le sens mais pas sur la formulation. Si c'est faux, dis-le clairement (jamais « presque » ni « pas tout à fait ») et explique pourquoi en t'appuyant sur la leçon, comme un bon maître. Réponds UNIQUEMENT avec un objet JSON : {\"ok\": true ou false, \"msg\": \"si juste : une félicitation variée ; si faux : l'explication du pourquoi en 1 ou 2 phrases courtes (35 mots maximum)\"}");if(r&&typeof r.ok==="boolean")return{ok:r.ok,msg:r.msg}}return{ok:kw}}
+ case"defi":{if(!raw)return{ok:false};if(CAP.sample){const r=await ai(ROLE+"\n\nConsigne d'écriture : "+it.q+"\nRègles de la leçon :\n"+it.rule+"\nTexte de l'élève : « "+raw+" »\n\nÉvalue si la consigne est respectée dans l'ensemble (ok = true si oui, même avec de petites fautes). Réponds UNIQUEMENT en JSON : {\"ok\": true ou false, \"msg\": \"2 phrases maximum : un compliment précis, puis un conseil pour améliorer ; si une faute d'orthographe importante est présente, corrige-la\"}",{modelTier:"default"});if(r&&typeof r.ok==="boolean")return{ok:r.ok,msg:r.msg}}
+  const words=raw.split(/\s+/).length;return{ok:words>=8,msg:words>=8?"Merci pour ton texte ! Relis-le avec la règle de la leçon pour vérifier que tout y est.":"Ton texte est un peu court. Essaie d'écrire au moins 2 ou 3 phrases."}}
+ }return{ok:false}}
+const PRAISE=["Bravo !","Excellent !","C'est juste !","Bien joué !","Parfait !","Super !","Magnifique !","Exactement !","Très bien !","Formidable !","Génial, c'est ça !","Tu as tout compris !","Bonne réponse !","Impeccable !","Chapeau !","Bien vu !","Quelle championne !","Tu progresses bien !","C'est ça, continue !","Excellent travail !","Félicitations !","Tu as bien appris ta leçon !"];
+let lastPraise="";
+function praise(){let p;do{p=pick(PRAISE)}while(p===lastPraise&&PRAISE.length>1);lastPraise=p;if(ST.name&&Math.random()<.25)p=p.replace(/ !$/,", "+ST.name+" !");return p}
+const RSTOP=new Set("dans avec pour quel quelle quels quelles sont une des les qui que quoi comment combien cette celui celle elle elles leur leurs mais plus aussi entre sous sur fait faire peut".split(" "));
+function lessonBit(it){const l=byId(it.lid);if(!l||!l.r)return"";const lines=l.r.split("\n").map(x=>x.replace(/^•\s*/,"").trim()).filter(Boolean);if(!lines.length)return"";if(it.hint){const f=lines.find(x=>x.includes(it.hint));if(f)return f}
+ const tk=s=>normHard(String(s).replace(/\[(\d+|\?)\/(\d+|\?)\]/g," ")).split(" ").filter(w=>w.length>3&&!RSTOP.has(w));const q=new Set(tk(it.q+" "+(it.at||"")+" "+(it.x||"")));
+ let best=0,bi=0;lines.forEach((ln,i)=>{const t=tk(ln);const sc=t.filter(w=>q.has(w)).length/Math.sqrt(t.length||1);if(sc>best){best=sc;bi=i}});
+ let out=lines[bi];if(/:$/.test(out)&&lines[bi+1])out+=" "+lines[bi+1];return out}
+async function answer(val,dunno,mic){if(Q.answered)return;Q.answered=true;stopMic();stopSpeak();const it=Q.items[Q.i];
+ document.querySelectorAll("#ans button,#ans input,#ans textarea").forEach(e=>e.disabled=true);
+ const fb=$("#fb");let res;
+ if(dunno)res={ok:false};else if(it.kind==="open"||it.kind==="defi"){fb.innerHTML='<div class="fb"><span class="spin"></span> Kalou lit ta réponse…</div>';res=await check(it,val,mic)}else res=await check(it,val,mic);
+ if(it.kind==="qcm"){const bs=document.querySelectorAll(".opt");bs[it.a]&&bs[it.a].classList.add("good");if(!res.ok&&!dunno&&bs[+val])bs[+val].classList.add("bad")}
+ Q.res[Q.i]=res.ok;const st=ST.les[it.lid]||(ST.les[it.lid]={n:0,ok:0,h:"",last:""});
+ if(!Q.retry){st.n++;if(res.ok)st.ok++;st.h=(st.h+(res.ok?"1":"0")).slice(-20)}st.last=today();
+ let gained=0;if(res.ok){Q.run++;gained=Q.retry?1:(Q.run>=3?2:1);Q.stars+=gained}else{Q.run=0;if(!Q.retry)Q.wrong.push(it)}
+ persistLocal();
+ const head=res.ok?praise()+(Q.run>=3&&!Q.retry?" "+Q.run+" de suite !":""):dunno?"Voici la bonne réponse.":"Faux.";const bit=!res.ok&&it.kind!=="defi"?lessonBit(it):"";const why=!res.ok&&it.x&&it.x!==bit?it.x:"";
+ const showAns=it.kind!=="defi"&&it.at&&!(res.ok&&it.kind!=="open");
+ const exp=(res.msg?"<p>"+esc(res.msg)+"</p>":"")+(res.note?"<p>"+esc(res.note)+"</p>":"")+(showAns?"<p><b>"+(it.kind==="open"?"Réponse modèle":"La bonne réponse")+" :</b> "+rt(it.at)+"</p>":"")+(why?"<p><b>Pourquoi ?</b> "+rt(why)+"</p>":"")+(res.ok&&it.x&&it.kind==="qcm"&&Math.random()<.4?"<p>"+rt(it.x)+"</p>":"")+(!res.ok&&it.pose?it.pose:"")+(bit?'<div class="recall"><b>Rappelle-toi la leçon :</b> '+rt(bit)+"</div>":"")+(it.kind==="defi"&&!CAP.sample?"<p class=\"small\">Vérifie avec la règle : "+rt(it.rule.split("\n")[0])+"</p>":"");
+ fb.innerHTML='<div class="fb '+(res.ok?"ok":"ko")+'"><div class="h">'+(res.ok?IC.ok:IC.ko)+"<span>"+esc(head)+"</span>"+(gained?'<span class="pill burst" style="margin-left:auto">+'+gained+" "+IC.star(18)+"</span>":"")+"</div>"+exp+'<div class="row" style="margin-top:12px"><button class="btn" data-a="next" id="nbtn">'+(Q.i+1<Q.items.length?"Question suivante":"Voir mon score")+"</button></div></div>";
+ const p=document.querySelector(".pill");if(p)p.innerHTML=IC.star(20)+" "+Q.stars;
+ const dots=document.querySelectorAll(".dots i");if(dots[Q.i])dots[Q.i].className=res.ok?"g":"r";
+ speak(res.ok?head+(res.msg?" "+res.msg:""):head+(res.msg?" "+res.msg:"")+(showAns?" La bonne réponse est : "+(it.at||"")+".":"")+(why?" Pourquoi ? "+why:bit?" Rappelle-toi la leçon : "+bit:""));
+ const nb=$("#nbtn");try{nb.scrollIntoView({behavior:"smooth",block:"nearest"});nb.focus({preventScroll:true})}catch(e){}}
+function validate(){const inp=$("#ain");if(!inp)return;const v=inp.value;if(!v.trim()){toast("Écris ou dis ta réponse, ou touche « Je ne sais pas ».");return}answer(v,false,inp.dataset.mic==="1")}
+function finishQuiz(){const n=Q.items.length,ok=Q.res.filter(Boolean).length;let bonus=0;if(!Q.retry&&n>=6&&ok===n)bonus=3;Q.bonus=bonus;
+ ST.stars+=Q.stars+bonus;const td=today();if(ST.day.d!==td)ST.day={d:td,stars:0};ST.day.stars+=Q.stars+bonus;
+ if(ST.lastDay!==td){ST.streak=ST.lastDay&&dayNum(td)-dayNum(ST.lastDay)===1?ST.streak+1:1;ST.lastDay=td}
+ save();go({v:"end"})}
+function endV(){const n=Q.items.length,ok=Q.res.filter(Boolean).length,p=ok/n;const msg=p>=.9?"Magnifique ! Tu maîtrises très bien.":p>=.7?"Très bien ! Encore un petit effort.":p>=.5?"C'est bien, continue à t'entraîner.":"On va revoir ça ensemble, tu vas y arriver !";
+ setTimeout(()=>speak(ok+" sur "+n+". "+msg),200);
+ return '<div class="card endsc stack"><div style="max-width:220px;margin:0 auto">'+kalou("100%")+'</div><div class="score burst">'+ok+" / "+n+'</div><p style="font-size:20px;margin:0">'+esc(msg)+'</p><p class="row" style="justify-content:center;margin:0"><span class="pill">+'+(Q.stars+(Q.bonus||0))+" "+IC.star(20)+"</span>"+(Q.bonus?'<span class="pill">Sans faute : +3 bonus</span>':"")+'</p>'+
+ (Q.wrong.length&&!Q.retry?'<button class="btn big" data-a="retry">Corriger mes '+Q.wrong.length+" erreur"+(Q.wrong.length>1?"s":"")+"</button>":"")+
+ '<button class="btn big g" data-a="again">Encore un quiz</button><button class="btn big gh" data-a="'+(Q.back&&Q.back.v==="lesson"?"lesson":Q.back&&Q.back.v==="subj"?"subj":"home")+'" data-p="'+esc(Q.back&&(Q.back.id||Q.back.s)||"")+'">Retour</button></div>'}
+
+/* ---- micro ---- */
+function stopMic(){if(MIC_ON&&CAP.dict){CAP.dict.stop().catch(()=>{})}MIC_ON=false}
+const EN=new Set("the is and you i it its it's what that this to of in my yes are was with for he she they we have do don't can so just like one two three four five six seven eight nine ten twenty hundred thousand okay ok please thank thanks answer".split(" "));
+const FRW=new Set("le la les de des du est et je tu il elle un une c'est que qui pas oui non deux trois quatre cinq sept huit neuf dix vingt cent mille sur plus moins on ce ces ses mais au aux".split(" "));
+function looksEnglish(t){const w=String(t).toLowerCase().replace(/[’]/g,"'").replace(/[^a-zàâçéèêëîïôûùüÿœ' ]/g," ").split(/\s+/).filter(Boolean);let en=0,fr=0;for(const x of w){if(EN.has(x))en++;if(FRW.has(x))fr++}return en>=1&&en>fr}
+function disableMic(msg){CAP.dict=null;CAP.dictNote=msg;stopMic();document.querySelectorAll(".mic").forEach(b=>b.remove());const h=$("#heard");if(h)h.textContent=KBTIP;toast(msg,7000)}
+function setupDict(d){d.onPartial(({text})=>{if(!micTarget)return;const v=(micBase+" "+text).trim();if(micTarget.type==="hidden"){const h=$("#heard");h&&(h.textContent="J'entends : "+v)}else micTarget.value=v});
+ d.onFinal(({text})=>{if(!micTarget)return;if(looksEnglish(text)){CAP.eng++;micTarget.value=micBase;const h=$("#heard");if(CAP.eng>=2){d.stop().catch(()=>{});disableMic("Le micro de la page écoute en anglais. "+KBTIP)}else{if(h)h.textContent="";toast("Le micro a compris de l'anglais. Réessaie en parlant bien distinctement.",5000)}return}micBase=(micBase+" "+text).trim();micTarget.value=micBase;const h=$("#heard");if(h)h.textContent=micTarget.type==="hidden"?"J'ai entendu : "+micBase:"";if(micTarget.type==="hidden")voiceChoose(micBase)});
+ d.onState(({state,reason})=>{if(state==="idle"&&reason==="unavailable"){CAP.dl++;if(CAP.dl>=DLANGS.length)disableMic("Le micro de la page ne propose pas le français ici. "+KBTIP)}MIC_ON=state==="listening";document.querySelectorAll(".mic").forEach(b=>b.classList.toggle("on",MIC_ON))})}
+function voiceChoose(t){if(!Q||Q.answered)return;const it=Q.items[Q.i];const h=normHard(t).replace(/^(c est|la reponse est|reponse|je dis|je pense que c est|je choisis)\s+/,"").replace(/^(la|le|l) /,"").trim();
+ const LET={a:["a","ah","reponse a"],b:["b","be","bebe","reponse b"],c:["c","ce","se","reponse c"],d:["d","de","reponse d"]};
+ for(let i=0;i<it.o.length;i++){const L="abcd"[i];if(LET[L].includes(h)){stopMic();answer(String(i),false,true);return}}
+ const STOP=new Set(["le","la","les","l","un","une","des","de","du","d","et","a","est","en","au","aux"]);
+ const toks=s=>normHard(s.replace(/[<>=]/g,"")).split(" ").filter(w=>w&&!STOP.has(w));const ht=new Set(toks(h));
+ const sc=it.o.map(o=>{const ot=toks(o);if(!ot.length)return 0;const no=ot.join(" ");if(h===no||h.includes(no))return 2;return ot.filter(w=>ht.has(w)).length/ot.length});
+ const best=Math.max(...sc);const top=sc.filter(x=>x===best).length;
+ if(best>=.6&&top===1){stopMic();answer(String(sc.indexOf(best)),false,true)}else toast("Je n'ai pas bien compris. Redis ta réponse ou touche-la.")}
+
+/* ---- espace parent ---- */
+function gateV(){const a=R(6,9),b=R(6,9);gateAns=a*b;return '<div class="top"><button class="btn gh sm" data-a="home">'+IC.back+' Accueil</button></div><div class="card stack" style="max-width:440px"><h2 class="cur">Espace parent</h2><p>Pour entrer, calcule : <b>'+a+" × "+b+'</b></p><input id="gin" class="inp" inputmode="numeric" autocomplete="off"><button class="btn" data-a="gatego">Entrer</button></div>'}
+function parentV(){const td=today();const rows=LESSONS.map(l=>[l,mastery(l.id),ST.les[l.id]]).filter(x=>x[2]&&x[2].n>0).sort((a,b)=>a[1]-b[1]);
+ const never=LESSONS.filter(l=>!ST.les[l.id]||!ST.les[l.id].n).length;const tot=rows.reduce((a,r)=>a+r[2].n,0);
+ const voiceNote=(CAP.tts?"Voix : active.":"speechSynthesis" in window?"Voix : voix de l'appareil.":"Voix : indisponible sur cet appareil.")+" "+(CAP.dict?"Micro : actif (en français).":CAP.dictNote?CAP.dictNote:"Micro : indisponible ici. Il fonctionne quand la page est ouverte dans Chrome (Android ou ordinateur) ; sinon l'élève écrit ses réponses.");
+ return '<div class="top"><button class="btn gh sm" data-a="home">'+IC.back+' Accueil</button></div><h1 class="cur">Espace parent</h1>'+
+ '<div class="card stack" style="margin-top:14px"><h3><b>Réglages</b></h3><label>Prénom de l\'élève<input id="pname" class="inp" value="'+esc(ST.name)+'" maxlength="30" style="margin-top:6px"></label>'+
+ '<label class="sw"><input type="checkbox" id="pvoice" '+(ST.voice?"checked":"")+'> Lire les questions à voix haute</label>'+
+ '<div class="row"><span>Vitesse de la voix</span><div class="seg">'+[[.85,"Lente"],[1,"Normale"],[1.15,"Rapide"]].map(([r,n])=>'<button data-a="rate" data-p="'+r+'" class="'+(ST.rate===r?"on":"")+'">'+n+"</button>").join("")+'</div><button class="btn gh sm" data-a="testvoice">Tester</button></div>'+
+ '<button class="btn sm" data-a="savename">Enregistrer</button><p class="note">'+esc(voiceNote)+(CAP.db?"":" Les progrès sont enregistrés sur ce téléphone.")+'</p></div>'+
+ '<div class="card stack" style="margin-top:16px"><h3><b>Progrès</b></h3><p>'+ST.stars+" étoiles · "+tot+" réponses · "+rows.length+" leçons travaillées · "+never+' jamais travaillées</p>'+
+ SORDER.map(s=>{const m=subjMastery(s);return'<div><div class="row"><span style="flex:1">'+SUBJ[s].n+'</span><span class="small muted">'+(m.done?Math.round(m.avg*100)+" %":"pas encore")+'</span></div><div class="bar" style="--c:'+SUBJ[s].c+'"><i style="width:'+Math.round(m.avg*100)+'%"></i></div></div>'}).join("")+
+ (rows.length?'<div class="scroll"><table class="stack"><thead><tr><th>Leçon (les plus faibles en premier)</th><th>Matière</th><th>Réussite</th><th>Réponses</th></tr></thead><tbody>'+rows.map(([l,m,s])=>"<tr><td>"+esc(l.t)+"</td><td>"+esc(SUBJ[l.s].n)+'</td><td class="n">'+Math.round(m*100)+' %</td><td class="n">'+s.n+"</td></tr>").join("")+"</tbody></table></div>":'<p class="muted">Aucune leçon travaillée pour l\'instant.</p>')+'</div>'+
+ '<div class="card stack" style="margin-top:16px"><h3><b>Ajouter de nouvelles leçons</b></h3>'+
+ (CAP.sample?'<p>Prends en photo les nouvelles pages du cahier (ou colle le texte). Claude lit les leçons, corrige les fautes recopiées et prépare les questions.</p><input id="pfile" type="file" accept="image/*" multiple class="inp" style="font-size:16px"><textarea id="ptext" class="inp" placeholder="Ou tape / colle le texte de la leçon ici (facultatif)"></textarea><button class="btn" data-a="analyze" id="abtn">Analyser les leçons</button><div id="pstat"></div>':'<p class="note">Pour ajouter les nouvelles leçons, envoie les photos des pages à Claude dans la conversation : il mettra l\'application à jour. Elle se met à jour toute seule à la prochaine ouverture (avec internet).</p>')+
+ (PENDING?pendingV():"")+'</div>'+
+ (EXTRA.length?'<div class="card stack" style="margin-top:16px"><h3><b>Leçons ajoutées</b></h3>'+EXTRA.slice().sort((a,b)=>(b.d||"").localeCompare(a.d||"")).map(l=>'<div class="row"><span style="flex:1"><b>'+esc(l.t)+'</b><br><span class="small muted">'+esc((SUBJ[l.s]||{}).n||"")+" · "+fmtDate(l.d)+'</span></span><button class="btn gh sm" data-a="dellesson" data-p="'+esc(l.id)+'">Supprimer</button></div>').join("")+"</div>":"")+
+ '<div class="card stack" style="margin-top:16px"><h3><b>Remise à zéro</b></h3><p class="small muted">Efface les étoiles et les progrès (les leçons restent).</p><button class="btn gh sm" data-a="reset" style="color:var(--red)">Effacer les progrès</button></div>'}
+function pendingV(){return '<div class="prev stack"><b>'+PENDING.length+" leçon"+(PENDING.length>1?"s":"")+" trouvée"+(PENDING.length>1?"s":"")+' :</b>'+PENDING.map(l=>'<div><span class="tag" style="--c:'+(SUBJ[l.s]||SUBJ.gram).c+'">'+esc((SUBJ[l.s]||SUBJ.gram).n)+" · "+esc(l.dom)+" · "+fmtDate(l.d)+'</span><p style="margin:6px 0 2px"><b>'+esc(l.t)+'</b></p><p class="small muted" style="margin:0">'+esc(String(l.r).slice(0,180))+"… · "+l.q.length+" questions"+(l.g?" + exercices automatiques":"")+"</p></div>").join("")+'<div class="row"><button class="btn g" data-a="savepending">Ajouter ces leçons</button><button class="btn gh sm" data-a="cancelpending">Annuler</button></div></div>'}
+async function shrink(file){try{const bmp=await createImageBitmap(file);const k=Math.min(1,1600/Math.max(bmp.width,bmp.height));const c=document.createElement("canvas");c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);return await new Promise(r=>c.toBlob(b=>r(b||file),"image/jpeg",.85))}catch(e){return file}}
+function cleanLesson(o,i){if(!o||!o.t||!o.r)return null;const s=mapSubj(o.s,o.dom);const q=(Array.isArray(o.q)?o.q:[]).map(x=>{const t=x.type||x.t;if(t==="qcm"&&Array.isArray(x.o)&&x.o.length>=2)return{type:"qcm",q:String(x.q),o:x.o.map(String).slice(0,4),x:x.x?String(x.x):""};if(t==="num"&&isFinite(+x.a))return{type:"num",q:String(x.q),a:+x.a,x:x.x?String(x.x):""};if(x.q&&x.a)return{type:"open",q:String(x.q),a:String(x.a),k:(x.k||[]).map(String),x:x.x?String(x.x):""};return null}).filter(Boolean);
+ return{id:"x-"+Date.now().toString(36)+"-"+i,s,dom:String(o.dom||"Leçon").slice(0,40),d:/^\d{4}-\d{2}-\d{2}$/.test(o.d||"")?o.d:today(),t:String(o.t).slice(0,90),g:GEN[o.g]?o.g:"",r:String(o.r).slice(0,3000),q,defi:o.defi?String(o.defi).slice(0,300):"",added:Date.now()}}
+async function analyze(){const files=[...($("#pfile").files||[])].slice(0,6);const text=($("#ptext").value||"").trim();if(!files.length&&!text){toast("Ajoute une photo ou du texte.");return}
+ const st=$("#pstat"),btn=$("#abtn");btn.disabled=true;st.innerHTML='<p><span class="spin"></span> Claude lit les leçons… (environ une minute)</p>';
+ let images=[];if(files.length){let lim={};try{lim=await CAP.sample.limits()}catch(e){}if(lim&&lim.images)images=await Promise.all(files.map(shrink));else if(!text){st.innerHTML='<p class="note">Les photos ne peuvent pas être lues ici. Colle le texte de la leçon, ou envoie les photos à Claude dans la conversation.</p>';btn.disabled=false;return}}
+ const prompt=ROLE+"\n\nTu reçois "+(images.length?images.length+" photo(s) de pages":"le texte")+" du cahier de leçons de l'élève (CM1, Côte d'Ivoire). Extrais chaque leçon distincte : une page peut en contenir plusieurs, chacune avec un titre de matière (Mathématiques, Grammaire, Conjugaison, Orthographe, Vocabulaire, Expression écrite, Expression orale, Sciences et technologie, Histoire, Géographie, EDHC…) et souvent une date.\nPour chaque leçon :\n- réécris le contenu en le CORRIGEANT : l'élève fait des fautes en recopiant (orthographe, conjugaison, erreurs de contenu) ; garde ce que le maître a enseigné ;\n- \"r\" : le résumé clair de la leçon, lignes séparées par \\n, puces avec « • » si besoin ;\n- \"q\" : 8 questions variées de révision et d'application, niveau CM1, exemples ivoiriens si possible ; pour l'orthographe, uniquement des qcm ;\n- \"defi\" : une consigne d'écriture courte seulement pour l'expression écrite, sinon \"\".\n"+GEN_DESC+"\nRéponds UNIQUEMENT en JSON :\n{\"lessons\":[{\"s\":\"maths|ortho|conj|gram|voc|expe|expo|sciences|histoire|geo|edhc\",\"dom\":\"Nombres, Opérations, Fractions, Orthographe, Grammaire, Conjugaison, Vocabulaire, Expression écrite, Milieux de vie, Histoire, Géographie, Citoyenneté…\",\"d\":\"AAAA-MM-JJ\",\"t\":\"titre court\",\"g\":\"\",\"r\":\"…\",\"defi\":\"\",\"q\":[{\"type\":\"qcm\",\"q\":\"…\",\"o\":[\"bonne réponse\",\"fausse 1\",\"fausse 2\"],\"x\":\"courte explication\"},{\"type\":\"num\",\"q\":\"…\",\"a\":123},{\"type\":\"open\",\"q\":\"…\",\"a\":\"réponse modèle\",\"k\":[\"mot clé\",\"autre|synonyme\"]}]}]}\nDans un qcm, la bonne réponse est toujours la première. Les nombres décimaux JSON utilisent un point. Si la date est illisible, mets "+today()+"."+(text?"\n\nTexte fourni par le parent :\n"+text:"");
+ const r=await ai(prompt,{modelTier:"default",images:images.length?images:undefined,ms:150000});btn.disabled=false;
+ const ls=r&&Array.isArray(r.lessons)?r.lessons.map(cleanLesson).filter(Boolean):[];
+ if(!ls.length){st.innerHTML='<p class="note">Je n\'ai pas réussi à lire de leçon. Essaie une photo plus nette, bien éclairée, une page à la fois.</p>';return}
+ PENDING=ls;render()}
+async function savePending(){if(!PENDING)return;const ls=PENDING;PENDING=null;let ok=0;
+ for(const l of ls){if(CAP.db){try{await CAP.db.collection("lessons").doc(l.id).set(l);ok++}catch(e){toast("Erreur d'enregistrement : "+(e&&e.code||""))}}else{EXTRA.push(l);ok++}}
+ if(!CAP.db){try{localStorage.setItem(LS+"-extra",JSON.stringify(EXTRA))}catch(e){}rebuild()}
+ toast(ok+" leçon"+(ok>1?"s":"")+" ajoutée"+(ok>1?"s":"")+" !");render()}
+
+/* ============ ACTIONS ============ */
+const ACT={
+ home:()=>go({v:"home"}),subj:p=>go({v:"subj",s:p}),lesson:p=>go({v:"lesson",id:p}),
+ mix:()=>mixQuiz(LESSONS,"Interroge-moi",{v:"home"}),
+ mixs:p=>mixQuiz(LESSONS.filter(l=>l.s===p),SUBJ[p].n,{v:"subj",s:p}),
+ recent:()=>{const lat=Math.max(...LESSONS.map(l=>dayNum(l.d)));const pool=LESSONS.filter(l=>lat-dayNum(l.d)<=7);mixQuiz(pool.length?pool:LESSONS,"Leçons de la semaine",{v:"home"})},
+ practice:p=>{const l=byId(p);if(!l)return;const it=itemsFor(l,8);if(l.defi)it.push(defiItem(l));startQuiz(it,l.t,{v:"lesson",id:p})},
+ defi:p=>{const l=byId(p);l&&startQuiz([defiItem(l)],l.t,{v:"lesson",id:p})},
+ invent:async(p,b)=>{const l=byId(p);if(!l||!CAP.sample)return;b.disabled=true;b.innerHTML='<span class="spin"></span> Kalou invente…';
+  const r=await ai(ROLE+"\n\nLeçon : "+l.t+" ("+SUBJ[l.s].n+", "+l.dom+")\nContenu de la leçon :\n"+l.r+"\n\nInvente 6 nouvelles questions variées pour vérifier qu'elle a compris ET qu'elle sait appliquer cette leçon (surtout des exercices d'application). Questions courtes, niveau CM1, exemples tirés de la vie en Côte d'Ivoire quand c'est possible. Pour l'orthographe, uniquement des qcm. Réponds UNIQUEMENT en JSON :\n{\"q\":[{\"type\":\"qcm\",\"q\":\"…\",\"o\":[\"bonne réponse\",\"fausse 1\",\"fausse 2\"],\"x\":\"courte explication\"},{\"type\":\"num\",\"q\":\"…\",\"a\":123,\"x\":\"…\"},{\"type\":\"open\",\"q\":\"…\",\"a\":\"réponse modèle\",\"k\":[\"mot clé\",\"autre|synonyme\"],\"x\":\"…\"}]}\nDans un qcm, la bonne réponse est toujours la première. Les nombres décimaux JSON utilisent un point.",{modelTier:"default",ms:60000});
+  const qs=r&&Array.isArray(r.q)?r.q.map(x=>{try{return tagItem(coursItem(normQ(x),l),l)}catch(e){return null}}).filter(it=>it&&it.q&&(it.kind!=="qcm"||it.o.length>1)):[];
+  if(!qs.length){b.disabled=false;b.textContent="Kalou invente de nouvelles questions";toast("Kalou n'a pas réussi cette fois. Réessaie dans un instant.");return}startQuiz(qs,l.t,{v:"lesson",id:p})},
+ readrule:p=>{const l=byId(p);l&&speak(l.t+". "+l.r.replace(/•/g,""),true)},
+ say:()=>Q&&sayItem(Q.items[Q.i]),
+ choose:p=>answer(p),validate:()=>validate(),dunno:()=>answer("",true),
+ next:()=>{if(Q.i+1<Q.items.length){Q.i++;render()}else finishQuiz()},
+ quit:()=>{if(Q&&Q.i>0){ST.stars+=Q.stars;save()}go(Q&&Q.back||{v:"home"})},
+ retry:()=>{const w=Q.wrong.map(it=>Object.assign({},it));const back=Q.back;Q={items:w,i:0,res:[],stars:0,run:0,title:"Corrections",back,wrong:[],answered:false,retry:true};go({v:"quiz"})},
+ again:()=>{const b=Q&&Q.back;if(b&&b.v==="lesson")ACT.practice(b.id);else if(b&&b.v==="subj")ACT.mixs(b.s);else ACT.mix()},
+ mic:()=>{const d=CAP.dict;if(!d)return;if(MIC_ON){d.stop().catch(()=>{});return}try{CAP.tts&&CAP.tts.stop()}catch(e){}try{window.speechSynthesis&&speechSynthesis.cancel()}catch(e){}
+  micTarget=$("#ain");if(micTarget)micTarget.dataset.mic="1";micBase=micTarget&&micTarget.type!=="hidden"?micTarget.value.trim():"";if(micTarget&&micTarget.type==="hidden")micTarget.value="";
+  d.start({language:DLANGS[Math.min(CAP.dl,DLANGS.length-1)]}).catch(e=>{MIC_ON=false;document.querySelectorAll(".mic").forEach(b=>b.classList.remove("on"));if(e&&(e.code==="unavailable"||e.code==="invalid_argument")){CAP.dl++;if(CAP.dl>=DLANGS.length)disableMic("Le micro de la page ne propose pas le français ici. "+KBTIP);else toast("Touche encore le micro pour réessayer.");return}if(e&&e.code==="stopped")return;if(e&&e.code==="no_speech"){toast("Je n'ai rien entendu. Touche le micro et parle.");return}if(e&&e.code==="not_granted"){CAP.dict=null;toast("Le micro n'est pas autorisé : tu peux écrire ta réponse.");document.querySelectorAll(".mic").forEach(b=>b.remove())}else toast("Le micro ne répond pas. Réessaie.")})},
+ setname:()=>{const v=($("#fname").value||"").trim().slice(0,30);if(!v)return;ST.name=v;save();render();speak("Bonjour "+v+" ! Je suis Kalou. On révise ensemble ?",true)},
+ gate:()=>go({v:"gate"}),
+ gatego:()=>{if(+($("#gin").value||0)===gateAns)go({v:"parent"});else toast("Ce n'est pas le bon résultat.")},
+ savename:()=>{ST.name=($("#pname").value||"").trim().slice(0,30);ST.voice=$("#pvoice").checked;save();toast("Réglages enregistrés.")},
+ rate:p=>{ST.rate=+p;save();render()},
+ testvoice:()=>speak("Bonjour "+(ST.name||"")+" ! Je suis Kalou. On révise ensemble ?",true),
+ analyze:()=>analyze(),savepending:()=>savePending(),cancelpending:()=>{PENDING=null;render()},
+ dellesson:async(p,b)=>{if(b.dataset.c!=="1"){b.dataset.c="1";b.textContent="Confirmer ?";return}if(CAP.db){try{await CAP.db.collection("lessons").doc(p).delete()}catch(e){toast("Suppression impossible.")}}else{EXTRA=EXTRA.filter(l=>l.id!==p);try{localStorage.setItem(LS+"-extra",JSON.stringify(EXTRA))}catch(e){}rebuild();render()}},
+ reset:(p,b)=>{if(b.dataset.c!=="1"){b.dataset.c="1";b.textContent="Confirmer l'effacement";return}const keep={name:ST.name,voice:ST.voice,rate:ST.rate};ST=Object.assign({stars:0,streak:0,lastDay:"",day:{d:"",stars:0},les:{},updated:0},keep);save();toast("Progrès effacés.");render()}
+};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b||b.disabled)return;const f=ACT[b.dataset.a];if(f){e.preventDefault();f(b.dataset.p,b,e)}});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="gin")ACT.gatego()});
+
+/* ============ DÉMARRAGE ============ */
+try{const s=JSON.parse(localStorage.getItem(LS)||"null");if(s&&typeof s==="object")ST=Object.assign(ST,s)}catch(e){}
+try{const x=JSON.parse(localStorage.getItem(LS+"-extra")||"null");if(Array.isArray(x)){EXTRA=x;rebuild()}}catch(e){}
+try{pickVoice();if(window.speechSynthesis)speechSynthesis.onvoiceschanged=pickVoice}catch(e){}
+render();
+function nativeDict(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return null;let rec=null,hp=()=>{},hf=()=>{},hs=()=>{};
+ return{start(){return new Promise((res,rej)=>{try{rec=new SR();rec.lang="fr-FR";rec.interimResults=true;rec.continuous=false;rec.maxAlternatives=1;
+  rec.onstart=()=>{hs({state:"listening"});res()};
+  rec.onresult=e=>{let fin="",part="";for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal)fin+=r[0].transcript;else part+=r[0].transcript}if(part)hp({text:part});if(fin){hp({text:""});hf({text:" "+fin})}};
+  rec.onerror=ev=>{const c=ev.error==="not-allowed"||ev.error==="service-not-allowed"?"not_granted":ev.error==="no-speech"?"no_speech":ev.error==="aborted"?"stopped":"upstream_error";hs({state:"idle",reason:c});rej({code:c})};
+  rec.onend=()=>hs({state:"idle",reason:"stopped"});rec.start()}catch(err){rej({code:"upstream_error"})}})},
+  stop(){try{rec&&rec.stop()}catch(e){}return Promise.resolve()},onPartial(f){hp=f},onFinal(f){hf=f},onState(f){hs=f}}}
+(()=>{const d=nativeDict();if(d){CAP.dict=d;try{setupDict(d)}catch(e){CAP.dict=null}}
+ if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
+ render()})();
+})();
+</script>
+</body>
+</html>

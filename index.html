@@ -124,8 +124,13 @@ let fsTried=false;
 document.addEventListener("click",()=>{if(fsTried||standalone()||!isMobile())return;fsTried=true;try{const el=document.documentElement;const f=el.requestFullscreen||el.webkitRequestFullscreen;if(f&&!document.fullscreenElement)f.call(el,{navigationUI:"hide"}).catch(()=>{})}catch(x){}},true);
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEvt=e;if(installWait&&Date.now()-installWait<4500){installWait=0;doInstall()}});
 let installWait=0;
-function doInstall(){const ev=installEvt;if(!ev)return false;installEvt=null;try{ev.prompt();ev.userChoice.then(r=>{if(r&&r.outcome==="accepted")toast("Installation en cours…");try{render()}catch(x){}}).catch(()=>{})}catch(x){}return true}
-window.addEventListener("appinstalled",()=>{installEvt=null;toast("Application installée ! Tu la trouves sur l'écran d'accueil.");render()});
+function doInstall(){const ev=installEvt;if(!ev)return false;installEvt=null;try{ev.prompt();ev.userChoice.then(r=>{if(r&&r.outcome==="accepted"){markInstalled(true);toast("Installation en cours…")}try{render()}catch(x){}}).catch(()=>{})}catch(x){}return true}
+const IKEY="revisions-cm1-installed";
+let installedKnown=(()=>{try{return localStorage.getItem(IKEY)==="1"}catch(e){return false}})();
+function markInstalled(v){installedKnown=v;try{v?localStorage.setItem(IKEY,"1"):localStorage.removeItem(IKEY)}catch(e){}}
+if(standalone())markInstalled(true);
+try{if(navigator.getInstalledRelatedApps)navigator.getInstalledRelatedApps().then(l=>{const v=Array.isArray(l)&&l.length>0;if(v!==installedKnown&&!standalone()){markInstalled(v);try{if(VIEW.v==="home")render()}catch(x){}}}).catch(()=>{})}catch(e){}
+window.addEventListener("appinstalled",()=>{markInstalled(true);installEvt=null;toast("Application installée ! Tu la trouves sur l'écran d'accueil.");render()});
 /* ============ MATIÈRES ============ */
 const SUBJ={
  maths:{n:"Mathématiques",c:"#2343c4"},
@@ -635,7 +640,7 @@ function render(){const a=$("#app");const v=VIEW.v;
 function homeV(){const lv=level();const nm=esc(ST.name||"championne");const td=ST.day.d===today()?ST.day.stars:0;
  const weak=LESSONS.map(l=>[l,mastery(l.id),ST.les[l.id]]).filter(x=>x[1]!=null&&x[1]<.6&&x[2].n>=3).sort((a,b)=>a[1]-b[1])[0];
  const msg=td?"Tu as déjà gagné "+td+" étoile"+(td>1?"s":"")+" aujourd'hui. Bravo, continue !":ST.streak>1&&ST.lastDay!==today()?"Tu as révisé "+ST.streak+" jours de suite. On continue aujourd'hui ?":"Prête pour réviser ? Je te pose des questions sur tes leçons !";
- return (standalone()?'':'<button class="btn g big" style="margin-bottom:14px" data-a="install">Installer l\'application</button>')+(ST.name?'':'<div class="card stack" style="margin-bottom:14px"><b>Comment t\'appelles-tu ?</b><div class="inrow"><input id="fname" class="inp" maxlength="30" autocomplete="off"><button class="btn" data-a="setname">OK</button></div></div>')+'<section class="hero"><div><h1 class="cur">Bonjour '+nm+' !</h1><div class="bubble">'+esc(msg)+'</div></div><div class="kal">'+kalou("100%")+'</div></section>'+
+ return (standalone()||installedKnown?'':'<button class="btn g big" style="margin-bottom:14px" data-a="install">Installer l\'application</button>')+(ST.name?'':'<div class="card stack" style="margin-bottom:14px"><b>Comment t\'appelles-tu ?</b><div class="inrow"><input id="fname" class="inp" maxlength="30" autocomplete="off"><button class="btn" data-a="setname">OK</button></div></div>')+'<section class="hero"><div><h1 class="cur">Bonjour '+nm+' !</h1><div class="bubble">'+esc(msg)+'</div></div><div class="kal">'+kalou("100%")+'</div></section>'+
  '<div class="stats" style="margin-top:14px"><div class="card stat">'+IC.star(26)+'<b>'+ST.stars+'</b><span>étoiles</span></div><div class="card stat">'+IC.fire+'<b>'+ST.streak+'</b><span>jour'+(ST.streak>1?"s":"")+' de suite</span></div><div class="card stat">'+IC.leaf+'<b style="font-size:17px;line-height:1.3">'+esc(lv.name)+'</b><span>'+(lv.next?"encore "+lv.need+" étoiles":"niveau max")+'</span></div></div>'+
  '<div class="stack" style="margin-top:16px"><button class="btn big" data-a="mix">Interroge-moi ! (10 questions)</button><button class="btn big g" data-a="recent">Mes leçons de la semaine</button>'+
  (weak?'<div class="card"><b>Kalou te conseille de revoir :</b><div class="row" style="margin-top:8px"><span style="flex:1">'+esc(weak[0].t)+'</span><button class="btn sm" data-a="lesson" data-p="'+esc(weak[0].id)+'">Revoir</button></div></div>':'')+

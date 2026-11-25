@@ -31,5 +31,11 @@
   "display_override": [
     "fullscreen",
     "standalone"
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://sayanla10-alt.github.io/revisions-cm1/manifest.json"
+    }
   ]
 }

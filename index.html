@@ -118,7 +118,10 @@ table{border-collapse:collapse;width:100%;font-size:15px}th,td{text-align:left;p
 <script>
 (()=>{
 "use strict";
-let installEvt=null;const standalone=()=>{try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}catch(e){return false}};
+let installEvt=null;const standalone=()=>{try{return matchMedia("(display-mode: standalone)").matches||matchMedia("(display-mode: fullscreen)").matches||navigator.standalone===true}catch(e){return false}};
+const isMobile=()=>/android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent);
+let fsTried=false;
+document.addEventListener("click",()=>{if(fsTried||standalone()||!isMobile())return;fsTried=true;try{const el=document.documentElement;const f=el.requestFullscreen||el.webkitRequestFullscreen;if(f&&!document.fullscreenElement)f.call(el,{navigationUI:"hide"}).catch(()=>{})}catch(x){}},true);
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEvt=e;if(installWait&&Date.now()-installWait<4500){installWait=0;doInstall()}});
 let installWait=0;
 function doInstall(){const ev=installEvt;if(!ev)return false;installEvt=null;try{ev.prompt();ev.userChoice.then(r=>{if(r&&r.outcome==="accepted")toast("Installation en cours…");try{render()}catch(x){}}).catch(()=>{})}catch(x){}return true}

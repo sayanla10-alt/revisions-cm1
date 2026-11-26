@@ -1276,7 +1276,7 @@ function ruleHtml(r){const lines=String(r||"").split("\n");let h="",inL=false;fo
 function toast(m,ms){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,ms||3500)}
 function go(v){stopSpeak();stopMic();VIEW=v;render();window.scrollTo(0,0)}
 function applyTheme(){const t=ST.theme;const r=document.documentElement;if(t==="light"||t==="dark")r.dataset.theme=t;else if(r.dataset.theme&&r.dataset.kt)delete r.dataset.theme;if(t==="light"||t==="dark")r.dataset.kt="1";else delete r.dataset.kt;
- const dk=t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches);const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=dk?"#17221e":"#2343c4"}
+ const dk=t==="dark"||(t!=="light"&&!!window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=dk?"#17221e":"#2343c4"}
 function render(){applyTheme();const a=$("#app");const v=VIEW.v;if(ST.flown==null)ST.flown=tripN();if(v==="home"||v==="voyage")updateTrip();
  const html=v==="home"?homeV():v==="subj"?subjV(VIEW.s):v==="lesson"?lessonV(VIEW.id):v==="quiz"?quizV():v==="end"?endV():v==="gate"?gateV():v==="parent"?parentV():v==="revision"?revisionV():v==="carnet"?carnetV():v==="compo"?compoV():v==="voyage"?voyageV():v==="exam"&&EX?examV():v==="grading"?gradingV():v==="examres"&&EX?examResV():homeV();
  a.innerHTML=v==="home"?'<div class="wide">'+html+'</div>':'<div class="narrow">'+html+'</div>';

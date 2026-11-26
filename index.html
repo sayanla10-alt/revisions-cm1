@@ -264,6 +264,20 @@ h3.step{margin:22px 0 10px;font-size:18px}
 .nav button.dot{position:relative}.nav button.dot::after{content:"";position:absolute;top:6px;right:calc(50% - 18px);width:10px;height:10px;border-radius:50%;background:#c92a42;box-shadow:0 0 0 2px #fff;animation:pulse 1.4s infinite}
 .bubble .kq{display:block}
 @media(prefers-reduced-motion:reduce){.kalou *,.kalou{animation:none!important}}
+
+/* ===== Royaumes historiques ===== */
+.cimap .king{cursor:pointer}
+.cimap .king ellipse{fill:color-mix(in srgb,var(--kc) 10%,transparent);stroke:color-mix(in srgb,var(--kc) 55%,transparent);stroke-width:2.5;stroke-dasharray:7 6}
+.cimap .king:not(.on) ellipse{fill:light-dark(rgba(120,110,90,.07),rgba(255,255,255,.05));stroke:light-dark(#c9c0aa,#566358)}
+.cimap .king.on ellipse{fill:color-mix(in srgb,var(--kc) 16%,transparent);stroke-dasharray:none}
+.cimap .king.sel ellipse{fill:color-mix(in srgb,var(--kc) 30%,transparent);stroke:var(--kc);stroke-width:4}
+.cimap .king text{font:italic 700 21px Andika,sans-serif;fill:var(--kc);paint-order:stroke;stroke:light-dark(#fff6dc,#2c3a2f);stroke-width:6px}
+.cimap .king text.q{font:700 24px Andika,sans-serif;fill:light-dark(#b3a98f,#7d8b82)}
+.cimap .king .crown{fill:var(--kc)}
+.kingcard{border-left:6px solid var(--kc)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-size:13px;color:var(--soft);margin:8px 4px 2px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;background:#c92a42;margin-right:5px;vertical-align:-1px}
+.legend i.k{border-radius:3px;background:color-mix(in srgb,#b8860b 30%,transparent);border:2px solid #b8860b}
 </style>
 <script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
 </head>
@@ -529,7 +543,7 @@ const pad=n=>String(n).padStart(2,"0");
 const today=()=>{const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())};
 const dayNum=s=>Math.round(Date.parse(s+"T12:00:00")/864e5);
 const MOIS=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
-const fmtDate=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||"");return m?(+m[3])+" "+MOIS[+m[2]-1]:""};
+const fmtDate=s=>{if(!s)return"Entraînement";const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||"");return m?(+m[3])+" "+MOIS[+m[2]-1]:""};
 function normSoft(s){return String(s||"").toLowerCase().replace(/[’`]/g,"'").replace(/[\u00a0\u202f]/g," ").replace(/\s+/g," ").replace(/^[\s«"]+|[\s.!?;:,»"]+$/g,"").trim()}
 function normHard(s){return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/œ/g,"oe").replace(/[’'`\-]/g," ").replace(/[^a-z0-9 ,./]/g," ").replace(/[.,/](?=\s|$)/g," ").replace(/\s+/g," ").trim()}
 
@@ -948,7 +962,7 @@ function kTap(el){const k=el&&el.querySelector(".kalou");kState(k,"look",1300);c
 function kFly(){const n=tripN();if(ST.flown==null||ST.flown>n){ST.flown=n;persistLocal();return}if(ST.flown>=n)return;
  const g=document.querySelector(".kmap");if(!g)return;const k=g.querySelector(".kalou"),fl=g.querySelector(".kflip");
  const path=[];for(let i=ST.flown;i<=n;i++)path.push(proj(CITIES[i][1],CITIES[i][2]));ST.flown=n;persistLocal();
- const land=()=>{kState(k,"happy",1200);setTimeout(()=>{const nb=document.querySelector('.nav [data-a="voyage"]');if(nb)nb.classList.remove("dot")},0);kSay("Nous voici à "+CITIES[n][0]+" ! "+CITIES[n][3])};
+ const land=()=>{kState(k,"happy",1200);setTimeout(()=>{const nb=document.querySelector('.nav [data-a="voyage"]');if(nb)nb.classList.remove("dot")},0);const nk=kingsFor([n]);kSay("Nous voici à "+CITIES[n][0]+" ! "+CITIES[n][3]+(nk.length?" Et tu découvres un royaume historique : le "+KINGS[nk[0]][0].replace(/^Royaume/,"royaume")+". Touche-le sur la carte !":""))};
  if(reduced()){g.setAttribute("transform","translate("+path[path.length-1]+")");land();return}
  const seg=[];let tot=0;for(let i=1;i<path.length;i++){const d=Math.hypot(path[i][0]-path[i-1][0],path[i][1]-path[i-1][1]);seg.push(d);tot+=d}
  const dur=Math.min(5000,Math.max(1600,tot*8)),t0=performance.now();k.classList.add("k-fly");
@@ -995,6 +1009,78 @@ Object.assign(GEN,{accords:L=>accordItem((L||2)>=3),dictee:dicteeGen(),dictee_ma
 BASE.push({id:"f-ortho-pp",s:"ortho",dom:"Orthographe",d:"2026-11-25",t:"L'accord du participe passé",g:"accords",
 r:"Avec l'auxiliaire être, le participe passé s'accorde en genre et en nombre avec le sujet : Les filles sont arrivées. Awa est tombée.\nAvec l'auxiliaire avoir, le participe passé ne s'accorde pas avec le sujet : Les enfants ont mangé.\nPour aller plus loin : avec avoir, il s'accorde avec le COD s'il est placé avant le verbe : Les mangues que j'ai achetées.\nSans auxiliaire, le participe passé s'accorde comme un adjectif avec le nom : des fenêtres cassées, une maison construite.",
 q:[["Avec être, avec quoi s'accorde le participe passé ?",["Avec le sujet","Avec le COD","Il ne s'accorde jamais"]],["Avec avoir, le participe passé s'accorde-t-il avec le sujet ?",["Non, jamais avec le sujet","Oui, toujours","Seulement au pluriel"]],["Sans auxiliaire, le participe passé s'accorde…",["comme un adjectif, avec le nom","avec le verbe","jamais"]],["Complète : Les filles sont (partir)…",["parties","parti","partie"]],["Complète : Les filles ont (chanter)…",["chanté","chantées","chantés"]]]});
+rebuild();
+/* ============ OPÉRATIONS : poser et effectuer, puis choisir ============ */
+SUBJ.ops={n:"Opérations",c:"#e8590c"};SORDER.splice(SORDER.indexOf("maths")+1,0,"ops");
+SIC.ops='<svg class="ic" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#e8590c"/><path d="M11 16h10M16 11v10M27 16h10M28 28l8 8M36 28l-8 8M11 32h10" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="27.5" r="1.8" fill="#fff"/><circle cx="16" cy="36.5" r="1.8" fill="#fff"/></svg>';
+const OPQ="Pose et effectue : ";
+function fmtF(v,dec){const neg=v<0;v=Math.abs(Math.round(v));let s=String(v).padStart(dec+1,"0");let i=dec?s.slice(0,-dec):s,d=dec?s.slice(-dec):"";i=i.replace(/\B(?=(\d{3})+(?!\d))/g,NB);return(neg?"−":"")+i+(d?","+d:"")}
+function dispD(v,dec){let s=fmtF(v,dec);if(s.includes(","))s=s.replace(/0+$/,"").replace(/,$/,"");return s}
+function ndig(n){return String(Math.abs(n)).length}
+function rndOp(d){let s=String(R(1,9));for(let i=1;i<d;i++)s+=Math.random()<.08?"0":String(R(1,9));return +s}
+function rawD(d,dec){return rndOp(d)}
+function bumpN(n){const L=ndig(n);const k=R(L>2?1:0,Math.max(1,L-2));const v=n+(Math.random()<.5?1:-1)*10**k;return v>0?v:n+10**k}
+function swapAdj(n){const s=String(n).split("");if(s.length<3)return bumpN(n);for(let t=0;t<8;t++){const i=R(1,s.length-2);if(s[i]!==s[i+1]){[s[i],s[i+1]]=[s[i+1],s[i]];return +s.join("")}}return bumpN(n)}
+function noCarry(a,b){let r=0,p=1;while(a||b){r+=((a%10+b%10)%10)*p;a=Math.floor(a/10);b=Math.floor(b/10);p*=10}return r}
+function noBorrow(a,b){let r=0,p=1;while(a||b){r+=Math.abs(a%10-b%10)*p;a=Math.floor(a/10);b=Math.floor(b/10);p*=10}return r}
+function shiftErr(a,b){const d=String(b).split("").reverse().map(Number);const ks=d.map((x,k)=>k).filter(k=>k>0&&d[k]);if(!ks.length)return bumpN(a*b);const k=pick(ks);return a*b-a*d[k]*10**k+a*d[k]*10**(k-1)}
+function wrongs(res,list,show){const out=[];const seen=new Set([show(res)]);for(const w of list){if(!(w>0))continue;const s=show(w);if(!seen.has(s)){seen.add(s);out.push(s)}}let g=0;while(out.length<3&&g++<80){const w=g>30?res+(Math.random()<.5?1:-1)*R(1,9)*10**R(0,Math.max(0,ndig(res)-1)):Math.random()<.5?bumpN(res):swapAdj(res);const s=show(w);if(w>0&&!seen.has(s)){seen.add(s);out.push(s)}}return out.slice(0,3)}
+function poseF(a,b,op,res,dec){return'<div class="pose"><span>'+fmtF(a,dec)+'</span><span>'+op+" "+fmtF(b,dec)+'</span><span class="ln">'+fmtF(res,dec)+"</span></div>"}
+function opItem(qop,sayop,good,wr,x,pose,hint){return Object.assign(mkQ(OPQ+qop,good,wr,x,"Pose et effectue sur ton cahier : "+sayop+". Puis choisis le bon résultat."),{pose,hint,big:1})}
+Object.assign(GEN,{
+ opAdd:L=>{const da=lvlRange(L,R(4,5),R(5,6),6),db=lvlRange(L,R(3,4),R(4,6),R(5,6));const a=rndOp(L>=4?6:da),b=rndOp(L>=4?6:db);const r=a+b;
+  return opItem(fmt(a)+" + "+fmt(b),a+" plus "+b,fmt(r),wrongs(r,[noCarry(a,b),r+10**R(1,ndig(r)-2),r-10**R(1,ndig(r)-2),swapAdj(r)],fmt),"J'aligne les unités sous les unités et je n'oublie pas les retenues : "+fmt(a)+" + "+fmt(b)+" = "+fmt(r)+".",pose(a,b,"+",r),"retiens")},
+ opAddD:L=>{const da=R(1,2),db=L===1?da:pick([0,1,2].filter(x=>x!==da||L>=3));const D=Math.max(da,db);const a=rawD(lvlRange(L,R(3,4),R(4,5),R(5,6)),da),b=rawD(lvlRange(L,R(2,4),R(3,5),R(4,6)),db);
+  const A=a*10**(D-da),B=b*10**(D-db),r=A+B;const sh=v=>dispD(v,D);
+  return opItem(dispD(a,da)+" + "+dispD(b,db),dispD(a,da)+" plus "+dispD(b,db),sh(r),wrongs(r,[da!==db?a+b:noCarry(A,B),r*10,Math.round(r/10),noCarry(A,B)],sh),"J'aligne les virgules les unes sous les autres et je complète avec des zéros : "+fmtF(A,D)+" + "+fmtF(B,D)+" = "+fmtF(r,D)+".",poseF(A,B,"+",r,D),"virgules")},
+ opSub:L=>{let a=rndOp(lvlRange(L,4,R(4,5),5)),b=rndOp(lvlRange(L,R(3,4),R(3,5),R(4,5)));if(b>a)[a,b]=[b,a];if(a===b)a+=R(11,99);const r=a-b;
+  return opItem(fmt(a)+" − "+fmt(b),a+" moins "+b,fmt(r),wrongs(r,[noBorrow(a,b),r+10**R(1,Math.max(1,ndig(r)-1)),r-10**R(1,Math.max(1,ndig(r)-1)),swapAdj(r)],fmt),"Le plus grand nombre en haut, unités sous unités. Quand le chiffre du haut est plus petit, j'ajoute 10 et je retiens 1 : "+fmt(a)+" − "+fmt(b)+" = "+fmt(r)+". Vérification : "+fmt(r)+" + "+fmt(b)+" = "+fmt(a)+".",pose(a,b,"−",r),"retiens 1")},
+ opSubD:L=>{let da=R(1,2),db=L===1?da:pick([0,1,2].filter(x=>x!==da||L>=3));const D=Math.max(da,db);let a=rawD(lvlRange(L,R(3,4),R(4,5),5),da),b=rawD(lvlRange(L,R(2,3),R(3,4),R(3,5)),db);
+  let A=a*10**(D-da),B=b*10**(D-db);if(B>=A){[a,b]=[b,a];[da,db]=[db,da];A=a*10**(D-da);B=b*10**(D-db)}if(B>=A)return null;const r=A-B;const sh=v=>dispD(v,D);
+  return opItem(dispD(a,da)+" − "+dispD(b,db),dispD(a,da)+" moins "+dispD(b,db),sh(r),wrongs(r,[da!==db?Math.abs(a-b):noBorrow(A,B),noBorrow(A,B),r*10,r+10**R(0,1)],sh),"J'aligne les virgules et je complète avec des zéros : "+fmtF(A,D)+" − "+fmtF(B,D)+" = "+fmtF(r,D)+".",poseF(A,B,"−",r,D),"virgules")},
+ opMul:L=>{const a=rndOp(lvlRange(L,5,R(5,6),6)),b=rndOp(lvlRange(L,3,R(3,4),4));const r=a*b;
+  return opItem(fmt(a)+" × "+fmt(b),a+" fois "+b,fmt(r),wrongs(r,[shiftErr(a,b),r+a*10**R(0,ndig(b)-1),r-a,swapAdj(r)],fmt),"Je multiplie "+fmt(a)+" par chaque chiffre de "+fmt(b)+" en décalant d'un rang à chaque ligne, puis j'additionne : "+fmt(r)+".",pose(a,b,"×",r),"décale")},
+ opMulD:L=>{const da=R(1,2),a=rawD(lvlRange(L,R(4,5),5,6),da);const dec2=L>=3&&Math.random()<.5;const db=dec2?1:0;const b=dec2?rawD(3,1):rndOp(lvlRange(L,3,R(3,4),4));const D=da+db,r=a*b;const sh=v=>dispD(v,D);
+  const wr=[r*10,Math.round(r/10),dec2?r*10:shiftErr(a,b),shiftErr(a,b)];const showB=dispD(b,db);
+  return opItem(dispD(a,da)+" × "+showB,dispD(a,da)+" fois "+showB,sh(r),wrongs(r,wr,sh),"Je multiplie comme des entiers ("+fmt(a)+" × "+fmt(b)+" = "+fmt(r)+"), puis je place la virgule : "+D+" chiffre"+(D>1?"s":"")+" après la virgule en tout, donc "+fmtF(r,D)+".",null,"place la virgule")},
+ opDiv:L=>{let d,n;for(let t=0;t<30;t++){d=L===1?R(2,9):L===2?(Math.random()<.5?R(2,9):R(11,99)):L===3?(Math.random()<.5?R(11,99):R(101,499)):R(101,999);n=L===1?R(300,9999):R(1000,9999);if(n>=d*3)break}
+  const q=Math.floor(n/d),r=n%d;const S=(qq,rr)=>"Quotient : "+fmt(qq)+" ; reste : "+fmt(rr);const good=S(q,r);const w=[];
+  if(r+d<n&&q>1)w.push(S(q-1,r+d));w.push(S(q+1,r));const qs=String(q);if(/\d0\d/.test(qs)||/0$/.test(qs)&&qs.length>1){const q2=+qs.replace(/0/,"");if(q2!==q)w.push(S(q2,r))}
+  w.push(S(q,r>0?r-1:r+1));w.push(S(q*10,r));w.push(S(q,(r+1)%d===r?r+2:r+1));
+  return Object.assign(mkQ(OPQ+fmt(n)+" : "+fmt(d),good,w,"Le reste est toujours plus petit que le diviseur. Vérification : "+fmt(d)+" × "+fmt(q)+" + "+fmt(r)+" = "+fmt(n)+".","Pose et effectue sur ton cahier : "+n+" divisé par "+d+". Puis choisis le bon quotient et le bon reste."),{hint:"reste est toujours",big:1})},
+ opDivD:L=>{let d,qr,qd,nr,ok=false;for(let t=0;t<200&&!ok;t++){d=L===1?R(2,9):L===2?pick([R(2,9),R(11,25)]):L===3?pick([R(2,9),R(11,99)]):pick([R(11,99),R(101,250)]);qd=R(1,2);qr=rndOp(R(2,4));if(qr%10===0)continue;nr=qr*d;
+   const intDiv=Math.random()<.35;if(intDiv){if(nr%10**qd)continue;nr=nr/10**qd;if(ndig(nr)>4||ndig(nr)<2)continue;ok="i"}else{if(ndig(nr)>4||ndig(nr)<3||nr%10===0)continue;ok="d"}}
+  if(!ok)return null;const nShow=ok==="i"?fmt(nr):dispD(nr,qd);const sh=v=>dispD(v,qd);const good=sh(qr);
+  const w=[dispD(qr,qd+1),dispD(qr*10,qd),dispD(qr+1,qd),dispD(qr+10,qd)];const ip=Math.floor(qr/10**qd),rem=ok==="i"?nr-ip*d:0;if(ok==="i"&&rem>0)w.unshift(fmt(ip)+" reste "+fmt(rem));
+  return Object.assign(mkQ(OPQ+nShow+" : "+d,good,w.filter(x=>x!==good),(ok==="i"?"Quand il reste quelque chose, je mets une virgule au quotient et un zéro au dividende, puis je continue. ":"Je place la virgule au quotient quand j'abaisse le premier chiffre après la virgule. ")+"Vérification : "+d+" × "+good+" = "+nShow+".","Pose et effectue sur ton cahier : "+nShow+" divisé par "+d+". Puis choisis le bon résultat."),{hint:ok==="i"?"zéro au dividende":"virgule au quotient",big:1})},
+ opTables:L=>{let a=R(2,L===1?5:9),b=R(1,10);if(L>=2&&Math.random()<.5){a=R(6,9);b=R(3,9)}if(Math.random()<.12)[a,b]=[10,R(2,10)];const p=a*b;const v=R(0,L>=2?3:2);
+  const x=a+" × "+b+" = "+p+"."+(a!==b?" C'est aussi "+b+" × "+a+".":"");
+  if(v===0)return{kind:"num",q:a+" × "+b+" = ?",say:"Combien font "+a+" fois "+b+" ?",a:p,at:String(p),x,big:1};
+  if(v===1){const w=[a*(b+1),a*(b-1),(a+1)*b,(a-1)*b,p+1,p-2].filter(z=>z>0&&z!==p).map(String);return Object.assign(mkQ("Combien font "+a+" × "+b+" ?",String(p),shuffle(w),x,"Combien font "+a+" fois "+b+" ?"),{big:1})}
+  if(v===2)return{kind:"num",q:a+" × ? = "+p,say:a+" fois combien égale "+p+" ?",a:b,at:String(b),x:"Je récite la table de "+a+" : "+a+" × "+b+" = "+p+".",big:1};
+  if(b>=10)b=R(2,9);return{kind:"num",q:"Dans la table de "+a+", quel nombre vient juste après "+a*b+" ?",say:"Dans la table de "+a+", quel nombre vient juste après "+a*b+" ?",a:a*(b+1),at:String(a*(b+1)),x:"Dans la table de "+a+", j'ajoute "+a+" à chaque fois : "+a*b+" + "+a+" = "+a*(b+1)+"."}}
+});
+[
+ {id:"o-tables",dom:"Tables de multiplication",t:"Les tables de multiplication de 1 à 10",g:"opTables",
+  r:"Je récite les tables : 7 × 1 = 7, 7 × 2 = 14, 7 × 3 = 21…\nOn peut changer l'ordre : 6 × 8 = 8 × 6 = 48.\nDans la table de 7, j'ajoute 7 à chaque fois : 7, 14, 21, 28…\nPour multiplier par 10, j'écris un zéro à droite : 7 × 10 = 70.\nPour trouver un nombre manquant, je récite la table : 7 × ? = 56, c'est 8 car 7 × 8 = 56."},
+ {id:"o-add",dom:"Addition",t:"Additions de nombres entiers (jusqu'à 6 chiffres)",g:"opAdd",
+  r:"Je pose l'addition en colonnes : unités sous unités, dizaines sous dizaines, centaines sous centaines.\nJe commence par la droite, par la colonne des unités.\nSi le résultat d'une colonne dépasse 9, j'écris les unités et je retiens la dizaine dans la colonne suivante.\nJe vérifie l'ordre de grandeur en arrondissant les nombres."},
+ {id:"o-add-dec",dom:"Addition",t:"Additions de nombres décimaux",g:"opAddD",
+  r:"Je pose l'addition en alignant les virgules les unes sous les autres.\nJe complète avec des zéros pour avoir le même nombre de chiffres après la virgule : 12,5 = 12,50.\nJ'additionne comme avec des entiers, sans oublier les retenues.\nJe place la virgule du résultat sous les autres virgules."},
+ {id:"o-sous",dom:"Soustraction",t:"Soustractions de nombres entiers (jusqu'à 5 chiffres)",g:"opSub",
+  r:"Je pose le plus grand nombre en haut, unités sous unités.\nJe commence par la colonne des unités.\nSi le chiffre du haut est plus petit, j'ajoute 10 en haut et je retiens 1 en bas, dans la colonne suivante.\nPour vérifier, j'additionne le résultat et le nombre du bas : je dois retrouver le nombre du haut."},
+ {id:"o-sous-dec",dom:"Soustraction",t:"Soustractions de nombres décimaux",g:"opSubD",
+  r:"Je pose la soustraction en alignant les virgules les unes sous les autres.\nJe complète avec des zéros : 45,2 − 13,75 devient 45,20 − 13,75.\nJe soustrais comme avec des entiers, sans oublier les retenues.\nJe place la virgule du résultat sous les autres virgules."},
+ {id:"o-mult",dom:"Multiplication",t:"Multiplications (5 ou 6 chiffres par 3 ou 4 chiffres)",g:"opMul",
+  r:"Je pose le nombre le plus long en haut.\nJe multiplie le nombre du haut par le chiffre des unités, puis par celui des dizaines, puis des centaines.\nÀ chaque nouvelle ligne, je décale d'un rang vers la gauche : je mets un zéro (ou un point) à droite.\nJ'additionne ensuite tous les produits partiels.\nJe n'oublie pas les retenues de la table."},
+ {id:"o-mult-dec",dom:"Multiplication",t:"Multiplications avec des nombres décimaux",g:"opMulD",
+  r:"Je multiplie sans m'occuper de la virgule, comme avec des entiers.\nJe compte les chiffres après la virgule dans les deux nombres.\nDans le résultat, je place la virgule pour avoir autant de chiffres après la virgule en tout.\nExemple : 3,25 × 12 : 325 × 12 = 3 900, 2 chiffres après la virgule, donc 39,00 = 39."},
+ {id:"o-div",dom:"Division",t:"Divisions (dividende jusqu'à 4 chiffres, diviseur jusqu'à 3)",g:"opDiv",
+  r:"Je pose la division avec la potence : le dividende à gauche, le diviseur à droite.\nJe prends assez de chiffres du dividende pour pouvoir diviser.\nJe cherche combien de fois le diviseur y est contenu, je multiplie et je soustrais.\nJ'abaisse le chiffre suivant et je recommence. Si le diviseur n'y est pas, j'écris 0 au quotient.\nLe reste est toujours plus petit que le diviseur.\nVérification : diviseur × quotient + reste = dividende."},
+ {id:"o-div-dec",dom:"Division",t:"Divisions avec un quotient décimal",g:"opDivD",
+  r:"Quand j'abaisse le premier chiffre après la virgule du dividende, je mets la virgule au quotient.\nSi le dividende est entier et qu'il reste quelque chose, je mets une virgule au quotient et un zéro au dividende, puis je continue.\nJe continue jusqu'à ce que le reste soit 0.\nVérification : diviseur × quotient = dividende."}
+].forEach(l=>BASE.push(Object.assign({s:"ops",d:"",q:[]},l)));
+Object.assign(DEEP,{"o-tables":"opTables","o-add":"opAdd","o-add-dec":"opAddD","o-sous":"opSub","o-sous-dec":"opSubD","o-mult":"opMul","o-mult-dec":"opMulD","o-div":"opDiv","o-div-dec":"opDivD"});
 rebuild();
 Object.assign(GEN_FOR,{"f-ortho-mais":["dictee_mais"],"f-ortho-cetait":["dictee_cetait"],"f-ortho-la":["dictee_la"],"f-ortho-ces":["dictee_ces"]});
 Object.assign(IC,{
@@ -1137,17 +1223,35 @@ function lmastered(id){const s=ST.les[id];if(!s||!s.h)return false;const h=s.h.s
 function tripN(){return Math.min((ST.trip||[]).length,NCITY)}
 function updateTrip(){ST.trip=ST.trip||[];const before=tripN();for(const l of LESSONS)if(lmastered(l.id)&&!ST.trip.some(t=>t.id===l.id))ST.trip.push({id:l.id,d:today()});const after=tripN();const r=[];for(let i=before+1;i<=after;i++)r.push(i);return r}
 function closestLesson(){let b=null,bv=-1;for(const l of LESSONS){if((ST.trip||[]).some(t=>t.id===l.id))continue;const s=ST.les[l.id];if(!s||!s.h)continue;const h=s.h.slice(-10);const v=h.split("").filter(c=>c==="1").length/Math.max(5,h.length);if(v>bv){bv=v;b=l}}return b}
+/* ---- Royaumes historiques : découverts quand Kalou atteint leur ville ---- */
+const KINGS=[
+ ["Royaume de Kong",[0,30,"middle"],9.2,-4.35,70,48,"#b8860b","Kong","Le royaume de Kong a été fondé vers 1710 par Sékou Ouattara. Kong était une grande ville de commerce et de savoir, avec ses mosquées en banco. Elle a été détruite par l'armée de Samory Touré en 1897."],
+ ["Royaume de Bouna",[0,64,"middle"],9.2,-3.1,42,44,"#8e44ad","Bouna","Le royaume de Bouna, au nord-est, a été fondé au XVIIe siècle. Ses habitants sont surtout des Koulango. Il a été ravagé par l'armée de Samory Touré à la fin du XIXe siècle."],
+ ["Royaume du Gyaman",[0,34,"middle"],8.0,-3.05,38,44,"#16a085","Bondoukou","Le royaume du Gyaman, aussi appelé royaume abron, avait pour centre la région de Bondoukou. Il a été fondé à la fin du XVIIe siècle par les Abron, venus de l'actuel Ghana."],
+ ["Royaume de l'Indénié",[38,6,"start"],6.78,-3.5,34,34,"#d35400","Abengourou","Le royaume agni de l'Indénié a pour capitale Abengourou. Il a été fondé au XVIIIe siècle, et il a toujours un roi aujourd'hui."],
+ ["Royaume du Sanwi",[-36,8,"end"],5.45,-3.25,32,26,"#c0392b","Aboisso","Le royaume agni du Sanwi a été fondé au début du XVIIIe siècle. Sa capitale est Krindjabo, près d'Aboisso, et il a toujours un roi aujourd'hui."],
+ ["Royaume baoulé",[0,-34,"middle"],7.4,-5.15,62,66,"#2980b9","Bouaké","D'après la légende, la reine Abla Pokou a guidé son peuple depuis l'actuel Ghana et lui a fait traverser le fleuve Comoé. Ils se sont installés au centre du pays, autour de Sakassou, près de Bouaké : ce sont les Baoulé."],
+ ["Royaume du Kabadougou",[0,-48,"middle"],9.55,-7.45,52,42,"#27ae60","Odienné","Le royaume du Kabadougou a été fondé au milieu du XIXe siècle par Vakaba Touré. Sa capitale était Odienné, au nord-ouest du pays."]];
+const kCity=k=>CITIES.findIndex(c=>c[0]===KINGS[k][7]);
+const kOpen=k=>{const i=kCity(k);return i>=0&&i<=tripN()};
+function kingLayer(o){if(!o.click)return"";return KINGS.map((k,i)=>{const[x,y]=proj(k[2],k[3]);const op=kOpen(i);
+ return'<g class="king'+(op?" on":"")+(o.king===i?" sel":"")+'" data-a="kingdom" data-p="'+i+'" style="--kc:'+k[6]+'"><ellipse cx="'+x+'" cy="'+y+'" rx="'+k[4]+'" ry="'+k[5]+'"/>'+(op?"":'<text class="q" x="'+x+'" y="'+(y+9)+'" text-anchor="middle">?</text>')+"</g>"}).join("")}
+function kingLabels(o){if(!o.click)return"";return KINGS.map((k,i)=>{if(!kOpen(i))return"";const[x,y]=proj(k[2],k[3]);const[lx,ly,an]=k[1];const tx=x+lx,ty=y+ly;const nm=k[0].replace(/^Royaume (de l'|de |du )?/,"").replace(/^baoulé$/,"Baoulé");const cw=22,cx0=an==="end"?tx-nm.length*5-cw/2:an==="start"?tx+nm.length*5-cw/2:tx-cw/2;
+ return'<g class="king klab'+(o.king===i?" sel":"")+'" data-a="kingdom" data-p="'+i+'" style="--kc:'+k[6]+'"><path class="crown" transform="translate('+cx0+","+(ty-36)+') scale(1.1)" d="M0 16L2 4l6 6 3-9 3 9 6-6 2 12z"/><text x="'+tx+'" y="'+ty+'" text-anchor="'+an+'">'+esc(nm)+"</text></g>"}).join("")}
+function kingCard(i){const k=KINGS[i];if(!kOpen(i))return'<div class="card citycard" style="margin-top:12px"><span class="who">Royaume historique</span><b style="font-size:20px">Royaume secret</b><p style="margin:6px 0 0">Pour découvrir ce royaume, Kalou doit arriver à <b>'+esc(k[7])+"</b>. Réussis tes leçons pour avancer !</p></div>";
+ return'<div class="card citycard kingcard" style="margin-top:12px;--kc:'+k[6]+'"><span class="who">Royaume historique</span><div class="row" style="justify-content:space-between"><b style="font-size:21px">'+esc(k[0])+'</b>'+(canSpeak()?'<button class="ib" data-a="kingspeak" data-p="'+i+'" aria-label="Écouter">'+IC.spk+"</button>":"")+'</div><p style="margin:6px 0 0">'+esc(k[8])+"</p></div>"}
+function kingsFor(cities){return KINGS.map((k,i)=>i).filter(i=>cities.includes(kCity(i)))}
 function mapSVG(o){o=o||{};const n=tripN();const pts=CITIES.map(c=>proj(c[1],c[2]));
  const route=pts.map((p,i)=>(i?"L":"M")+p[0]+","+p[1]).join("");const done=pts.slice(0,n+1).map((p,i)=>(i?"L":"M")+p[0]+","+p[1]).join("");
  const lab=(t,lat,lon,sz,anc)=>{const[x,y]=proj(lat,lon);return'<text x="'+x+'" y="'+y+'" font-size="'+(sz||22)+'" text-anchor="'+(anc||"middle")+'" class="mlab">'+t+"</text>"};
  let s='<svg class="cimap" viewBox="0 0 664 710" role="img" aria-label="Carte du voyage en Côte d\'Ivoire"><rect width="664" height="710" class="sea"/>'+
  ["MLI","BFA","GHA","GIN","LBR"].map(k=>'<path d="'+MAPP[k]+'" class="land2"/>').join("")+'<path d="'+MAPP.CIV+'" class="land"/>'+
  lab("Mali",10.75,-6.6)+lab("Burkina Faso",10.72,-3.6)+lab("Ghana",7.3,-2.35,22,"end")+lab("Guinée",9.9,-8.75,22,"start")+lab("Liberia",6.0,-8.8,22,"start")+lab("Océan Atlantique",4.25,-5.3,24)+
- '<path d="'+route+'" class="rt"/>'+(n?'<path d="'+done+'" class="rtd"/>':"");
+ kingLayer(o)+'<path d="'+route+'" class="rt"/>'+(n?'<path d="'+done+'" class="rtd"/>':"");
  CITIES.slice(0,NCITY).forEach((c,i)=>{const[x,y]=pts[i];const st=i<=n?"v":i===n+1?"nx":"lk";
   s+='<g class="cty '+st+'"'+(i<=n&&o.click?' data-a="city" data-p="'+i+'"':"")+'>'+(st==="nx"?'<circle cx="'+x+'" cy="'+y+'" r="15" class="ring"/>':"")+'<circle cx="'+x+'" cy="'+y+'" r="'+(st==="lk"?5:9)+'"/>'+
   (o.labels!==false&&(i===n||i===n+1||i===o.sel)?'<text x="'+(x+c[4])+'" y="'+(y+c[5])+'" text-anchor="'+(c[4]<0?"end":"start")+'">'+esc(c[0])+"</text>":"")+"</g>"});
- const kf=ST.flown!=null&&ST.flown<n&&o.click?ST.flown:n;const[cx,cy]=pts[kf];s+='<g class="kmap" data-a="city" data-p="'+n+'" transform="translate('+cx+","+cy+')"><g class="kflip"><svg class="kalou" x="-62" y="-104" width="118" height="108" viewBox="0 0 230 210">'+kalouIn(true)+'</svg></g></g>';
+ s+=kingLabels(o);const kf=ST.flown!=null&&ST.flown<n&&o.click?ST.flown:n;const[cx,cy]=pts[kf];s+='<g class="kmap" data-a="city" data-p="'+n+'" transform="translate('+cx+","+cy+')"><g class="kflip"><svg class="kalou" x="-62" y="-104" width="118" height="108" viewBox="0 0 230 210">'+kalouIn(true)+'</svg></g></g>';
  return s+"</svg>"}
 function tripLine(){const n=tripN();if(n>=NCITY)return'<span class="tline">Tu as fait le tour de la Côte d\'Ivoire !</span>';
  return'<span class="tline">'+(n===0?"Ton voyage commence à Abidjan. Réussis une leçon pour aller à <b>"+esc(CITIES[1][0])+"</b> !":"Tu es à <b>"+esc(CITIES[n][0])+"</b>. Prochaine étape : <b>"+esc(CITIES[n+1][0])+"</b>.")+'</span>'}
@@ -1156,11 +1260,11 @@ function tripCard(){const n=tripN();const cur=CITIES[n];const nx=CITIES[n+1];con
  '<div><div class="row" style="justify-content:space-between"><span class="small muted">'+n+" ville"+(n>1?"s":"")+" visitée"+(n>1?"s":"")+" sur "+NCITY+'</span>'+(ST.streak>1?'<span class="chip mid">'+ST.streak+" jours de suite</span>":"")+'</div><div class="bar" style="--c:#c92a42;margin-top:6px"><i style="width:'+Math.round(n/NCITY*100)+'%"></i></div></div>'+
  (nx?'<p style="margin:0"><b>Prochaine étape : '+esc(nx[0])+'.</b> Pour y aller, réussis une leçon : au moins 8 bonnes réponses sur 10.</p>'+(cl?'<button class="btn sm g" data-a="lesson" data-p="'+esc(cl.id)+'">Presque réussie : '+esc(cl.t)+'</button>':""):'<p style="margin:0"><b>Tu as fait tout le tour du pays !</b></p>')+
  '<button class="btn sm gh" data-a="voyage">Voir ma carte</button></div></div>'}
-function cityCards(list){if(!list||!list.length)return"";return list.slice(-3).map(i=>{const c=CITIES[i];return'<div class="card citycard burst"><div class="row" style="gap:10px"><svg width="30" height="36" viewBox="-17 -44 34 46" aria-hidden="true"><path d="M0,0C-16,-22,-16,-40,0,-42C16,-40,16,-22,0,0Z" fill="#c92a42"/><circle cy="-28" r="7" fill="#fff"/></svg><b style="font-size:19px;flex:1">'+(i===NCITY?"Retour à Abidjan : le tour est fini !":"Nouvelle ville : "+esc(c[0])+" !")+'</b></div><p style="margin:8px 0 0">'+esc(c[3])+"</p></div>"}).join("")+'<button class="btn gh" data-a="voyage">Voir Kalou s\'envoler sur la carte</button>'}
-function voyageV(){const n=tripN();const sel=VIEW.city!=null&&VIEW.city<=n?VIEW.city:n;const c=CITIES[sel];
- return'<h1 class="cur center">Mon voyage</h1><p class="center muted" style="margin-top:0">Chaque leçon réussie te fait avancer d\'une ville. Touche une ville visitée pour la redécouvrir.</p>'+
- '<div class="card mapcard">'+mapSVG({click:true,sel})+'</div>'+
- '<div class="card citycard" style="margin-top:12px"><span class="who">'+(sel===0?"Point de départ":"Ville "+sel+" sur "+NCITY)+'</span><div class="row" style="justify-content:space-between"><b style="font-size:21px">'+esc(c[0])+'</b>'+(canSpeak()?'<button class="ib" data-a="cityspeak" data-p="'+sel+'" aria-label="Écouter">'+IC.spk+"</button>":"")+'</div><p style="margin:6px 0 0">'+esc(c[3])+'</p></div>'+
+function cityCards(list){if(!list||!list.length)return"";return list.slice(-3).map(i=>{const c=CITIES[i];return'<div class="card citycard burst"><div class="row" style="gap:10px"><svg width="30" height="36" viewBox="-17 -44 34 46" aria-hidden="true"><path d="M0,0C-16,-22,-16,-40,0,-42C16,-40,16,-22,0,0Z" fill="#c92a42"/><circle cy="-28" r="7" fill="#fff"/></svg><b style="font-size:19px;flex:1">'+(i===NCITY?"Retour à Abidjan : le tour est fini !":"Nouvelle ville : "+esc(c[0])+" !")+'</b></div><p style="margin:8px 0 0">'+esc(c[3])+"</p>"+kingsFor([i]).map(k=>'<p style="margin:8px 0 0"><b>Tu découvres aussi le '+esc(KINGS[k][0].replace(/^Royaume/,"royaume"))+" !</b></p>").join("")+"</div>"}).join("")+'<button class="btn gh" data-a="voyage">Voir Kalou s\'envoler sur la carte</button>'}
+function voyageV(){const n=tripN();const sel=VIEW.city!=null&&VIEW.city<=n?VIEW.city:n;const c=CITIES[sel];const kg=VIEW.king;const nk=KINGS.filter((k,i)=>kOpen(i)).length;
+ return'<h1 class="cur center">Mon voyage</h1><p class="center muted" style="margin-top:0">Chaque leçon réussie te fait avancer d\'une ville. Touche une ville visitée ou un royaume pour les redécouvrir.</p>'+
+ '<div class="card mapcard">'+mapSVG({click:true,sel:kg!=null?-1:sel,king:kg})+'<div class="legend"><span><i></i>'+(n+1)+' ville'+(n?"s":"")+' visitée'+(n?"s":"")+'</span><span><i class="k"></i>'+nk+' royaume'+(nk>1?"s":"")+' découvert'+(nk>1?"s":"")+' sur '+KINGS.length+'</span></div></div>'+(kg!=null?kingCard(kg):
+ '<div class="card citycard" style="margin-top:12px"><span class="who">'+(sel===0?"Point de départ":"Ville "+sel+" sur "+NCITY)+'</span><div class="row" style="justify-content:space-between"><b style="font-size:21px">'+esc(c[0])+'</b>'+(canSpeak()?'<button class="ib" data-a="cityspeak" data-p="'+sel+'" aria-label="Écouter">'+IC.spk+"</button>":"")+'</div><p style="margin:6px 0 0">'+esc(c[3])+'</p></div>')+
  (n<NCITY?'<p class="center" style="margin-top:14px"><b>Prochaine étape : '+esc(CITIES[n+1][0])+'</b> · encore '+(NCITY-n)+" ville"+(NCITY-n>1?"s":"")+" pour faire le tour du pays.</p>":"")}
 Object.assign(IC,{map:'<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M9 4v14M15 6v14" stroke="currentColor" stroke-width="2"/></svg>'});
 
@@ -1184,7 +1288,7 @@ function homeV(){const lv=level();const nm=esc(ST.name||"championne");const td=S
 
 function subjV(s){const S=SUBJ[s];const ls=LESSONS.filter(l=>l.s===s).sort((a,b)=>(b.d||"").localeCompare(a.d||""));const doms=[...new Set(ls.map(l=>l.dom))];
  return '<div class="top"><button class="btn gh sm" data-a="home">'+IC.back+' Accueil</button></div><div class="row">'+SIC[s]+'<h1 class="cur" style="flex:1">'+S.n+'</h1></div>'+
- '<button class="btn big" style="margin-top:14px;--btn:'+S.c+';--btnD:color-mix(in srgb,'+S.c+' 70%,#000)" data-a="mixs" data-p="'+s+'">Quiz de '+esc(S.n)+' (10 questions)</button>'+
+ '<button class="btn big" style="margin-top:14px;--btn:'+S.c+';--btnD:color-mix(in srgb,'+S.c+' 70%,#000)" data-a="mixs" data-p="'+s+'">Quiz '+(/^[AEÉIOUY]/.test(S.n)?"d'":"de ")+esc(S.n)+' (10 questions)</button>'+
  doms.map(d=>(doms.length>1?'<div class="dom">'+esc(d)+'</div>':'<div style="height:16px"></div>')+'<div class="stack">'+ls.filter(l=>l.dom===d).map(l=>'<button class="card les" data-a="lesson" data-p="'+esc(l.id)+'"><span class="t"><b>'+esc(l.t)+'</b><span>'+fmtDate(l.d)+(l.added?" · ajoutée":"")+'</span></span>'+chip(l.id)+'</button>').join("")+"</div>").join("")}
 
 function lessonV(id){const l=byId(id);if(!l)return homeV();const S=SUBJ[l.s]||SUBJ.gram;
@@ -1374,7 +1478,7 @@ const ACT={
  exsubmit:(p,b)=>{exSave();const miss=EX.ans.filter(a=>a==null||String(a).trim()==="").length;if(miss&&b.dataset.c!=="1"){b.dataset.c="1";b.textContent="Il reste "+miss+" question"+(miss>1?"s":"")+" sans réponse. Rendre quand même ?";return}submitExam(false)},
  exquit:(p,b)=>{if(b.dataset.c!=="1"){b.dataset.c="1";b.textContent="Arrêter sans note ?";return}clearInterval(EXT);EXT=null;EX.done=true;go({v:"compo"})},
  exretry:()=>{const w=EX.items.filter((it,k)=>!EX.res[k].ok).map(it=>reshuffle(Object.assign({},it)));Q={items:w,i:0,res:[],stars:0,run:0,title:"Corrections",back:{v:"compo"},wrong:[],answered:false,retry:true};go({v:"quiz"})},
- voyage:()=>go({v:"voyage"}),city:p=>{VIEW.city=+p;render();kSay(CITIES[+p][0]+". "+CITIES[+p][3])},cityspeak:p=>kSay(CITIES[+p][0]+". "+CITIES[+p][3],true),kalou:(p,b)=>kTap(b),
+ voyage:()=>go({v:"voyage",king:null}),city:p=>{VIEW.city=+p;VIEW.king=null;render();kSay(CITIES[+p][0]+". "+CITIES[+p][3])},cityspeak:p=>kSay(CITIES[+p][0]+". "+CITIES[+p][3],true),kalou:(p,b)=>kTap(b),kingdom:p=>{const i=+p;VIEW.king=i;render();const k=KINGS[i];kSay(kOpen(i)?k[0]+". "+k[8]:"Ce royaume est encore secret. Pour le découvrir, il faut arriver à "+k[7]+" !")},kingspeak:p=>kSay(KINGS[+p][0]+". "+KINGS[+p][8],true),
  gate:()=>go({v:"gate"}),
  gatego:()=>{if(+($("#gin").value||0)===gateAns)go({v:"parent"});else toast("Ce n'est pas le bon résultat.")},
  savename:()=>{ST.name=($("#pname").value||"").trim().slice(0,30);ST.voice=$("#pvoice").checked;ST.sound=$("#psound").checked;save();toast("Réglages enregistrés.")},

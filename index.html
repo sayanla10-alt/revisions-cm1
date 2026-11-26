@@ -278,6 +278,8 @@ h3.step{margin:22px 0 10px;font-size:18px}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-size:13px;color:var(--soft);margin:8px 4px 2px}
 .legend i{display:inline-block;width:12px;height:12px;border-radius:50%;background:#c92a42;margin-right:5px;vertical-align:-1px}
 .legend i.k{border-radius:3px;background:color-mix(in srgb,#b8860b 30%,transparent);border:2px solid #b8860b}
+:root[data-theme=dark] .kalou{filter:drop-shadow(0 0 5px rgba(255,255,255,.22))}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .kalou{filter:drop-shadow(0 0 5px rgba(255,255,255,.22))}}
 </style>
 <script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
 </head>
@@ -1273,7 +1275,9 @@ function rt(s){return esc(s).replace(/\[(\d+|\?)\/(\d+|\?)\]/g,(m,a,b)=>'<span c
 function ruleHtml(r){const lines=String(r||"").split("\n");let h="",inL=false;for(const ln of lines){const t=ln.trim();if(!t)continue;if(t.startsWith("•")){if(!inL){h+="<ul>";inL=true}h+="<li>"+rt(t.replace(/^•\s*/,""))+"</li>"}else{if(inL){h+="</ul>";inL=false}h+="<p>"+rt(t)+"</p>"}}return h+(inL?"</ul>":"")}
 function toast(m,ms){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,ms||3500)}
 function go(v){stopSpeak();stopMic();VIEW=v;render();window.scrollTo(0,0)}
-function render(){const a=$("#app");const v=VIEW.v;if(ST.flown==null)ST.flown=tripN();if(v==="home"||v==="voyage")updateTrip();
+function applyTheme(){const t=ST.theme;const r=document.documentElement;if(t==="light"||t==="dark")r.dataset.theme=t;else if(r.dataset.theme&&r.dataset.kt)delete r.dataset.theme;if(t==="light"||t==="dark")r.dataset.kt="1";else delete r.dataset.kt;
+ const dk=t==="dark"||(t!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches);const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=dk?"#17221e":"#2343c4"}
+function render(){applyTheme();const a=$("#app");const v=VIEW.v;if(ST.flown==null)ST.flown=tripN();if(v==="home"||v==="voyage")updateTrip();
  const html=v==="home"?homeV():v==="subj"?subjV(VIEW.s):v==="lesson"?lessonV(VIEW.id):v==="quiz"?quizV():v==="end"?endV():v==="gate"?gateV():v==="parent"?parentV():v==="revision"?revisionV():v==="carnet"?carnetV():v==="compo"?compoV():v==="voyage"?voyageV():v==="exam"&&EX?examV():v==="grading"?gradingV():v==="examres"&&EX?examResV():homeV();
  a.innerHTML=v==="home"?'<div class="wide">'+html+'</div>':'<div class="narrow">'+html+'</div>';
  const n=$("#nav");if(n)n.innerHTML=navV();
@@ -1416,6 +1420,7 @@ function parentV(){const td=today();const rows=LESSONS.map(l=>[l,mastery(l.id),S
  '<div class="card stack" style="margin-top:14px"><h3><b>Réglages</b></h3><label>Prénom de l\'élève<input id="pname" class="inp" value="'+esc(ST.name)+'" maxlength="30" style="margin-top:6px"></label>'+
  '<label class="sw"><input type="checkbox" id="pvoice" '+(ST.voice?"checked":"")+'> Lire les questions à voix haute</label>'+'<label class="sw"><input type="checkbox" id="psound" '+(ST.sound!==false?"checked":"")+'> Petits sons de jeu (bonne réponse, erreur, fin)</label>'+
  '<div class="row"><span>Vitesse de la voix</span><div class="seg">'+[[.85,"Lente"],[1,"Normale"],[1.15,"Rapide"]].map(([r,n])=>'<button data-a="rate" data-p="'+r+'" class="'+(ST.rate===r?"on":"")+'">'+n+"</button>").join("")+'</div><button class="btn gh sm" data-a="testvoice">Tester</button></div>'+
+ '<div class="row"><span>Affichage</span><div class="seg">'+[["auto","Automatique"],["light","Jour"],["dark","Nuit"]].map(([t,n])=>'<button data-a="theme" data-p="'+t+'" class="'+((ST.theme||"auto")===t?"on":"")+'">'+n+"</button>").join("")+'</div></div>'+
  '<button class="btn sm" data-a="savename">Enregistrer</button><p class="note">'+esc(voiceNote)+(CAP.db?"":" Les progrès sont enregistrés sur ce téléphone.")+'</p></div>'+
  '<div class="card stack" style="margin-top:16px"><h3><b>Progrès</b></h3><p>'+((ST.compos||[]).length?"Compositions blanches : "+ST.compos.length+", moyenne "+String(Math.round(ST.compos.reduce((a,c)=>a+c.note,0)/ST.compos.length*10)/10).replace(".",",")+" / 20 (dernière : "+String(ST.compos[0].note).replace(".",",")+" / 20). ":"")+"Carnet d'erreurs : "+Object.keys(ST.err||{}).length+" question(s) à maîtriser.</p><p>"+tripN()+" ville(s) visitée(s) sur "+NCITY+" · "+tot+" réponses · "+rows.length+" leçons travaillées · "+never+' jamais travaillées</p>'+
  SORDER.map(s=>{const m=subjMastery(s);return'<div><div class="row"><span style="flex:1">'+SUBJ[s].n+'</span><span class="small muted">'+(m.done?Math.round(m.avg*100)+" %":"pas encore")+'</span></div><div class="bar" style="--c:'+SUBJ[s].c+'"><i style="width:'+Math.round(m.avg*100)+'%"></i></div></div>'}).join("")+
@@ -1482,7 +1487,7 @@ const ACT={
  gate:()=>go({v:"gate"}),
  gatego:()=>{if(+($("#gin").value||0)===gateAns)go({v:"parent"});else toast("Ce n'est pas le bon résultat.")},
  savename:()=>{ST.name=($("#pname").value||"").trim().slice(0,30);ST.voice=$("#pvoice").checked;ST.sound=$("#psound").checked;save();toast("Réglages enregistrés.")},
- rate:p=>{ST.rate=+p;save();render()},
+ rate:p=>{ST.rate=+p;save();render()},theme:p=>{ST.theme=p;save();applyTheme();render()},
  testvoice:()=>speak("Bonjour "+(ST.name||"")+" ! Je suis Kalou. Le Professeur et moi, on révise avec toi !",true),
  analyze:()=>analyze(),savepending:()=>savePending(),cancelpending:()=>{PENDING=null;render()},
  dellesson:async(p,b)=>{if(b.dataset.c!=="1"){b.dataset.c="1";b.textContent="Confirmer ?";return}if(CAP.db){try{await CAP.db.collection("lessons").doc(p).delete()}catch(e){toast("Suppression impossible.")}}else{EXTRA=EXTRA.filter(l=>l.id!==p);try{localStorage.setItem(LS+"-extra",JSON.stringify(EXTRA))}catch(e){}rebuild();render()}},

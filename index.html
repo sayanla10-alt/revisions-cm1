@@ -215,12 +215,19 @@ h3.step{margin:22px 0 10px;font-size:18px}
  .mapcard svg{max-height:calc(100vh - 200px);width:100%}
 }
 @media(max-width:599px){.tripmap{max-width:230px}.qtext{font-size:22px}
- .hero{grid-template-columns:minmax(0,1fr) 112px;text-align:left;gap:8px}.hero .kal{order:0;max-width:112px;margin:0}.hero h1,.hero .cur{font-size:26px;margin-top:0}}
+}
 .narrow>.stack:has(>.les)>*{margin:0}
 @media(min-width:1024px){.modes:has(>[data-a="csel"]){grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-height:520px) and (orientation:landscape){.hero .kal{max-width:150px}.mapcard svg{max-height:calc(100vh - 40px)}#app{padding-bottom:90px}}
 @media(max-width:599px){.subjs{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.subj{padding:10px 12px!important;gap:3px!important}.subj b{font-size:15px;line-height:1.2}.subj .small{font-size:12px;line-height:1.3}.subj>svg{width:30px!important;height:30px!important}.bubble{font-size:15px;line-height:1.45;padding:10px 12px}.hero h1{font-size:24px}}
-@media(min-width:1024px){.hero .kal{max-width:230px}}
+.hero{display:flex!important;flex-direction:column;align-items:center;text-align:center;gap:6px}
+.hero>div:first-child{display:contents}
+.hero .kal{order:-1;width:100%;max-width:300px;margin:0 auto}
+.hero h1{order:0;margin:4px 0 2px}
+.hero .bubble{order:1;width:100%;max-width:none;text-align:center;margin:0}
+.hero .bubble::before,.hero .bubble::after{display:none}
+@media(max-width:599px){.hero .kal{max-width:240px}}
+@media(min-width:1024px){.hero .kal{max-width:320px}.hero .bubble{font-size:18px;padding:14px 24px}.bubble .tline{display:inline;margin:0 0 0 6px}}
 .bubble .tline{display:block;margin-top:6px;font-size:.92em;color:var(--soft)}.bubble .tline b{color:var(--ink)}
 </style>
 <script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>

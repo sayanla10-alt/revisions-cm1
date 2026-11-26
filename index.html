@@ -196,6 +196,29 @@ h3.step{margin:22px 0 10px;font-size:18px}
 .mapcard{padding:8px;overflow:hidden}.mapcard .cimap{border-radius:12px}
 .citycard{background:color-mix(in srgb,#c92a42 7%,var(--card))}
 @media(prefers-reduced-motion:reduce){.pinme,.cty .ring{animation:none!important}}
+
+/* ===== Écrans : téléphone < 600, tablette 600-1023, ordinateur >= 1024 ===== */
+.qtext{overflow-wrap:anywhere}
+@media(min-width:700px){.narrow>.stack:has(>.les){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.narrow>.stack>.les{height:100%}}
+@media(min-width:600px) and (max-width:1023px){.narrow{max-width:760px}.modes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1024px){
+ .wide{max-width:1040px}
+ .narrow:has(>.dom),.narrow:has(>.modes){max-width:980px}
+ .modes{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .narrow:has(>.qcard),.narrow:has(>.card.rule){max-width:800px}
+ .qtext{font-size:30px}
+ .narrow:has(>.mapcard){max-width:1080px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);column-gap:28px;align-items:start;grid-auto-flow:row dense}
+ .narrow:has(>.mapcard)>*{grid-column:1/-1}
+ .narrow:has(>.mapcard)>.mapcard{grid-column:1;grid-row:3/span 3}
+ .narrow:has(>.mapcard)>.citycard{grid-column:2;grid-row:3;margin-top:0}
+ .narrow:has(>.mapcard)>.mapcard~p.center{grid-column:2;grid-row:4;text-align:left}
+ .mapcard svg{max-height:calc(100vh - 200px);width:100%}
+}
+@media(max-width:599px){.tripmap{max-width:230px}.qtext{font-size:22px}
+ .hero{grid-template-columns:minmax(0,1fr) 112px;text-align:left;gap:8px}.hero .kal{order:0;max-width:112px;margin:0}.hero h1,.hero .cur{font-size:26px;margin-top:0}}
+.narrow>.stack:has(>.les)>*{margin:0}
+@media(min-width:1024px){.modes:has(>[data-a="csel"]){grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-height:520px) and (orientation:landscape){.hero .kal{max-width:150px}.mapcard svg{max-height:calc(100vh - 40px)}#app{padding-bottom:90px}}
 </style>
 <script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
 </head>
@@ -206,13 +229,10 @@ h3.step{margin:22px 0 10px;font-size:18px}
 <script>
 (()=>{
 "use strict";
-let installEvt=null;const standalone=()=>{try{return matchMedia("(display-mode: standalone)").matches||matchMedia("(display-mode: fullscreen)").matches||navigator.standalone===true}catch(e){return false}};
+let installEvt=null;const standalone=()=>{try{return matchMedia("(display-mode: standalone)").matches||(matchMedia("(display-mode: fullscreen)").matches&&!document.fullscreenElement)||navigator.standalone===true}catch(e){return false}};
 const isMobile=()=>/android|iphone|ipad|ipod|mobile/i.test(navigator.userAgent);
-let fsTried=false;
-document.addEventListener("click",()=>{if(fsTried||standalone()||!isMobile())return;fsTried=true;try{const el=document.documentElement;const f=el.requestFullscreen||el.webkitRequestFullscreen;if(f&&!document.fullscreenElement)f.call(el,{navigationUI:"hide"}).catch(()=>{})}catch(x){}},true);
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEvt=e;if(installWait&&Date.now()-installWait<4500){installWait=0;doInstall()}});
-let installWait=0;
-function doInstall(){const ev=installEvt;if(!ev)return false;installEvt=null;try{ev.prompt();ev.userChoice.then(r=>{if(r&&r.outcome==="accepted"){markInstalled(true);toast("Installation en cours…")}try{render()}catch(x){}}).catch(()=>{})}catch(x){}return true}
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEvt=e;if(installedKnown)markInstalled(false);try{if(VIEW.v==="home")render()}catch(x){}});
+function doInstall(){const ev=installEvt;if(!ev)return false;installEvt=null;try{render()}catch(x){}try{ev.prompt();ev.userChoice.then(r=>{if(r&&r.outcome==="accepted"){markInstalled(true);toast("Installation en cours. L'icône Révisions apparaît sur ton écran d'accueil.",6000)}try{render()}catch(x){}}).catch(()=>{})}catch(x){}return true}
 const IKEY="revisions-cm1-installed";
 let installedKnown=(()=>{try{return localStorage.getItem(IKEY)==="1"}catch(e){return false}})();
 function markInstalled(v){installedKnown=v;try{v?localStorage.setItem(IKEY,"1"):localStorage.removeItem(IKEY)}catch(e){}}
@@ -917,7 +937,7 @@ function carnetV(){const es=Object.entries(ST.err||{}).sort((a,b)=>(a[1].next||"
  :'<div class="card center stack"><div style="max-width:200px;margin:0 auto">'+kalou("100%")+'</div><p style="font-size:19px;margin:0">Ton carnet est vide. Les questions que tu rates viendront ici pour que tu les maîtrises.</p></div>')}
 /* ---- composition blanche ---- */
 const COMPO={
- fr:{n:"Français",min:30,c:"#c92a42",ic:"francais",sec:[["Orthographe",["ortho"],4],["Conjugaison",["conj"],4],["Grammaire",["gram"],3],["Vocabulaire",["voc"],3],["Dictée à trous","dictee",3],["Accord du participe passé","accords",2]]},
+ fr:{n:"Français",min:30,c:"#c92a42",ic:"ortho",sec:[["Orthographe",["ortho"],4],["Conjugaison",["conj"],4],["Grammaire",["gram"],3],["Vocabulaire",["voc"],3],["Dictée à trous","dictee",3],["Accord du participe passé","accords",2]]},
  maths:{n:"Mathématiques",min:35,c:"#2343c4",ic:"maths",sec:[["Calcul",["m-addition","m-soustraction","m-multiplication","m-division"],4],["Numération",["m-nombres","m-romains","m-ranger","m-decimaux","m-dec-comparer"],4],["Fractions",["m-fractions","m-frac-equiv","m-frac-dec","m-frac-comparer"],3],["Problèmes","prob",3]]},
  eveil:{n:"Éveil",sub:"Sciences, Histoire, Géographie, EDHC",min:25,c:"#11784a",ic:"sciences",sec:[["Sciences et technologie",["sciences"],5],["Histoire",["histoire"],3],["Géographie",["geo"],3],["EDHC",["edhc"],3]]},
  all:{n:"Toutes les matières",min:35,c:"#6a34a8",ic:"edhc",sec:[["Français",["ortho","conj","gram","voc"],5],["Dictée à trous","dictee",2],["Mathématiques",["maths"],5],["Problème","prob",1],["Éveil",["sciences","histoire","geo","edhc"],4]]}
@@ -993,7 +1013,7 @@ const CITIES=[
  ["Abengourou",6.73,-3.50,"Abengourou est la capitale du royaume agni de l'Indénié. Sa région produit beaucoup de cacao.",-14,8],
  ["Bondoukou",8.04,-2.80,"Bondoukou, près du Ghana, est surnommée « la ville aux mille mosquées ». C'était un grand carrefour de commerce.",-14,8],
  ["Bouna",9.27,-3.00,"Près de Bouna s'étend le parc national de la Comoé, l'un des plus grands parcs d'Afrique de l'Ouest. On y voit des éléphants et des hippopotames.",-14,8],
- ["Kong",9.15,-4.61,"Kong est la ville du royaume fondé vers 1710 par Sékou Ouattara. Sa grande mosquée est construite en banco, de la terre crue.",14,8],
+ ["Kong",9.15,-4.61,"Kong est la ville du royaume fondé vers 1710 par Sékou Ouattara. Sa grande mosquée est construite en banco, de la terre crue.",-14,8],
  ["Ferkessédougou",9.59,-5.19,"Autour de Ferkessédougou, on cultive la canne à sucre. Une partie du sucre de nos cuisines vient d'ici.",14,8],
  ["Korhogo",9.46,-5.63,"Korhogo est la capitale du pays sénoufo. Les artisans y peignent les célèbres toiles de Korhogo.",-8,36],
  ["Boundiali",9.52,-6.49,"Boundiali est dans le nord du pays, une région où l'on cultive beaucoup de coton.",-14,8],
@@ -1062,7 +1082,7 @@ function render(){const a=$("#app");const v=VIEW.v;if(v==="home"||v==="voyage")u
 function homeV(){const lv=level();const nm=esc(ST.name||"championne");const td=ST.day.d===today()?ST.day.stars:0;
  const weak=LESSONS.map(l=>[l,mastery(l.id),ST.les[l.id]]).filter(x=>x[1]!=null&&x[1]<.6&&x[2].n>=3).sort((a,b)=>a[1]-b[1])[0];
  const msg=td?"Tu as déjà bien travaillé aujourd'hui. Bravo, continue !":ST.streak>1&&ST.lastDay!==today()?"Tu as révisé "+ST.streak+" jours de suite. On continue aujourd'hui ?":"Prête pour réviser ? Je te pose des questions sur tes leçons !";
- return (standalone()||installedKnown?'':'<button class="btn g big" style="margin-bottom:14px" data-a="install">Installer l\'application</button>')+(ST.name?'':'<div class="card stack" style="margin-bottom:14px"><b>Comment t\'appelles-tu ?</b><div class="inrow"><input id="fname" class="inp" maxlength="30" autocomplete="off"><button class="btn" data-a="setname">OK</button></div></div>')+'<section class="hero"><div><h1 class="cur">Bonjour '+nm+' !</h1><div class="bubble">'+esc(msg)+'</div></div><div class="kal">'+sparkles()+kalou("100%")+'</div></section>'+
+ return (!installEvt||standalone()||installedKnown?'':'<button class="btn g big" style="margin-bottom:14px" data-a="install">Installer l\'application</button>')+(ST.name?'':'<div class="card stack" style="margin-bottom:14px"><b>Comment t\'appelles-tu ?</b><div class="inrow"><input id="fname" class="inp" maxlength="30" autocomplete="off"><button class="btn" data-a="setname">OK</button></div></div>')+'<section class="hero"><div><h1 class="cur">Bonjour '+nm+' !</h1><div class="bubble">'+esc(msg)+'</div></div><div class="kal">'+sparkles()+kalou("100%")+'</div></section>'+
  tripCard()+
  '<div class="modes" style="margin-top:16px">'+modeCard("revday","Révision du jour",(errItems(false).length?errItems(false).length+" erreur(s) à revoir + ":"")+"tes leçons à renforcer","#11784a",IC.rev)+modeCard("compo","Composition blanche","Une vraie épreuve chronométrée, notée sur 20","#c92a42",IC.exam)+modeCard("mix","Interroge-moi !","10 questions mélangées","#2343c4",IC.star(28))+'</div><div class="stack" style="margin-top:14px">'+
  (weak?'<div class="card"><b>Le Professeur te conseille de revoir :</b><div class="row" style="margin-top:8px"><span style="flex:1">'+esc(weak[0].t)+'</span><button class="btn sm" data-a="lesson" data-p="'+esc(weak[0].id)+'">Revoir</button></div></div>':'')+
@@ -1250,7 +1270,7 @@ const ACT={
   micTarget=$("#ain");if(micTarget)micTarget.dataset.mic="1";micBase=micTarget&&micTarget.type!=="hidden"?micTarget.value.trim():"";if(micTarget&&micTarget.type==="hidden")micTarget.value="";
   d.start({language:DLANGS[Math.min(CAP.dl,DLANGS.length-1)]}).catch(e=>{MIC_ON=false;document.querySelectorAll(".mic").forEach(b=>b.classList.remove("on"));if(e&&(e.code==="unavailable"||e.code==="invalid_argument")){CAP.dl++;if(CAP.dl>=DLANGS.length)disableMic("Le micro de la page ne propose pas le français ici. "+KBTIP);else toast("Touche encore le micro pour réessayer.");return}if(e&&e.code==="stopped")return;if(e&&e.code==="no_speech"){toast("Je n'ai rien entendu. Touche le micro et parle.");return}if(e&&e.code==="not_granted"){CAP.dict=null;toast("Le micro n'est pas autorisé : tu peux écrire ta réponse.");document.querySelectorAll(".mic").forEach(b=>b.remove())}else toast("Le micro ne répond pas. Réessaie.")})},
  setname:()=>{const v=($("#fname").value||"").trim().slice(0,30);if(!v)return;ST.name=v;save();render();speak("Bonjour "+v+" ! Je suis Kalou. Le Professeur et moi, on révise avec toi !",true)},
- install:()=>{if(doInstall())return;installWait=Date.now();setTimeout(()=>{if(installWait){installWait=0;toast(standalone()?"L'application est déjà installée.":"L'application est déjà installée sur ce téléphone, ou ce navigateur ne permet pas l'installation (utilise Chrome).",6000)}},4500)},
+ install:()=>{doInstall()},
  revision:()=>go({v:"revision"}),carnet:()=>go({v:"carnet"}),compo:()=>go({v:"compo"}),
  revday:()=>{let it=shuffle(errItems(false)).slice(0,6);const ls=weighted(LESSONS,6);for(const l of ls)it=it.concat(itemsFor(l,2));startQuiz(it.slice(0,12),"Révision du jour",{v:"revision"});if(Q)Q.again=["revday"]},
  carnetgo:()=>{startQuiz(shuffle(errItems(true)).slice(0,12),"Carnet d'erreurs",{v:"carnet"});if(Q)Q.again=["carnetgo"]},

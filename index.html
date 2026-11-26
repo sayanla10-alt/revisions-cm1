@@ -280,6 +280,7 @@ h3.step{margin:22px 0 10px;font-size:18px}
 .legend i.k{border-radius:3px;background:color-mix(in srgb,#b8860b 30%,transparent);border:2px solid #b8860b}
 :root[data-theme=dark] .kalou{filter:drop-shadow(0 0 5px rgba(255,255,255,.22))}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]) .kalou{filter:drop-shadow(0 0 5px rgba(255,255,255,.22))}}
+.ptab{overflow-x:auto;margin:10px 0 4px}.ptab table{border-collapse:collapse;margin:0 auto;font-size:19px}.ptab th,.ptab td{border:2px solid var(--line,#c8cfe6);padding:7px 10px;text-align:center;min-width:42px}.ptab th{font-size:13px;color:var(--soft);font-weight:600;white-space:nowrap}.ptab tr:first-child td{background:light-dark(#eef2ff,#1f2c3a)}.ptab td.pq{background:light-dark(#fff4cc,#3a3214);color:#c92a42;font-weight:800}
 </style>
 <script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
 </head>
@@ -1082,6 +1083,45 @@ Object.assign(GEN,{
  {id:"o-div-dec",dom:"Division",t:"Divisions avec un quotient décimal",g:"opDivD",
   r:"Quand j'abaisse le premier chiffre après la virgule du dividende, je mets la virgule au quotient.\nSi le dividende est entier et qu'il reste quelque chose, je mets une virgule au quotient et un zéro au dividende, puis je continue.\nJe continue jusqu'à ce que le reste soit 0.\nVérification : diviseur × quotient = dividende."}
 ].forEach(l=>BASE.push(Object.assign({s:"ops",d:"",q:[]},l)));
+/* ---- Leçons du 26 novembre ---- */
+const MAMS=[["la vache","H"],["la chèvre","H"],["le mouton","H"],["le cheval","H"],["l'éléphant","H"],["la girafe","H"],["le zèbre","H"],["le lapin","H"],["l'hippopotame","H"],["l'antilope","H"],
+ ["le lion","C"],["la panthère","C"],["le léopard","C"],["le chat","C"],["la hyène","C"],["le loup","C"],["le guépard","C"],
+ ["l'homme","O"],["le porc","O"],["le chimpanzé","O"],["le rat","O"],["l'ours","O"],["le phacochère","O"]];
+const REG={H:["herbivore","mange des plantes"],C:["carnivore","mange de la viande"],O:["omnivore","mange de tout : des plantes et de la viande"]};
+function ptab(top,bot){const c=v=>'<td'+(v==="?"?' class="pq"':"")+">"+v+"</td>";return'<div class="ptab"><table><tr><th>1re liste</th>'+top.map(c).join("")+'</tr><tr><th>2e liste</th>'+bot.map(c).join("")+"</tr></table></div>"}
+Object.assign(GEN,{
+ mamRegime:L=>{const[n,r]=pick(MAMS);const nm=n.charAt(0).toUpperCase()+n.slice(1);return mkQ(nm+" est un mammifère…",REG[r][0],["herbivore","carnivore","omnivore"].filter(x=>x!==REG[r][0]),nm+" "+REG[r][1]+" : c'est un "+REG[r][0]+".",nm+" est un mammifère herbivore, carnivore ou omnivore ?")},
+ proportion:L=>{const a=R(2,L===1?5:L===2?9:10);const n=L===1?4:5;const xs=[];while(xs.length<n){const v=R(1,L>=3?25:12);if(!xs.includes(v))xs.push(v)}const ys=xs.map(v=>v*a);const k=R(0,n-1);const v=R(0,L>=2?3:2);
+  const SAY="Regarde bien le tableau. ";
+  if(v===0){const bot=ys.map((y,i)=>i===k?"?":y);return{kind:"num",q:"Ce tableau est un tableau de proportionnalité. Quel nombre manque dans la 2e liste ?",vis:ptab(xs,bot),say:SAY+"C'est un tableau de proportionnalité. Quel nombre manque dans la deuxième liste ?",a:ys[k],at:String(ys[k]),x:"L'opérateur est ×"+a+" ("+xs[(k+1)%n]+" × "+a+" = "+ys[(k+1)%n]+"). Donc "+xs[k]+" × "+a+" = "+ys[k]+".",hint:"opérateur"}}
+  if(v===1){const good="× "+a;const w=["× "+(a+1),"+ "+(ys[0]-xs[0]),"× "+(a>2?a-1:a+2),": "+a];return Object.assign(mkQ("Quel est l'opérateur de ce tableau de proportionnalité ?",good,w.filter(x=>x!==good),"Je passe de la 1re liste à la 2e en multipliant par "+a+" : "+xs[0]+" × "+a+" = "+ys[0]+", "+xs[1]+" × "+a+" = "+ys[1]+". L'opérateur est ×"+a+".",SAY+"Quel est l'opérateur de ce tableau ?"),{vis:ptab(xs,ys),hint:"opérateur pour ce tableau"})}
+  if(v===2){const top=xs.map((x,i)=>i===k?"?":x);return{kind:"num",q:"Ce tableau est un tableau de proportionnalité. Quel nombre manque dans la 1re liste ?",vis:ptab(top,ys),say:SAY+"C'est un tableau de proportionnalité. Quel nombre manque dans la première liste ?",a:xs[k],at:String(xs[k]),x:"L'opérateur est ×"+a+". Pour revenir en arrière, je divise par "+a+" : "+ys[k]+" : "+a+" = "+xs[k]+".",hint:"divisé"}}
+  const kind=R(0,2);let bot=ys.slice();let ok=true;let why;
+  if(kind===1){bot[k]=ys[k]+pick([1,2,a]);ok=false;why=xs[k]+" × "+a+" = "+ys[k]+", et pas "+bot[k]+". Le même opérateur ne marche pas pour tous les nombres."}
+  else if(kind===2){const c=R(2,9);bot=xs.map(x=>x+c);ok=false;why="On ajoute "+c+" à chaque nombre : ce n'est pas un opérateur « multiplier par » ou « diviser par ». Ce n'est pas un tableau de proportionnalité."}
+  else why="Tous les nombres sont multipliés par "+a+" : l'opérateur est ×"+a+".";
+  const good=ok?"Oui, c'est un tableau de proportionnalité":"Non, ce n'est pas un tableau de proportionnalité";
+  return Object.assign(mkQ("Ce tableau est-il un tableau de proportionnalité ?",good,[ok?"Non, ce n'est pas un tableau de proportionnalité":"Oui, c'est un tableau de proportionnalité"],why,SAY+"Est-ce un tableau de proportionnalité ?"),{vis:ptab(xs,bot),hint:"situation de proportionnalité"})}
+});
+BASE.push({id:"m-proportion",s:"maths",dom:"Proportionnalité",d:"2026-11-26",t:"La proportionnalité",
+r:"On dit qu'il y a une situation de proportionnalité quand on passe d'une première liste de nombres à une deuxième par un opérateur.\nL'opérateur peut être « multiplier par a » ou « diviser par a ». a est un nombre entier non nul.\nExemple :\n1re liste : 1 ; 2 ; 8 ; 5 ; 7 ; 12 ; 15 ; 20\n2e liste : 3 ; 6 ; 24 ; 15 ; 21 ; 36 ; 45 ; 60\nL'opérateur pour ce tableau est ×3 : multiplié par trois (×3). Pour revenir de la 2e liste à la 1re, on divise par trois (:3).",
+q:[["Quand dit-on qu'il y a une situation de proportionnalité ?",["Quand on passe d'une liste de nombres à une autre par un opérateur","Quand les nombres sont rangés du plus petit au plus grand","Quand on additionne tous les nombres d'une liste"]],
+ ["L'opérateur peut être…",["multiplier par a ou diviser par a","ajouter a ou enlever a","toujours multiplier par 10"]],
+ ["Dans l'exemple de la leçon (1 → 3, 2 → 6, 8 → 24), quel est l'opérateur ?",["×3","+2","×2"]],
+ ["Dans l'exemple de la leçon, l'opérateur est ×3. Pour revenir de la 2e liste à la 1re, on…",["divise par 3","multiplie par 3","ajoute 3"]],
+ ["Le nombre a de l'opérateur est…",["un nombre entier non nul","zéro","toujours un nombre décimal"]],
+ ["Dans l'exemple de la leçon, 12 donne…",["36","15","24"]]]});
+BASE.push({id:"sc-mammiferes",s:"sciences",dom:"Les animaux",d:"2026-11-26",t:"Je m'informe sur les mammifères",
+r:"Parmi les mammifères, il y a des herbivores, des carnivores et des omnivores.\nLes mammifères sont tous vivipares sauf le kangourou qui est ovovivipare.",
+q:[["Parmi les mammifères, il y a des herbivores, des carnivores et des…",["omnivores","ovipares","vertébrés"]],
+ ["Un mammifère qui mange des plantes est un…",["herbivore","carnivore","omnivore"]],
+ ["Un mammifère qui mange de la viande est un…",["carnivore","herbivore","omnivore"]],
+ ["Un mammifère qui mange de tout (plantes et viande) est un…",["omnivore","herbivore","carnivore"]],
+ ["D'après ta leçon, comment naissent les mammifères ?",["Ils sont tous vivipares, sauf le kangourou","Ils sortent tous d'un œuf","Ils sont tous ovovivipares"]],
+ ["D'après ta leçon, quel mammifère est ovovivipare ?",["le kangourou","la vache","le chien"]],
+ ["Cite les trois groupes de mammifères selon ce qu'ils mangent.","Les herbivores, les carnivores et les omnivores",["herbivor","carnivor","omnivor"],3]]});
+Object.assign(GEN_FOR,{"m-proportion":["proportion"],"sc-mammiferes":["mamRegime"]});
+Object.assign(DEEP,{"m-proportion":"proportion"});
 Object.assign(DEEP,{"o-tables":"opTables","o-add":"opAdd","o-add-dec":"opAddD","o-sous":"opSub","o-sous-dec":"opSubD","o-mult":"opMul","o-mult-dec":"opMulD","o-div":"opDiv","o-div-dec":"opDivD"});
 rebuild();
 Object.assign(GEN_FOR,{"f-ortho-mais":["dictee_mais"],"f-ortho-cetait":["dictee_cetait"],"f-ortho-la":["dictee_la"],"f-ortho-ces":["dictee_ces"]});

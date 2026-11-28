@@ -1122,6 +1122,46 @@ q:[["Parmi les mammifères, il y a des herbivores, des carnivores et des…",["o
  ["Cite les trois groupes de mammifères selon ce qu'ils mangent.","Les herbivores, les carnivores et les omnivores",["herbivor","carnivor","omnivor"],3]]});
 Object.assign(GEN_FOR,{"m-proportion":["proportion"],"sc-mammiferes":["mamRegime"]});
 Object.assign(DEEP,{"m-proportion":"proportion"});
+/* ---- Leçons du 27 novembre ---- */
+const POSS=[["ma","mon","mes"],["ta","ton","tes"],["sa","son","ses"],["notre","notre","nos"],["votre","votre","vos"],["leur","leur","leurs"]];
+const POSSW=["à moi","à toi","à lui ou à elle","à nous","à vous","à eux ou à elles"];
+const POSSV=[["range","ranges","range","rangeons","rangez","rangent"],["prends","prends","prend","prenons","prenez","prennent"],["lave","laves","lave","lavons","lavez","lavent"],["cherche","cherches","cherche","cherchons","cherchez","cherchent"]];
+const POSSO=[["Je",0],["Tu",1],["Ali",2],["Awa",2],["Nous",3],["Vous",4],["Les élèves",5],["Mes cousines",5]];
+const POSSN=[["règle","trousse","chemise","robe","gomme","valise","chambre","natte"],["cahier","crayon","sac","stylo","livre","vélo","ballon","pagne"],["cahiers","chaussures","livres","crayons","habits","jouets","assiettes","stylos"]];
+const POSSG=["féminin singulier","masculin singulier","pluriel"];
+const PSPRON=[["s'engager",["engageai","engageas","engagea","engageâmes","engageâtes","engagèrent"],1],["se laver",["lavai","lavas","lava","lavâmes","lavâtes","lavèrent"],1],["se réveiller",["réveillai","réveillas","réveilla","réveillâmes","réveillâtes","réveillèrent"],1],["s'habiller",["habillai","habillas","habilla","habillâmes","habillâtes","habillèrent"],1],["se dépêcher",["dépêchai","dépêchas","dépêcha","dépêchâmes","dépêchâtes","dépêchèrent"],1],["s'amuser",["amusai","amusas","amusa","amusâmes","amusâtes","amusèrent"],1],
+ ["se saisir",["saisis","saisis","saisit","saisîmes","saisîtes","saisirent"],2],["se munir",["munis","munis","munit","munîmes","munîtes","munirent"],2],["se nourrir",["nourris","nourris","nourrit","nourrîmes","nourrîtes","nourrirent"],2],["se réunir",["réunis","réunis","réunit","réunîmes","réunîtes","réunirent"],2],
+ ["se prendre",["pris","pris","prit","prîmes","prîtes","prirent"],3],["se mettre",["mis","mis","mit","mîmes","mîtes","mirent"],3],["s'enfuir",["enfuis","enfuis","enfuit","enfuîmes","enfuîtes","enfuirent"],3],["se battre",["battis","battis","battit","battîmes","battîtes","battirent"],3]];
+const PSPRES={"s'engager":["engage","engages","engage","engageons","engagez","engagent"],"se prendre":["prends","prends","prend","prenons","prenez","prennent"],"se mettre":["mets","mets","met","mettons","mettez","mettent"],"s'enfuir":["enfuis","enfuis","enfuit","enfuyons","enfuyez","enfuient"],"se battre":["bats","bats","bat","battons","battez","battent"]};
+Object.assign(GEN,{
+ possessif:L=>{const[o,i]=pick(POSSO);const g=R(0,2);const n=pick(POSSN[g]);const v=pick(POSSV)[i];const good=POSS[i][g];
+  if(Math.random()<.22){const s=o+" "+v+" "+good+" "+n+".";return mkQ("Dans la phrase « "+s+" », quel est l'adjectif possessif ?",good,shuffle([o,v,n]),"« "+good+" » est l'adjectif possessif : il est placé devant le nom « "+n+" » et indique à qui il appartient ("+POSSW[i]+").")}
+  const w=[...new Set([...POSS[i],POSS[[2,2,1,4,3,4][i]][g],POSS[[1,0,5,2,5,2][i]][g]])].filter(x=>x!==good);
+  return Object.assign(mkQ("Complète avec le bon adjectif possessif : "+o+" "+v+" ___ "+n+".",good,shuffle(w),"« "+n+" » est un nom "+POSSG[g]+", et c'est "+POSSW[i]+" : on écrit « "+good+" ». "+o+" "+v+" "+good+" "+n+".","Complète avec le bon adjectif possessif : "+o+" "+v+", blanc, "+n+"."),{hint:POSSG[g]==="pluriel"?"pluriel":POSSG[g]})},
+ conj_pronom_ps:L=>{const[inf,fs,gr]=pick(PSPRON);const k=R(0,7);const p=PR[k];const i=PI[k];const full=pform(p,i,fs[i]);
+  const w=new Set(fs.filter(x=>x!==fs[i]).map(x=>pform(p,i,x)));w.add(p+" "+fs[i]);
+  const pres=PSPRES[inf]||(gr===2?forms(inf.replace(/^(se |s')/,""),"present"):gr===1?forms(inf.replace(/^(se |s')/,""),"present"):null);if(pres)w.add(pform(p,i,pres[i]));
+  const q="Conjugue « "+inf+" » au passé simple avec « "+p+" ».";const x="Passé simple de "+inf+" : "+fs.map((f,j)=>pform(PD[j],j,f)).join(", ")+".";const hint=["","1er groupe","2e groupe","3e groupe"][gr];
+  const wl=shuffle([...w].filter(z=>z!==full));if(L>=2&&Math.random()<.5)return{kind:"text",q,a:full,alts:[full.replace(/^\S+ /,"")],at:full,x,hint};return Object.assign(mkQ(q,full,wl,x),{hint})}
+});
+BASE.push({id:"f-gram-poss",s:"francais",dom:"Grammaire",d:"2026-11-27",t:"J'utilise les adjectifs possessifs",g:"possessif",
+r:"L'adjectif possessif est un déterminant du nom. Il indique celui ou celle à qui appartient l'être ou l'objet qu'il détermine.\nExemple : Ali prend son sac. Il prend ses sacs.\nLes adjectifs possessifs sont :\n• ma, ta, sa (féminin singulier) ;\n• mon, ton, son (masculin singulier) ;\n• mes, tes, ses (masculin, féminin pluriel) ;\n• nos, vos, leurs (masculin, féminin pluriel) ;\n• notre, votre, leur (masculin, féminin singulier).",
+q:[["L'adjectif possessif est…",["un déterminant du nom","un verbe","un adverbe"]],
+ ["Qu'indique l'adjectif possessif ?",["À qui appartient l'être ou l'objet","Où se trouve l'objet","Quand se passe l'action"]],
+ ["Dans « Ali prend son sac », quel est l'adjectif possessif ?",["son","Ali","sac"]],
+ ["« ma, ta, sa » s'emploient devant un nom…",["féminin singulier","masculin singulier","pluriel"]],
+ ["« mon, ton, son » s'emploient devant un nom…",["masculin singulier","féminin singulier","pluriel"]],
+ ["« mes, tes, ses » et « nos, vos, leurs » s'emploient devant un nom…",["pluriel","singulier","féminin seulement"]],
+ ["« notre, votre, leur » s'emploient devant un nom…",["singulier, masculin ou féminin","pluriel","masculin seulement"]],
+ ["Ali prend son sac. Il prend ___ sacs.",["ses","son","sa"]]]});
+BASE.push({id:"f-conj-pronom-ps",s:"francais",dom:"Conjugaison",d:"2026-11-27",t:"Les verbes pronominaux au passé simple",g:"conj_pronom_ps",
+r:"Au passé simple, les verbes pronominaux se conjuguent de la manière suivante :\n1er groupe (s'engager) : je m'engageai, tu t'engageas, il/elle s'engagea, nous nous engageâmes, vous vous engageâtes, ils/elles s'engagèrent.\n2e groupe (se saisir) : je me saisis, tu te saisis, il/elle se saisit, nous nous saisîmes, vous vous saisîtes, ils/elles se saisirent.\n3e groupe (se prendre) : je me pris, tu te pris, il/elle se prit, nous nous prîmes, vous vous prîtes, ils/elles se prirent.\nLes verbes pronominaux se conjuguent normalement à tous les temps : on ajoute seulement le pronom personnel (me, te, se, nous, vous, se).",
+q:[["Avec « nous », « s'engager » au passé simple donne…",["nous nous engageâmes","nous nous engagâmes","nous engageâmes"]],
+ ["Avec « ils », « se saisir » au passé simple donne…",["ils se saisirent","ils se saisissent","ils saisirent"]],
+ ["Avec « il », « se prendre » au passé simple donne…",["il se prit","il se prend","il se prenit"]],
+ ["Avec « vous », « se prendre » au passé simple donne…",["vous vous prîtes","vous vous prenez","vous prîtes"]],
+ ["Comment se conjuguent les verbes pronominaux ?",["Normalement à tous les temps, en ajoutant seulement le pronom personnel","Avec des terminaisons spéciales","Seulement au présent"]],
+ ["Avec « je », « s'engager » au passé simple donne…",["je m'engageai","je m'engagai","je engageai"]]]});
 Object.assign(DEEP,{"o-tables":"opTables","o-add":"opAdd","o-add-dec":"opAddD","o-sous":"opSub","o-sous-dec":"opSubD","o-mult":"opMul","o-mult-dec":"opMulD","o-div":"opDiv","o-div-dec":"opDivD"});
 rebuild();
 Object.assign(GEN_FOR,{"f-ortho-mais":["dictee_mais"],"f-ortho-cetait":["dictee_cetait"],"f-ortho-la":["dictee_la"],"f-ortho-ces":["dictee_ces"]});
